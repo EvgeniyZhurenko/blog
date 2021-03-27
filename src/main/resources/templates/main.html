@@ -13,11 +13,10 @@
 <header th:insert="blocks/header :: header"></header>
 
 
-<!--th:if="${list}"-->
 <!--th:text="${mainBlog.blogName}"-->
 <!--th:text="${mainBlog.text}"-->
 <!--th:href="@{ blog/{id}( id= ${ mainBlog.getIdBlog() } ) }"-->
-<main class="container" >
+<main class="container" th:if="${list}" >
     <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark bg-fon"
          th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
          style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
@@ -160,8 +159,8 @@
 
 </main>
 
-<!--th:unless="${list}" th:text="${msg}"-->
-<main class="container"  ></main>
+
+<main class="container"  th:unless="${list}" th:text="${msg}"></main>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 

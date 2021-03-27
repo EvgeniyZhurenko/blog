@@ -14,6 +14,11 @@
 
 <div class="container mt-5">
     <h1 th:text="${title}"></h1>
+    <div th:each="blog : ${blogList}" class="alert alert-info mt-2">
+        <h3 th:text="${blog.title}"></h3>
+        <p th:text="${blog.announcement}"></p>
+        <a th:href="'/blog/' + ${blog.id}">Читать полностью</a>
+    </div>
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
