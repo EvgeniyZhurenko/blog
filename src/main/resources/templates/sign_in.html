@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<title th:text="${title}"></title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<link th:href="@{/css/signInCSS.css}"  href="../static/css/signInCSS.css" rel="stylesheet">
+</head>
+
+<body class="bodySignIn"
+	  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; margin-top: 200px;'"
+	  style="background-image: url('../static/images/background-registration.jpg'); background-size: cover; margin-top: 200px;">
+
+<div id="container">
+	<section id="content">
+		<form action="/login/process" method="post" >
+
+			<!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
+
+			<!--<div th:if="${bool}">-->
+				<!--<span th:text="${msg}"></span>-->
+			<!--</div>-->
+			<h1>Войти в свой аккаунт</h1>
+
+			<!--<div th:if="${error}">-->
+				<!--<span style="color: red">Не удачная попытка</span>-->
+			<!--</div>-->
+
+			<!--<div th:if="${bool}">-->
+				<!--<span style="color: blue" th:text="${msg}"></span>-->
+			<!--</div>-->
+			<!--<br>-->
+
+			<div>
+				<input type="text" placeholder="Username" required="" id="username" name="username" />
+			</div>
+			<div>
+				<input type="password" placeholder="Password" required="" id="password" name="password" />
+			</div>
+			<div>
+				<input type="submit" value="Войти" />
+				<a href="/forgot-password">Забыли пароль?</a>
+				<a href="/registration">Регистрация</a>
+				<br>
+				<a href="/">На главную</a>
+			</div>
+
+		</form><!-- form -->
+		
+	</section><!-- content -->
+</div><!-- container -->
+</body>
+</html>
+  
+

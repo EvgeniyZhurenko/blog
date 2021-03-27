@@ -1,0 +1,169 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+
+</head>
+<body>
+
+<header th:insert="blocks/header :: header"></header>
+
+
+<!--th:if="${list}"-->
+<!--th:text="${mainBlog.blogName}"-->
+<!--th:text="${mainBlog.text}"-->
+<!--th:href="@{ blog/{id}( id= ${ mainBlog.getIdBlog() } ) }"-->
+<main class="container" >
+    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark bg-fon"
+         th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
+         style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic"  >Заголовок блога с наибольшим рейтингом</h1>
+
+            <p class="lead-my-3" >Текст блога</p>
+
+            <p class="lead-mb-0"><a  class="text-white fw-bold" >Продолжить читать...</a></p>
+        </div>
+    </div>
+
+    <!--col-md-6-->
+<!--th:text="|Рейтинг ${listBlog.get(0).rating}|"-->
+    <!--th:text="${listBlog.get(0).blogName}"-->
+    <!--th:text="${listBlog.get(0).dateCreateBlog}"-->
+    <!--th:text="${listBlog.get(0).text}"-->
+    <!--th:href="@{ blog/{id}( id= ${ listBlog.get(0).getIdBlog() } ) }"-->
+    <!--th:attr= "src=${listBlog.get(0).pictures[0]}, alt=listBlog.get(0).pictures[0].namePicture" -->
+
+    <!--"col-md-6-->
+    <!--th:text="|Рейтинг ${listBlog.get(1).rating}|"-->
+    <!--th:text="${listBlog.get(1).blogName}"-->
+    <!--th:text="${listBlog.get(1).dateCreateBlog}"-->
+    <!--th:text="${listBlog.get(1).text}"-->
+    <!--th:href="@{ book/{id}( id= ${ listBlog.get(1).getIdBlog() } ) }"-->
+    <!--th:attr="src=${listBlog.get(1).pictures[0]}, alt=${listBlog.get(1).pictures[1].getNamePicture()}"-->
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+
+
+                    <strong class="d-inline-block mb-2 text-primary"  >Рейтинг</strong>
+
+                    <h3 class="mb-0"  >Заголовок блог 1</h3>
+
+                    <div class="mb-1 text-muted"  >Дата поста</div>
+
+                    <p class="card-text mb-auto"  >Текст блога.</p>
+
+                    <a  class="stretched-link" href="/"  >Продолжить читать...</a>
+                </div>
+                <div class="col-auto d-none d-lg-block" >
+
+                    <img class="bd-placeholder-img" width="200" height="250"
+                          />
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static" >
+
+                    <strong class="d-inline-block mb-2 text-success"
+                            >Рейтинг</strong>
+
+                    <h3 class="mb-0"  >Заголовок блог 2</h3>
+
+                    <div class="mb-1 text-muted"  >Дата поста</div>
+
+                    <p class="mb-auto"  >Текст блога.</p>
+
+                    <a  class="stretched-link" href="/" >Продолжить читать...</a>
+                </div>
+                <div class="col-auto d-none d-lg-block">
+
+                    <img class="bd-placeholder-img" width="200" height="250"
+                          />
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--th:each="blog: ${otherListBlog}"-->
+    <div class="row">
+        <div class="col-md-8" >
+
+            <article class="blog-post" >
+
+<!--th:text="${blog.blogName}"-->
+                <!--th:text="${blog.dateCreateBlog}"-->
+                <!--th:href="@{/user/{id} ( id = ${blog.idBlog})}" th:text="${blog.user.username}"-->
+                <!--th:text="${blog.text}"-->
+                <!--th:each="picture: ${blog.pictures}"-->
+                <!--th:attr = "src=${picture.urlImage},alt=${picture.namePicture}"-->
+                <h2 class="blog-post-title" >Заголовок</h2>
+                <p class="blog-post-meta" > Дата
+                    <a  >Имя блогера</a></p>
+
+                <p  >Текст блога.</p>
+                <hr>
+                <ol class="ul" style="display: inline;"  >
+                    <li><img  >Фото 1</li>
+                </ol>
+
+            </article><!-- /.blog-post -->
+
+
+            <nav class="blog-pagination" aria-label="Pagination">
+                <a class="btn btn-outline-primary" href="/blog">Все блоги</a>
+            </nav>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="p-4">
+                <h4 class="fst-italic">Archives</h4>
+                <ol class="list-unstyled mb-0">
+                    <li><a href="user/arhive">March 2014</a></li>
+                    <li><a href="user/arhive">February 2014</a></li>
+                    <li><a href="user/arhive">January 2014</a></li>
+                    <li><a href="user/arhive">December 2013</a></li>
+                    <li><a href="user/arhive">November 2013</a></li>
+                    <li><a href="user/arhive">October 2013</a></li>
+                    <li><a href="user/arhive">September 2013</a></li>
+                    <li><a href="user/arhive">August 2013</a></li>
+                    <li><a href="user/arhive">July 2013</a></li>
+                    <li><a href="user/arhive">June 2013</a></li>
+                    <li><a href="user/arhive">May 2013</a></li>
+                    <li><a href="user/arhive">April 2013</a></li>
+                </ol>
+            </div>
+
+            <div class="p-4">
+                <h4 class="fst-italic">Elsewhere</h4>
+                <ol class="list-unstyled">
+                    <li><a href="https://github.com/evgeniy2702/EvgeniyZhurenkoJAVA">GitHub</a></li>
+                    <li><a href="https://twitter.com/?lang=ru">Twitter</a></li>
+                    <li><a href="https://www.facebook.com/?ref=tn_tnmn">Facebook</a></li>
+                </ol>
+            </div>
+        </div>
+
+    </div><!-- /.row -->
+
+</main>
+
+<!--th:unless="${list}" th:text="${msg}"-->
+<main class="container"  ></main>
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+</body>
+</html>
