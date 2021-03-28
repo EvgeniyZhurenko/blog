@@ -14,21 +14,13 @@
 	<section id="content">
 		<form action="/login/process" method="post" >
 
-			<!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
-
-			<!--<div th:if="${bool}">-->
-				<!--<span th:text="${msg}"></span>-->
-			<!--</div>-->
+			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+			
 			<h1>Войти в свой аккаунт</h1>
 
-			<!--<div th:if="${error}">-->
-				<!--<span style="color: red">Не удачная попытка</span>-->
-			<!--</div>-->
-
-			<!--<div th:if="${bool}">-->
-				<!--<span style="color: blue" th:text="${msg}"></span>-->
-			<!--</div>-->
-			<!--<br>-->
+			<div th:if="${error}">
+				<span style="color: red">Не удачная попытка</span>
+			</div>
 
 			<div>
 				<input type="text" placeholder="Username" required="" id="username" name="username" />

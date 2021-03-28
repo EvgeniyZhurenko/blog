@@ -64,4 +64,10 @@ public class BlogService {
         return getAllBlog().stream().sorted((blog1,blog2) -> blog2.getRating() - blog1.getRating())
                 .collect(Collectors.toList());
     }
+
+    public List<Blog> getUserSortListBlogByRating(Long idUser){
+        return userRepo.getById(idUser).getBlogs().stream()
+                        .sorted((blog1, blog2) -> blog2.getRating()- blog1.getRating())
+                        .collect(Collectors.toList());
+    }
 }

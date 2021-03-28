@@ -77,6 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         public void configure(WebSecurity web) throws Exception {
                 web.debug(true);
         }
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
                 http
@@ -84,7 +85,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/user/**").hasRole("USER")
                         .antMatchers("/admin/**").hasRole("ADMIN")
                         .antMatchers("/registration").anonymous()
-                        .antMatchers("/login", "/" ).permitAll()
+                        .antMatchers("/login", "/","/metrics", "/blog/list",
+                                                 "/about", "/contacts",
+                                                 "/**/*.jpg", "/**/*.css", "/**/*.js" ).permitAll()
                         .anyRequest().authenticated()
                         .and()
                         .exceptionHandling()

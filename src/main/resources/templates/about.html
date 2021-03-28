@@ -6,14 +6,44 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-
+    <link rel="stylesheet" href="../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
 </head>
 <body>
 
 <header th:insert="blocks/header :: header"></header>
 
-<div class="container my-5">
-    <h1 th:text="${title}" ></h1>
+<div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
+     style="background-image: url('../static/images/background-about-metrics-contact.jpg'); background-size: cover; display: grid; justify-items: center;" >
+
+    <h1 th:text="${title}"></h1>
+    <div class="div-about-metrics-contact">
+        <p>
+            Куда бы вы не поехали, в далекую страну или в ближайшую деревеньку,
+            везде вас пригласят отведать оригинальные блюда. Чем более экзотичней местность, тем интересней кулинарные открытия.
+            Смешение вкусов и самые невероятные сочетания продуктов вы встретите на страницах этого сайта, рецепты
+            для гурманов и для тех, кто не ищет особых изысков в еде.
+        </p>
+        <p>
+            Все что помогает нам в работе на кухне: удобная мебель, современные печи,
+            холодильники, эргономичные кастрюли и сковороды, миксеры и тостеры,
+            а также красивая посуда для сервировки стола, если это будет интересно ,
+            то обязательно появится на страницах блога "Кулинарный блог".
+        </p>
+        <p>
+            Вы часто бываете в поездках или вам приходится обедать вне дома, тогда вам
+            будет любопытно узнать о меню фешенебельных ресторанов или небольших таверн.
+            Мы можем с вами заглянуть на кухню простых хозяек или под зонтики изящных кофеен.
+        </p>
+        <p>
+            А что вы предпочитаете из напитков? Сухое белое вино, виски, вермут,
+            портвейн, а может пиво? Или вместо алкоголя обожаете кофе, чай, какао, сок?
+            Самые известные и самые экзотичные напитки станут темами блога Кулинарный блог".
+        </p>
+        <p>
+            А в кулинарное путешествие за рецептами по всему миру приглашаем вас мы, "Кулинарный блог".
+        </p>
+    </div>
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>

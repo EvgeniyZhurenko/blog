@@ -2,6 +2,7 @@ package com.exam.blog.models;
 
 
 import lombok.Data;
+import net.bytebuddy.implementation.bytecode.Throw;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -44,4 +45,5 @@ public class Blog {
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     User user;
+
 }

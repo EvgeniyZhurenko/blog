@@ -1,0 +1,19 @@
+h1, p, ol > li{
+    color: rgba(0, 0, 0, 0.67);
+}
+
+.div-about-metrics-contact{
+    margin: 0 20em;
+}
+
+.social{
+    list-style: none;
+    display: block;
+    text-align: center;
+    margin-top: -3em;
+}
+
+.social-icon{
+    display: inline-block;
+    margin: auto 0.5em;
+}

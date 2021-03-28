@@ -65,37 +65,43 @@ public class MainController {
 
             model.addAttribute("anonymous", true);
 
+            List<Blog> bloges = blogService.getSortListBlogByRating();
+
+            // проверка на наличие блогов вообще на сайте
+            if (bloges.size() != 0) {
+                model.addAttribute("list", true);
+                model.addAttribute("blogList", bloges);
+            } else {
+                model.addAttribute("list", false);
+                model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
+            }
+
         }
 
-        List<Blog> bloges = blogService.getSortListBlogByRating();
-
-
-        // проверка на наличие блогов вообще на сайте
-        if (bloges.size() != 0) {
-            model.addAttribute("list", true);
-           model.addAttribute("list_blog", bloges);
-        } else {
-            model.addAttribute("list", false);
-            model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
-        }
         return namePage;
     }
 
-    @GetMapping(value = "about")
+    @GetMapping(value = "metrics")
     public String aboutPage( Model model) {
-        model.addAttribute("title", "Страница о сайте");
-        return "about";
+        model.addAttribute("title", "ТАБЛИЦА МЕР ПРОДУКТОВ");
+        model.addAttribute("anonymous", true);
+        model.addAttribute("blog", false);
+        return "metrics";
     }
 
-    @GetMapping(value = "support")
+    @GetMapping(value = "about")
     public String supportPage( Model model) {
-        model.addAttribute("title", "Страница технической поддержки");
-        return "support";
+        model.addAttribute("title", "О БЛОГЕ");
+        model.addAttribute("anonymous", true);
+        model.addAttribute("blog", false);
+        return "about";
     }
 
     @GetMapping("contacts")
     public String contactsPage( Model model) {
         model.addAttribute("title", "Котнакты");
+        model.addAttribute("anonymous", true);
+        model.addAttribute("blog", false);
         return "contacts";
     }
 

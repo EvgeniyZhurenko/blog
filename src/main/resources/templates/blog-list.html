@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+
+</head>
+<body>
+
+<header  th:insert="blocks/header :: header"></header>
+
+<div th:if="${boolean}" >
+    <div class="alert alert-info mt-2" >
+        <p class="blog-post-meta" th:text="*{blog.date_create_blog}"> Дата &nbsp;&nbsp;
+            <a  th:href="@{user/{id}(id = ${blog.user.getId()})}"
+                th:text="${blog.user.getFirst_name()} + ' '  + ${blog.user.getLast_name()}" >Имя блогера</a>
+        </p>
+    </div>
+    <div class="container mt-5">
+        <h3 th:text="${title}"></h3>
+        <div th:each="blog : ${blogList}" class="alert alert-info mt-2">
+            <h3 th:text="${blog.title}"></h3>
+            <div>
+                <p th:text="${blog.announcement}"></p>
+                <p th:text="${blog.rating}"></p>
+            </div>
+            <a th:href="@{blog/{id}(id= ${blog.id})}">Читать полностью</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="container" th:unless="${boolean}">
+    <h3 th:text="${title}"></h3>
+    <div th:each="blog : ${blogList}" class="alert alert-info mt-2">
+        <h3 th:text="${blog.title}"></h3>
+        <div>
+            <p th:text="${blog.announcement}"></p>
+            <p th:text="${blog.rating}"></p>
+        </div>
+        <a th:href="@{blog/{id}(id= ${blog.id})}">Читать полностью</a>
+    </div>
+</div>
+
+<div class="container "  th:unless="${list}" style="display: block; text-align: center;" th:style="'display: block; text-align: center'">
+    <p th:text="${msg}" ></p>
+</div>
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+</body>

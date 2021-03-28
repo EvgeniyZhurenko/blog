@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+    <link rel="stylesheet" href="../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
+</head>
+<body>
+
+<header th:insert="blocks/header :: header"></header>
+
+<div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
+     style="background-image: url('../static/images/background-about-metrics-contact.jpg'); background-size: cover; display: grid; justify-items: center;" >
+
+    <h1 th:text="${title}" ></h1>
+    <div class="div-about-metrics-contact">
+        <p>
+            Успешное приготовление большинства блюд зависит от точного соблюдения пропорций продуктов, указанных в рецепте.
+            Чаще всего вес продуктов указывается в граммах.
+            У меня на кухне есть электронные весы, поэтому для меня определить вес продуктов не проблема.
+            Для тех, у кого нет такой возможности предлагаю ознакомиться с таблицей мер.
+        </p>
+
+        <p>
+            Определяя вес продуктов на глаз, следует не забывать несколько правил:
+            Стаканы и ложки заполняются жидкими продуктами (растительное масло, молоко) полностью.
+            Вязкие (варенье, сгущенка, сметана) и сыпучие (мука, крупы) зачерпываются ложками и накладываются в стакан «с горкой».
+            Сыпучие продукты нельзя утрамбовывать и разрыхлять.
+        </p>
+        <ol>
+            <li>3 чайных ложки = 1 столовая ложка</li>
+            <li>4 столовых ложки = 60 мл</li>
+            <li>5 ст. ложки+1 ч.ложка = 80 мл</li>
+            <li>8 столовых ложек = 125 мл</li>
+            <li>щепотка = менее 1/8 чайной ложки</li>
+            <li>1 стакан = 250 мл</li>
+        </ol>
+
+        <ol>Емкость посуды для измерения веса продуктов следующая:
+            <li>тонкий (чайный) стакан — 250 см3</li>
+            <li>граненый стакан — 200 см3</li>
+            <li>1 чайный ст. = 16,5 ст.л. = 50 ч.л.</li>
+            <li>1 граненый ст. = 13 ст.л. = 40 ч.л.</li>
+        </ol>
+
+    </div>
+</div>
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+</body>

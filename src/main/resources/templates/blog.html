@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="${title}"></title>
+    <title th:text="${blog.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
@@ -13,11 +13,15 @@
 <header  th:insert="blocks/header :: header"></header>
 
 <div class="container mt-5">
-    <h1 th:text="${title}"></h1>
-    <div th:each="blog : ${blogList}" class="alert alert-info mt-2">
-        <h3 th:text="${blog.title}"></h3>
-        <p th:text="${blog.announcement}"></p>
-        <a th:href="'/blog/' + ${blog.id}">Читать полностью</a>
+    <h1 th:text="${blog.title}"></h1>
+    <div class="alert alert-info mt-2" >
+        <div>
+            <a th:href="@{user/account/{id}(id = ${blog.user.id})}" th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
+            <span th:text="'Дата блога ' + ${blog.date_create_blog} + ' Рейтинг ' + ${blog.rating}"></span>
+        </div>
+
+        <p th:text="${blog.full_text}"></p>
+        <a href="/">На главную</a>
     </div>
 </div>
 
