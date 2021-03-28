@@ -43,14 +43,19 @@ public class SecurityController {
     @PostMapping("/registration")
     public String registrationPost(@ModelAttribute User user,
                                    Model model){
-        User userDB = userRepo.getUserByUserName(user.getUsername());
-        System.out.println(userDB);
-        if(userDB == null){
-            userRepo.saveBoolean(user);
-            return "redirect:/login";
+        if( userRepo.userRegistration(user).equalsIgnoreCase("Заполните поля :")) {
+            User userDB = userRepo.getUserByUserName(user.getUsername());
+            if (userDB == null) {
+                userRepo.saveBoolean(user);
+                return "redirect:/login";
+            } else {
+                model.addAttribute("bool", true);
+                model.addAttribute("msg", "Аккаунт с таким " + user.getUsername() + " уже существует!");
+                return "redirect:/registration";
+            }
         } else {
             model.addAttribute("bool", true);
-            model.addAttribute("msg", "Аккаунт с таким " + user.getUsername() +  " уже существует!");
+            model.addAttribute("msg", userRepo.userRegistration(user));
             return "redirect:/registration";
         }
     }

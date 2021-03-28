@@ -26,11 +26,10 @@
     <input class="input" type="password" placeholder="Пароль" name="password" >
     <input class="input" type="password" placeholder="Пароль еще раз" name="repeat_password">
 
-    <button class="btn" type="submit" name="button" disabled>Регистрация</button>
+    <button id="button" class="btn" type="submit" name="button"
+            disabled="disabled">Регистрация</button>
     <br>
-    <a class="p-2 text-dark btn"
-       style="text-align: center;"
-       th:style="'text-align: center;'" href="/">На главную</a>
+    <button class="btn" th:onclick="'document.location='/''">На главную</button>
 </form>
 
 </body>

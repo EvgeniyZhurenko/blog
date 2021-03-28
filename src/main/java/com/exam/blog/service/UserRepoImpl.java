@@ -78,4 +78,23 @@ public class UserRepoImpl implements UserDetailsService{
         User user = userRepo.getUserByUsername(userName);
         return user;
     }
+
+    public String userRegistration(User user){
+        String string = "Заполните поля :";
+
+        if(user.getUsername() != null)
+            string = string.concat(" поле username ");
+        if(user.getFirst_name() != null)
+            string = string.concat(" поле firstName ");
+        if(user.getLast_name() != null)
+            string = string.concat(" поле lastName ");
+        if(user.getEmail() != null )
+            string = string.concat(" поле gmail ");
+        if(user.getPhone() != null)
+            string = string.concat(" поле phone ");
+        if(user.getPassword() != null)
+            string = string.concat(" поле password ");
+
+        return string;
+    }
 }
