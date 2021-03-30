@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/user/")
 public class UserController {
@@ -45,7 +47,7 @@ public class UserController {
         model.addAttribute("title", "Страница пользователя");
         model.addAttribute("user", user);
 
-        return "user_page";
+        return "user/user_page";
     }
 
     @GetMapping("update/{id}")
@@ -55,7 +57,8 @@ public class UserController {
         User user = userRepo.getById(idUser);
         model.addAttribute("title", "Страница редактирования данных пользователя");
         model.addAttribute("user", user);
+        model.addAttribute("rating", user.getBlogs().stream().map(Blog::getRating).collect(Collectors.toList()))
 
-        return "user_update_page";
+        return "user/user_update_page";
     }
 }

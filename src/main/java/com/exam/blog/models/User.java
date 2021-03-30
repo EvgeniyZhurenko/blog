@@ -41,6 +41,8 @@ public class User implements UserDetails {
     private String last_name;
     private String phone;
     private String email;
+    private String city;
+    private String country;
     private Boolean ban_user;
 
     private String foto;

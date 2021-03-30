@@ -22,7 +22,7 @@ import java.util.List;
 
 
 @Service
-public class UserRepoImpl implements UserDetailsService{
+public class UserRepoImpl implements UserDetailsService {
 
     private UserRepo userRepo;
 
@@ -40,19 +40,19 @@ public class UserRepoImpl implements UserDetailsService{
 
     public boolean saveBoolean(User user) {
         User userFromDB = userRepo.getUserByUsername(user.getUsername());
-        if(userFromDB == null){
+        if (userFromDB == null) {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.saveAndFlush(user);
             return true;
-        } else{
+        } else {
             return false;
         }
     }
 
     public boolean update(User user) {
         User userFromDB = userRepo.getUserById(user.getId());
-        if(userFromDB != null){
+        if (userFromDB != null) {
             userRepo.saveAndFlush(user);
             return true;
         }
@@ -71,7 +71,7 @@ public class UserRepoImpl implements UserDetailsService{
 
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = userRepo.getUserByUsername(userName);
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User with " + userName + " not found");
         }
         return user;
@@ -82,22 +82,25 @@ public class UserRepoImpl implements UserDetailsService{
         return user;
     }
 
-    public String[] userRegistration(User user){
+    public String[] userRegistration(User user) {
         String[] attr = new String[6];
 
-        if(user.getFirst_name().equals(""))
+        if (user.getFirst_name().equals(""))
             attr[0] = "Заполните поле Ваша имя!";
-        if(user.getLast_name().equals(""))
+        if (user.getLast_name().equals(""))
             attr[1] = "Заполните поле Ваша фамилия!";
-        if(user.getEmail().equals(""))
-            attr[2]="Заполните поле Ваш e-mail!";
-        if(user.getPhone().equals(""))
-            attr[3]="Заполните поле Ваш телефон!";
-        if(user.getUsername().equals(""))
-            attr[4]="Заполните поле Ваше логин!";
-        if(user.getPassword().equals(""))
-            attr[5]="Заполните поле Ваш пароль!";
+        if (user.getEmail().equals(""))
+            attr[2] = "Заполните поле Ваш e-mail!";
+        if (user.getPhone().equals(""))
+            attr[3] = "Заполните поле Ваш телефон!";
+        if (user.getUsername().equals(""))
+            attr[4] = "Заполните поле Ваше логин!";
+        if (user.getPassword().equals(""))
+            attr[5] = "Заполните поле Ваш пароль!";
 
         return attr;
     }
+
+
+
 }

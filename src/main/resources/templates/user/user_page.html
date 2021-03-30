@@ -8,53 +8,58 @@
     <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
 
 </head>
-<body  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; margin-top: 200px;'"
-       style="background-image: url('../../static/images/background-registration.jpg'); background-size: cover; margin-top: 200px;">
-
+<body>
 <header th:insert="blocks/user :: user"></header>
 
+<div  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; margin-top: 200px;'"
+       style="background-image: url('../../static/images/background-registration.jpg'); background-size: cover;height: 60em">
 <main>
-<div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-sm-6 col-md-6">
-            <div class="well well-sm">
-                <div class="row">
-                    <div class="col-sm-6 col-md-4">
-                        <img th:attr= "src=${user.foto},
-                         alt=${user.username}" class="img-rounded img-responsive">
-                    </div>
-                    <div class="col-sm-6 col-md-8">
-                        <h4><a th:href="@{user/update/{id}(id = ${user.id})" th:text="${user.first_name} + ${user.last.name}"></a></h4>
 
-                        <small><cite th:text="${user.address}> <i class="glyphicon glyphicon-map-marker">
-                        </i></cite></small>
-                        <p>
-                            <i class="glyphicon glyphicon-envelope" th:text="${user.email}"></i>
-                            <br>
-                            <i class="glyphicon glyphicon-gift" th:text="${user.born}"></i></p>
-                        <!-- Split button -->
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary">
-                                Social</button>
-                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span><span class="sr-only">Social</span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a th:href="@{user.twiter}">Twitter</a></li>
-                                <li><a th:href="@{user.facebook}">Facebook</a></li>
-                                <li><a th:href="@{user.instagram}">Instagram</a></li>
-                                <li class="divider"></li>
-                                <li><a th:href="@{user.git_hub}">Github</a></li>
-                            </ul>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="well well-sm">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-4">
+                            <img th:attr= "src=${user.foto},
+                            alt=${user.username}" class="img-rounded img-responsive">
+                        </div>
+                        <div class="col-sm-6 col-md-8">
+                            <h4><a th:href="@{update/{id}(id = ${user.getId()})}" th:text="${user.first_name} + ' '  + ${user.last_name}"></a></h4>
+                            <small>
+                                <cite title="San Francisco, USA">
+                                    <i class="glyphicon glyphicon-map-marker" th:text="${user.city} + ', ' + ${user.country}"></i>
+                                </cite>
+                            </small>
+                            <p>
+                                <i class="glyphicon glyphicon-envelope" th:text="${user.email}"></i>
+                                <br>
+                                <i class="glyphicon glyphicon-globe"></i><a th:href="@{user/all-blogs/{id}(id_user = ${user.getId()})}" th:text="Блоги">www.jquery2dotnet.com</a>
+                                <br>
+                                <i class="glyphicon glyphicon-gift" th:text="${user.born}"></i>June 02, 1988</p>
+                            <!-- Split button -->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-primary">
+                                    Social</button>
+                                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span><span class="sr-only">Social</span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li><a th:href="@{user.twiter}">Twitter</a></li>
+                                    <li><a th:href="@{user.facebook}">Facebook</a></li>
+                                    <li><a th:href="@{user.instagram}">Instagram</a></li>
+                                    <li class="divider"></li>
+                                    <li><a th:href="@{user.git_hub}">Github</a></li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script type="text/javascript">
-</script>
+    <script type="text/javascript">
+    </script>
 
 
 </main>
@@ -62,5 +67,6 @@
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
+</div>
 </body>
 </html>
