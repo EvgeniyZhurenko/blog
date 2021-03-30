@@ -41,6 +41,21 @@ public class UserController {
     public String userInfo(@PathVariable(name = "id", required = false) Long idUser,
                            Model model){
 
+        User user = userRepo.getById(idUser);
+        model.addAttribute("title", "Страница пользователя");
+        model.addAttribute("user", user);
+
         return "user_page";
+    }
+
+    @GetMapping("update/{id}")
+    public String userUpdate(@PathVariable(name = "id", required = false) Long idUser,
+                           Model model){
+
+        User user = userRepo.getById(idUser);
+        model.addAttribute("title", "Страница редактирования данных пользователя");
+        model.addAttribute("user", user);
+
+        return "user_update_page";
     }
 }

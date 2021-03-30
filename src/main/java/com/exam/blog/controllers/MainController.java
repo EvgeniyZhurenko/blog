@@ -47,7 +47,7 @@ public class MainController {
             // проверка роли пользователя - ROLE_ADMIN
             if (userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"))) {
 
-                namePage = "main-user";
+                namePage = "user/main-user";
 
                 //проверка на наличи блогов у пользователя
                 if (userDB.getBlogs().toArray().length >= 1) {
@@ -88,15 +88,12 @@ public class MainController {
 
 
 
-
-
-
     @GetMapping(value = "metrics")
     public String aboutPage( Model model) {
         model.addAttribute("title", "ТАБЛИЦА МЕР ПРОДУКТОВ");
         model.addAttribute("anonymous", true);
         model.addAttribute("blog", false);
-        return "metrics";
+        return "menu_bar_pages/metrics";
     }
 
     @GetMapping(value = "about")
@@ -104,7 +101,7 @@ public class MainController {
         model.addAttribute("title", "О БЛОГЕ");
         model.addAttribute("anonymous", true);
         model.addAttribute("blog", false);
-        return "about";
+        return "menu_bar_pages/about";
     }
 
     @GetMapping("contacts")
@@ -112,7 +109,7 @@ public class MainController {
         model.addAttribute("title", "Котнакты");
         model.addAttribute("anonymous", true);
         model.addAttribute("blog", false);
-        return "contacts";
+        return "menu_bar_pages/contacts";
     }
 
 }

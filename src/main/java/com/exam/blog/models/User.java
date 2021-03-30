@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,6 +42,13 @@ public class User implements UserDetails {
     private String phone;
     private String email;
     private Boolean ban_user;
+
+    private String foto;
+    private Date born;
+    private String twiter;
+    private String facebook;
+    private String instagram;
+    private String git_hub;
 
     public User(String username, String password) {
         this.username = username;

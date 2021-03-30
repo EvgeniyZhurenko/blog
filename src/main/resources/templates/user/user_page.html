@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+
+</head>
+<body  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; margin-top: 200px;'"
+       style="background-image: url('../../static/images/background-registration.jpg'); background-size: cover; margin-top: 200px;">
+
+<header th:insert="blocks/user :: user"></header>
+
+<main>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-6 col-md-6">
+            <div class="well well-sm">
+                <div class="row">
+                    <div class="col-sm-6 col-md-4">
+                        <img th:attr= "src=${user.foto},
+                         alt=${user.username}" class="img-rounded img-responsive">
+                    </div>
+                    <div class="col-sm-6 col-md-8">
+                        <h4><a th:href="@{user/update/{id}(id = ${user.id})" th:text="${user.first_name} + ${user.last.name}"></a></h4>
+
+                        <small><cite th:text="${user.address}> <i class="glyphicon glyphicon-map-marker">
+                        </i></cite></small>
+                        <p>
+                            <i class="glyphicon glyphicon-envelope" th:text="${user.email}"></i>
+                            <br>
+                            <i class="glyphicon glyphicon-gift" th:text="${user.born}"></i></p>
+                        <!-- Split button -->
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary">
+                                Social</button>
+                            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span><span class="sr-only">Social</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a th:href="@{user.twiter}">Twitter</a></li>
+                                <li><a th:href="@{user.facebook}">Facebook</a></li>
+                                <li><a th:href="@{user.instagram}">Instagram</a></li>
+                                <li class="divider"></li>
+                                <li><a th:href="@{user.git_hub}">Github</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+</script>
+
+
+</main>
+
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+</body>
+</html>

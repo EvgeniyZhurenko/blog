@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+
+</head>
+<body  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; margin-top: 200px;'"
+       style="background-image: url('../../static/images/background-registration.jpg'); background-size: cover; margin-top: 200px;">
+
+<header th:insert="blocks/user :: user"></header>
+
+<form class="form" action="/user/update/{id}(id = ${user.id})" method = "post" >
+
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+
+    <input class="input" type="text" placeholder="Ваше имя" name="first_name" th:text="${user.first_name}">
+    <br>
+    <input class="input" type="text" placeholder="Ваше фамилия" name="last_name" th:text="${user.last_name}">
+    <br>
+    <input class="input" type="email" placeholder="Ваш e-mail" name = "email" th:text="${user.email}">
+    <br>
+    <input class="input" type="tel" placeholder="Ваш телефон" name="phone" th:text="${user.phone}">
+    <br>
+    <input class="input" type="file" placeholder="Фото профиля" name="foto" th:text="${user.foto}">
+    <br>
+    <input class="input" type="date" placeholder="Дата рождения" name="born" th:text="${user.born}">
+    <br>
+    <input class="input" type="password" placeholder="Twiter" name="twiter" th:text="${user.twiter}">
+    <br>
+    <input class="input" type="password" placeholder="Facebook" name="facebook" th:text="${user.facebook}">
+    <br>
+    <input class="input" type="password" placeholder="Instagram" name="instagram" th:text="${user.instagram}">
+    <br>
+    <input class="input" type="password" placeholder="Git_hub" name="git_hub" th:text="${user.git_hub}">
+
+    <button id="button" class="btn" type="submit" name="button">Редактировать</button>
+    <br>
+    <button class="btn" th:href="@{user/{id}(id = user.id)}" >На профиль</button>
+</form>
+
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+</body>
+</html>
+
+</body>
+</html>
