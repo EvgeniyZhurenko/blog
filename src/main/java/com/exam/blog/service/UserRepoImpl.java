@@ -11,7 +11,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  @author Zhurenko Evgeniy
@@ -39,7 +42,7 @@ public class UserRepoImpl implements UserDetailsService{
         User userFromDB = userRepo.getUserByUsername(user.getUsername());
         if(userFromDB == null){
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
-//            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepo.saveAndFlush(user);
             return true;
         } else{
@@ -79,22 +82,22 @@ public class UserRepoImpl implements UserDetailsService{
         return user;
     }
 
-    public String userRegistration(User user){
-        String string = "Заполните поля :";
+    public String[] userRegistration(User user){
+        String[] attr = new String[6];
 
-        if(user.getUsername() != null)
-            string = string.concat(" поле username ");
-        if(user.getFirst_name() != null)
-            string = string.concat(" поле firstName ");
-        if(user.getLast_name() != null)
-            string = string.concat(" поле lastName ");
-        if(user.getEmail() != null )
-            string = string.concat(" поле gmail ");
-        if(user.getPhone() != null)
-            string = string.concat(" поле phone ");
-        if(user.getPassword() != null)
-            string = string.concat(" поле password ");
+        if(user.getFirst_name().equals(""))
+            attr[0] = "Заполните поле Ваша имя!";
+        if(user.getLast_name().equals(""))
+            attr[1] = "Заполните поле Ваша фамилия!";
+        if(user.getEmail().equals(""))
+            attr[2]="Заполните поле Ваш e-mail!";
+        if(user.getPhone().equals(""))
+            attr[3]="Заполните поле Ваш телефон!";
+        if(user.getUsername().equals(""))
+            attr[4]="Заполните поле Ваше логин!";
+        if(user.getPassword().equals(""))
+            attr[5]="Заполните поле Ваш пароль!";
 
-        return string;
+        return attr;
     }
 }

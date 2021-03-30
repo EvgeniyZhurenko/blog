@@ -1,8 +1,9 @@
 package com.exam.blog.models;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -15,7 +16,10 @@ import java.util.Set;
  */
 
 
-@Data
+@Setter
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 
@@ -36,7 +40,13 @@ public class User implements UserDetails {
     private String email;
     private Boolean ban_user;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Role.class)
     Set<Role> roles = new HashSet<>();
 
     @OneToMany( targetEntity = Blog.class, mappedBy = "user",

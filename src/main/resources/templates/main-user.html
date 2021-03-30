@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+
+</head>
+<body>
+
+<header th:insert="blocks/user :: user"></header>
+
+<main class="container" th:if="${blog}" >
+    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark bg-fon"
+         th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
+         style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
+        <div class="col-md-6 px-0">
+            <h1 class="display-4 fst-italic"  th:text="${blogList[0].title}" >Заголовок блога с наибольшим рейтингом</h1>
+
+            <p class="lead-my-3" th:text="${blogList[0].full_text}">Текст блога</p>
+
+            <p class="lead-mb-0"><a  class="text-white fw-bold"
+                                     th:href="@{blog/{id}(id_user = ${blogList[0].user.id})}">Продолжить читать...</a></p>
+        </div>
+    </div>
+
+
+    <div class="row mb-2" th:each="blog : ${blogList}">
+        <div class="col-md-6">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+
+
+                    <strong class="d-inline-block mb-2 text-primary"
+                            th:text="'Рейтинг блога ' + ${blog.rating}" >Рейтинг</strong>
+
+                    <h3 class="mb-0" th:text="${blog.title}" >Заголовок блог 1</h3>
+
+                    <div class="mb-1 text-muted" th:text="${blog.date_create_blog}" >Дата поста</div>
+
+                    <p class="card-text mb-auto"  th:text="${blog.full_text}" >Текст блога.</p>
+
+                    <a  class="stretched-link" th:href="@{blog/{id}(id_user = ${blog.user.id})}"  >Продолжить читать...</a>
+                </div>
+                <div class="col-auto d-none d-lg-block" >
+
+                    <img class="bd-placeholder-img" width="200" height="250"
+                         th:attr= "src=${blog.pictures.stream().findFirst().get().getUrl_image()},
+                         alt=${blog.pictures.stream().findFirst().get().getName_picture()}" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<main class="container "  th:unless="${blog}" style="display: block; text-align: center;" th:style="'display: block; text-align: center'">
+    <p th:text="${msg}" ></p>
+</main>
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+</body>
+</html>

@@ -1,7 +1,6 @@
 package com.exam.blog.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -14,9 +13,9 @@ import java.util.Set;
  */
 
 
-@Data
+@Setter
+@Getter
 @Entity
-@NoArgsConstructor
 @Table(name = "role")
 
 
@@ -28,6 +27,13 @@ public class Role implements GrantedAuthority{
     private Long id;
 
     private String name;
+
+    public Role() {
+    }
+
+    public Role(Long id) {
+        this.id = id;
+    }
 
     public Role(Long id, String name) {
         this.id = id;

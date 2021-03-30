@@ -4,9 +4,17 @@ import com.exam.blog.models.User;
 import com.exam.blog.service.UserRepoImpl;
 import org.dom4j.rule.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Arrays;
+import java.util.Map;
 
 @Controller
 public class SecurityController {
@@ -20,42 +28,58 @@ public class SecurityController {
 
     @GetMapping("/login")
     public String loginGet(Model model){
-        model.addAttribute("title", "Страница авторизации");
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(!auth.getPrincipal().toString().equalsIgnoreCase("anonymousUser")){
+            model.addAttribute("title", "Страница авторизации");
+            return "redirect:/";
+        }
+
         return "sign_in";
     }
 
-    @PostMapping("/login")
+    @PostMapping(value={"/login","/authantication"})
     public String loginPost(@RequestParam(name = "error", required = false) Boolean error,
                             Model model){
+
         if(Boolean.TRUE.equals(error)){
             model.addAttribute("error" , true);
-        }
-        return "sign_in";
+            return "sign_in";
+        } else
+            return "main";
 
     }
 
     @GetMapping("/registration")
-    public String registraionGet(Model model){
+    public String registrationGet(Model model){
         model.addAttribute("title", "Страница регистрации");
+        Map post = model.asMap();
+        for(Object key : post.keySet()){
+            if(key != "title") {
+                model.addAttribute(key.toString(), post.get(key));
+            }
+        }
+
         return "registration";
     }
 
     @PostMapping("/registration")
     public String registrationPost(@ModelAttribute User user,
-                                   Model model){
-        if( userRepo.userRegistration(user).equalsIgnoreCase("Заполните поля :")) {
+                                   RedirectAttributes redirectAttributes){
+
+        if(Arrays.asList(userRepo.userRegistration(user)).contains(null)) {
             User userDB = userRepo.getUserByUserName(user.getUsername());
             if (userDB == null) {
                 userRepo.saveBoolean(user);
                 return "redirect:/login";
             } else {
-                model.addAttribute("bool", true);
-                model.addAttribute("msg", "Аккаунт с таким " + user.getUsername() + " уже существует!");
+                redirectAttributes.addFlashAttribute("account", true);
+                redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\n Попробуйте еще раз");
                 return "redirect:/registration";
             }
         } else {
-            model.addAttribute("bool", true);
-            model.addAttribute("msg", userRepo.userRegistration(user));
+            redirectAttributes.addFlashAttribute("bool", true);
+            redirectAttributes.addFlashAttribute("msg", userRepo.userRegistration(user));
             return "redirect:/registration";
         }
     }

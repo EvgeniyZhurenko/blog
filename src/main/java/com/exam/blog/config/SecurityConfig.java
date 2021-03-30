@@ -4,8 +4,8 @@ package com.exam.blog.config;
 import com.exam.blog.security.RefererRedirectionAuthenticationSuccessHandler;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -17,11 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
-import java.util.Arrays;
+
+import javax.sql.DataSource;
 
 /**
  @author Zhurenko Evgeniy
@@ -42,6 +42,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         private AuthenticationEntryPoint authenticationEntryPoint;
 
         private UserRepoImpl userRepo;
+
+        @Autowired
+        private DataSource dataSource;
 
         @Autowired
         public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -82,32 +85,45 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
                 http
                         .authorizeRequests()
-                        .antMatchers("/user/**").hasRole("USER")
-                        .antMatchers("/admin/**").hasRole("ADMIN")
-                        .antMatchers("/registration").anonymous()
-                        .antMatchers("/login", "/","/metrics", "/blog/list",
-                                                 "/about", "/contacts",
-                                                 "/**/*.jpg", "/**/*.css", "/**/*.js" ).permitAll()
-                        .anyRequest().authenticated()
-                        .and()
-                        .exceptionHandling()
+                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js" ).permitAll();
+                http
+                        .authorizeRequests().antMatchers("/registration").not().fullyAuthenticated();
+                http
+                        .authorizeRequests().antMatchers("/user/**","/main").hasRole("USER");
+                http
+                        .authorizeRequests().antMatchers("/admin/**","/main").hasRole("ADMIN");
+                http
+                        .authorizeRequests().anyRequest().authenticated();
+                http.authorizeRequests().and().exceptionHandling()
                         .authenticationEntryPoint(authenticationEntryPoint)
-                        .accessDeniedHandler(accessDeniedHandler)
+                        .accessDeniedHandler(accessDeniedHandler);
+                http
+                        .authorizeRequests()
                         .and()
                         .formLogin()
+                        .loginProcessingUrl("/authantication")
                         .loginPage("/sign_in")
-                        .loginProcessingUrl("/login/process")
                         .defaultSuccessUrl("/main")
-                        .failureUrl("/login")
-                        .failureForwardUrl("/login?error = true")
+                        .failureUrl("/login?error = true")
+//                        .failureForwardUrl("/login?error = true")
                         .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
                         .failureHandler(authenticationFailureHandler)
+
                         .and()
+//                        .logout()
+//                        .logoutUrl("/leave/authentication")
+//                        .deleteCookies("JSESSIONID")
+//                        .logoutSuccessUrl("/main");
                         .logout(logout -> logout
                                         .logoutUrl("/leave/authentication")
                                         .deleteCookies("JSESSIONID")
-                                        .logoutSuccessUrl("/")
+                                        .logoutSuccessUrl("/main")
+                                        .permitAll()
                         );
+                http
+                        .authorizeRequests().and() //
+                        .rememberMe().tokenRepository(this.persistentTokenRepository()) //
+                        .tokenValiditySeconds(1 * 24 * 60 * 60); // 24h
 
 
         }
@@ -115,6 +131,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
                 auth.userDetailsService(userRepo).passwordEncoder(passwordEncoder);
+        }
+
+        @Bean
+        public PersistentTokenRepository persistentTokenRepository() {
+                JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+                db.setDataSource(dataSource);
+                return db;
         }
 
 }

@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.security.Principal;
 import java.util.List;
 
 
@@ -30,7 +32,7 @@ public class MainController {
     }
 
 
-    @GetMapping(value = {"/main",""})
+    @GetMapping(value = {"user/main","","main"})
     public String mainPage( Model model) {
         model.addAttribute("title", "Главная страница");
 
@@ -40,11 +42,12 @@ public class MainController {
 
         //проверка на имя пользователя != anonymousUser
         if (!auth.getName().equalsIgnoreCase("anonymousUser")) {
+
             User userDB = userRepo.getUserByUserName(auth.getName());
             model.addAttribute("anonymous", false);
 
             // проверка роли пользователя - ROLE_ADMIN
-            if (userDB.getRoles().contains("ROLE_USER")) {
+            if (userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"))) {
 
                 namePage = "main-user";
 
@@ -53,10 +56,14 @@ public class MainController {
                     model.addAttribute("blog", true);
                     model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
                     model.addAttribute("idUser", userDB.getId());
+                    model.addAttribute("blogList", blogService.getUserSortListBlogByRating(userDB.getId()));
+                    model.addAttribute("anonymous", false);
                 } else {
                     model.addAttribute("blog", false);
+                    model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
                     model.addAttribute("idUser", userDB.getId());
                     model.addAttribute("msg", "У вас пока что нет блогов!");
+                    model.addAttribute("anonymous", false);
                 }
             }
         } else {
@@ -80,6 +87,11 @@ public class MainController {
 
         return namePage;
     }
+
+
+
+
+
 
     @GetMapping(value = "metrics")
     public String aboutPage( Model model) {
