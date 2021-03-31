@@ -7,9 +7,7 @@ import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.stream.Collectors;
 
@@ -51,14 +49,27 @@ public class UserController {
     }
 
     @GetMapping("update/{id}")
-    public String userUpdate(@PathVariable(name = "id", required = false) Long idUser,
+    public String userUpdateGet(@PathVariable(name = "id", required = false) Long idUser,
                            Model model){
 
         User user = userRepo.getById(idUser);
         model.addAttribute("title", "Страница редактирования данных пользователя");
         model.addAttribute("user", user);
-        model.addAttribute("rating", user.getBlogs().stream().map(Blog::getRating).collect(Collectors.toList()))
+        model.addAttribute("rating", userRepo.countRating(user));
 
         return "user/user_update_page";
+    }
+
+    @PostMapping("update/{id}")
+    public String userUpdatePost(@ModelAttribute User user){
+
+        User userDB = userRepo.getById(user.getId()) ;
+        if(userDB != null) {
+            userDB = user;
+            userRepo.update(userDB);
+            return "redirect: /user/user_page";
+        } else {
+            return "redirect: /user/user/update/" + user.getId();
+        }
     }
 }

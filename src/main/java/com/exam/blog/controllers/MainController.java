@@ -10,6 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
@@ -88,27 +89,48 @@ public class MainController {
 
 
 
-    @GetMapping(value = "metrics")
+    @GetMapping(value = {"metrics","user/metrics"})
     public String aboutPage( Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "ТАБЛИЦА МЕР ПРОДУКТОВ");
-        model.addAttribute("anonymous", true);
-        model.addAttribute("blog", false);
+        if(auth.getName().equalsIgnoreCase("anonymousUser"))
+            model.addAttribute("anonymous", true);
+        else {
+            User userDB = userRepo.getUserByUserName(auth.getName());
+            model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+            model.addAttribute("idUser", userDB.getId());
+            model.addAttribute("anonymous", false);
+        }
         return "menu_bar_pages/metrics";
     }
 
-    @GetMapping(value = "about")
+    @GetMapping(value = {"about","user/about"})
     public String supportPage( Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "О БЛОГЕ");
-        model.addAttribute("anonymous", true);
-        model.addAttribute("blog", false);
+        if(auth.getName().equalsIgnoreCase("anonymousUser"))
+            model.addAttribute("anonymous", true);
+        else {
+            User userDB = userRepo.getUserByUserName(auth.getName());
+            model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+            model.addAttribute("idUser", userDB.getId());
+            model.addAttribute("anonymous", false);
+        }
         return "menu_bar_pages/about";
     }
 
-    @GetMapping("contacts")
+    @GetMapping(value = {"contacts", "user/contacts"})
     public String contactsPage( Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "Котнакты");
-        model.addAttribute("anonymous", true);
-        model.addAttribute("blog", false);
+        if(auth.getName().equalsIgnoreCase("anonymousUser"))
+            model.addAttribute("anonymous", true);
+        else {
+            User userDB = userRepo.getUserByUserName(auth.getName());
+            model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+            model.addAttribute("idUser", userDB.getId());
+            model.addAttribute("anonymous", false);
+        }
         return "menu_bar_pages/contacts";
     }
 

@@ -29,7 +29,7 @@ public class Blog {
     private String full_text;
     private String announcement;
     private LocalDateTime date_create_blog;
-    private Integer rating;
+    private Float rating;
     private Boolean ban_blog;
 
     @OneToMany(targetEntity = Comment.class, mappedBy = "blog",

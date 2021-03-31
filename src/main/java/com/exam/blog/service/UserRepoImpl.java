@@ -1,9 +1,11 @@
 package com.exam.blog.service;
 
+import com.exam.blog.models.Blog;
 import com.exam.blog.models.Role;
 import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
 
+import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  @author Zhurenko Evgeniy
@@ -101,6 +104,10 @@ public class UserRepoImpl implements UserDetailsService {
         return attr;
     }
 
+    public Float countRating(User user){
 
-
+        List<Float> ratingAllBlogsList = user.getBlogs().stream().map(Blog::getRating).collect(Collectors.toList());
+        Float avarageRating =ratingAllBlogsList.stream().reduce((n1, n2)-> n1+n2).orElse((float) 0).floatValue() /ratingAllBlogsList.size();
+        return avarageRating;
+    }
 }

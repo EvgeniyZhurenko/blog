@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
@@ -46,15 +48,16 @@ public class User implements UserDetails {
     private Boolean ban_user;
 
     private String foto;
-    private Date born;
+    private LocalDateTime born;
     private String twiter;
     private String facebook;
     private String instagram;
     private String git_hub;
 
-    public User(String username, String password) {
+    public User(String username, String password, String born) {
         this.username = username;
         this.password = password;
+        this.born = LocalDateTime.parse(born, DateTimeFormatter.ofPattern( "dd/MM/uuuu" ));
     }
 
 

@@ -11,8 +11,8 @@
 <body>
 <header th:insert="blocks/user :: user"></header>
 
-<div  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; margin-top: 200px;'"
-       style="background-image: url('../../static/images/background-registration.jpg'); background-size: cover;height: 60em">
+<div  th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; height: 60em;'"
+       style="background-image: url('../../static/images/background-registration.jpg'); background-size: cover;height: 60em;">
 <main>
 
     <div class="container">
@@ -20,14 +20,14 @@
             <div class="col-xs-12 col-sm-6 col-md-6">
                 <div class="well well-sm">
                     <div class="row">
-                        <div class="col-sm-6 col-md-4">
-                            <img th:attr= "src=${user.foto},
-                            alt=${user.username}" class="img-rounded img-responsive">
+                        <div class="col-sm-6 col-md-4" th:if="${user.foto}">
+                            <img th:src="@{|/${user.foto}|}",
+                            th:alt="${user.username}" class="img-rounded img-responsive">
                         </div>
                         <div class="col-sm-6 col-md-8">
                             <h4><a th:href="@{update/{id}(id = ${user.getId()})}" th:text="${user.first_name} + ' '  + ${user.last_name}"></a></h4>
                             <small>
-                                <cite title="San Francisco, USA">
+                                <cite title="San Francisco, USA" >
                                     <i class="glyphicon glyphicon-map-marker" th:text="${user.city} + ', ' + ${user.country}"></i>
                                 </cite>
                             </small>
@@ -63,10 +63,10 @@
 
 
 </main>
-
+</div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
-</div>
+
 </body>
 </html>
