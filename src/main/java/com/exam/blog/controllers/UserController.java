@@ -71,8 +71,8 @@ public class UserController {
     }
 
     @PostMapping(value = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String userUpdatePost(@ModelAttribute User user)
-//                                 @RequestParam("foto") MultipartFile foto, HttpServletRequest req)
+    public String userUpdatePost(@ModelAttribute User user,
+                                 @RequestParam(name = "foto", required = false) MultipartFile foto, HttpServletRequest req)
                                 {
 
 //        String realPath = req.getSession().getServletContext().getRealPath("/uploadFile");

@@ -30,7 +30,8 @@
                 <span class="text-black-50" th:text="${rating}"> </span>
             </div>
         </div>
-        <form class="col-md-5 border-right" th:action="@{user}" th:method = "post" th:object="${user}">
+        <form class="col-md-5 border-right" th:action="@{user}" th:method = "post"
+              th:object="${user}" enctype="multipart/form-data">
             <div>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Редактировние профиля :</h4>
@@ -80,7 +81,8 @@
                     </div>
                     <div class="col-md-12">
                         <!--<label class="labels">Фото профиля :</label>-->
-                        Фото : <input type="file" class="form-control" placeholder="Фото профиля" th:field="*{foto}">
+                        Фото : <input type="file" class="form-control" placeholder="Фото профиля"
+                                      th:name="foto" th:multiple="true">
                     </div>
                 </div>
                 <div class="row mt-3" >
