@@ -11,96 +11,103 @@
 <body>
 
 <header th:insert="blocks/user :: user"></header>
-<div th:style="'background-image: url(/images/background-registration.jpg); background-size: cover; height: 60em;;'"
+
+<div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; height: 60em;;'"
      style="background-image: url('../../static/images/background-registration.jpg');
        background-size: cover; height: 60em">
 
-<div class="container rounded bg-white mt-5 mb-5">
-    <div class="row">
+    <!--<div class="container rounded bg-white mt-5 mb-5">-->
+    <div class="row" th:style="'margin-left:10em;'">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <img class="rounded-circle mt-5" width="150px"
-                     th:attr= "src=${user.foto},
-                            alt=${user.username}"/>
+                <a th:href="@{/{id}(id = ${user.getId()})}">
+                    <img class="rounded-circle mt-5" width="150px"
+                         th:src="@{|/${user.foto}|}"
+                         th:alt="${user.username}"/>
+                </a>
                 <span class="font-weight-bold" th:text="${user.first_name} + ' ' + ${user.last_name}"></span>
                 <span class="text-black-50" th:text="${user.email}"></span>
                 <span class="text-black-50" th:text="${rating}"> </span>
             </div>
         </div>
-        <form class="col-md-5 border-right" th:action="@{{id}(id = ${user.getId()})}" th:method = "post" th:object="${user}">
-            <!--<div class="p-3 py-5">-->
-                <!--<div class="d-flex justify-content-between align-items-center mb-3">-->
+        <form class="col-md-5 border-right" th:action="@{user}" th:method = "post" th:object="${user}">
+            <div>
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="text-right">Редактировние профиля :</h4>
-                <!--</div>-->
-                <!--<div class="row mt-2" >-->
-                    <!--<div class="col-md-6">-->
-                        <label class="labels">Имя :</label>
-                        <input type="text" class="form-control" placeholder="Ваше имя" th:field="*{first_name}">
-                    <!--</div>-->
-                    <!--<div class="col-md-6">-->
-                        <label class="labels">Фамилия :</label>
-                        <input type="text" class="form-control" th:field="*{last_name}" placeholder="Ваша фамилия" >
-                    <!--</div>-->
-                    <!--<div class="col-md-6">-->
-                        <label class="labels">Логин :</label>
-                        <input type="text" class="form-control" placeholder="Ваш логин" th:field="*{username}">
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="row mt-3" >-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Телефон :</label>
-                        <input type="tel" class="form-control" placeholder="Ваш телефон" th:field="*{phone}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Email :</label>
-                        <input type="email" class="form-control" placeholder="Электронная почта" th:field="*{email}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Дата рождения :</label>
-                        <input type="date" class="form-control" placeholder="Дата рождения" th:field="*{born}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Twiter :</label>
-                        <input type="text" class="form-control" placeholder="Twiter" th:field="*{twiter}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Facebook :</label>
-                        <input type="text" class="form-control" placeholder="Facebook" th:field="*{facebook}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Instagram</label>
-                        <input type="text" class="form-control" placeholder="Instagram" th:field="*{instagram}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">GitHub</label>
-                        <input type="text" class="form-control" placeholder="GitHub" th:field="*{git_hub}">
-                    <!--</div>-->
-                    <!--<div class="col-md-12">-->
-                        <label class="labels">Фото профиля :</label>
-                        <input type="file" class="form-control" placeholder="Фото профиля" th:field="*{foto}">
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="row mt-3" >-->
-                    <!--<div class="col-md-6">-->
-                        <label class="labels">Страна проживания :</label>
-                        <input type="text" class="form-control" placeholder="Страна проживания" th:field="*{country}">
-                    <!--</div>-->
-                    <!--<div class="col-md-6">-->
-                        <label class="labels">Город проживания :</label>
-                        <input type="text" class="form-control" th:field="*{city}" placeholder="Город проживания">
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<div class="mt-5 text-center">-->
+                </div>
+                <div class="row mt-2" >
+                    <div class="col-md-6">
+
+                        <input type="hidden" class="form-control" placeholder="Ваше имя" th:field="*{id}">
+
+                        <!--<label class="labels">Имя :</label>-->
+                        Имя :<input type="text" class="form-control" placeholder="Ваше имя" th:field="*{first_name}">
+                    </div>
+                    <div class="col-md-6">
+                        <!--<label class="labels">Фамилия :</label>-->
+                        Фамилия : <input type="text" class="form-control" th:field="*{last_name}" placeholder="Ваша фамилия" >
+                    </div>
+                    <div class="col-md-6">
+                        <!--<label class="labels">Логин :</label>-->
+                        Логин : <input type="text" class="form-control" placeholder="Ваш логин" th:field="*{username}">
+                    </div>
+                </div>
+                <div class="row mt-3" >
+                    <div class="col-md-12">
+                        <!--<label class="labels">Телефон :</label>-->
+                        Телефон : <input type="tel" class="form-control" placeholder="Ваш телефон" th:field="*{phone}">
+                    </div>
+                    <div class="col-md-12">
+                        <!--<label class="labels">Email :</label>-->
+                        E-mail : <input type="email" class="form-control" placeholder="Электронная почта" th:field="*{email}">
+                    </div>
+                    <div class="col-md-12">
+                        <!--<label class="labels">Дата рождения :</label>-->
+                        <!--<input id="data" type="date" class="form-control" placeholder="Дата рождения" th:text = "${#temporals.format(#myDialect.parseISODate(someStringISODate), 'dd/MMM/yyyy')}">-->
+                        Дата рождения : <input type="date" class="form-control" placeholder="Дата рождения" th:field="*{born}">
+                    </div>
+                    <div class="col-md-12">
+                        <!--<label class="labels">Twiter :</label>-->
+                        Twitter : <input type="text" class="form-control" placeholder="Twiter" th:field="*{twiter}">
+                    </div>
+                    <div class="col-md-12">
+                        <!--<label class="labels">Facebook :</label>-->
+                        Facebook : <input type="text" class="form-control" placeholder="Facebook" th:field="*{facebook}">
+                    </div>
+                    <div class="col-md-12">
+                        <!--<label class="labels">Instagram</label>-->
+                        Instagram : <input type="text" class="form-control" placeholder="Instagram" th:field="*{instagram}">
+                    </div>
+                    <div class="col-md-12">
+                        <!--<label class="labels">Фото профиля :</label>-->
+                        Фото : <input type="file" class="form-control" placeholder="Фото профиля" th:field="*{foto}">
+                    </div>
+                </div>
+                <div class="row mt-3" >
+                    <div class="col-md-6">
+                        <!--<label class="labels">Страна проживания :</label>-->
+                        Страна проживания : <input type="text" class="form-control" placeholder="Страна проживания" th:field="*{country}">
+                    </div>
+                    <div class="col-md-6">
+                        <!--<label class="labels">Город проживания :</label>-->
+                        Город проживания : <input type="text" class="form-control" th:field="*{city}" placeholder="Город проживания">
+                    </div>
+                </div>
+                <div class="text-center">
                     <button class="btn btn-primary profile-button" type="submit">Сохрaнить</button>
-                <!--</div>-->
-            <!--</div>-->
+                </div>
+            </div>
         </form>
     </div>
 </div>
-</div>
+<!--</div>-->
 
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
 </body>
+
+<script type="text/javascript" src="../../static/js/user_update_page.js" th:src="@{/js/user_update_page.js}"></script>
+
 </html>

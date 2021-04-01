@@ -85,7 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         protected void configure(HttpSecurity http) throws Exception {
                 http
                         .authorizeRequests()
-                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js" ).permitAll();
+                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js","/static/**" ).permitAll();
                 http
                         .authorizeRequests().antMatchers("/registration").not().fullyAuthenticated();
                 http
@@ -101,24 +101,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authorizeRequests()
                         .and()
                         .formLogin()
-                        .loginProcessingUrl("/authantication")
+                        .loginProcessingUrl("/authentication")
                         .loginPage("/sign_in")
                         .defaultSuccessUrl("/main")
-                        .failureUrl("/login?error = true")
+////                        .failureUrl("/login?error = true")
 //                        .failureForwardUrl("/login?error = true")
                         .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
                         .failureHandler(authenticationFailureHandler)
 
                         .and()
-//                        .logout()
-//                        .logoutUrl("/leave/authentication")
-//                        .deleteCookies("JSESSIONID")
-//                        .logoutSuccessUrl("/main");
                         .logout(logout -> logout
                                         .logoutUrl("/leave/authentication")
                                         .deleteCookies("JSESSIONID")
                                         .logoutSuccessUrl("/main")
-                                        .permitAll()
                         );
                 http
                         .authorizeRequests().and() //

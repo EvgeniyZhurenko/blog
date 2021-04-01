@@ -1,6 +1,9 @@
 package com.exam.blog.models;
 
 import lombok.*;
+import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +18,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static javax.persistence.TemporalType.DATE;
+
 
 /**
  @author Zhurenko Evgeniy
@@ -27,8 +32,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Entity
 @Table(name = "user")
-
-//implements UserDetails
 
 public class User implements UserDetails {
 
@@ -48,28 +51,35 @@ public class User implements UserDetails {
     private Boolean ban_user;
 
     private String foto;
-    private LocalDateTime born;
+
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private Date born;
+
     private String twiter;
     private String facebook;
     private String instagram;
     private String git_hub;
 
-    public User(String username, String password, String born) {
+    public User(String username, String password) {
         this.username = username;
         this.password = password;
-        this.born = LocalDateTime.parse(born, DateTimeFormatter.ofPattern( "dd/MM/uuuu" ));
     }
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, targetEntity = Role.class)
+    @ManyToMany
+    @JoinTable (name="user_roles",
+            joinColumns=@JoinColumn (name="users_id_user"),
+            inverseJoinColumns=@JoinColumn(name="roles_id_role"))
     Set<Role> roles = new HashSet<>();
 
     @OneToMany( targetEntity = Blog.class, mappedBy = "user",
-                cascade = CascadeType.ALL, orphanRemoval = true)
+                cascade = CascadeType.ALL)
     Set<Blog> blogs;
 
     @OneToMany(targetEntity = Comment.class, mappedBy = "user", fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL, orphanRemoval = true )
+               cascade = CascadeType.ALL )
     Set<Comment> comments;
 
     @Override

@@ -18,8 +18,6 @@ import java.util.Set;
 @Entity
 @Table(name = "role")
 
-
-
 public class Role implements GrantedAuthority{
 
     @Id
@@ -40,7 +38,10 @@ public class Role implements GrantedAuthority{
         this.name = name;
     }
 
-    @ManyToMany(mappedBy = "roles")
+    @ManyToMany
+    @JoinTable (name="user_roles",
+            joinColumns=@JoinColumn (name="roles_id_role"),
+            inverseJoinColumns=@JoinColumn(name="users_id_user"))
     Set<User> users = new HashSet<>();
 
     @Override

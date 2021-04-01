@@ -34,12 +34,12 @@ public class Blog {
 
     @OneToMany(targetEntity = Comment.class, mappedBy = "blog",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL, orphanRemoval = true)
+               cascade = CascadeType.ALL)
     Set<Comment> comments;
 
     @OneToMany(targetEntity = Picture.class, mappedBy = "blog",
                fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL, orphanRemoval = true)
+               cascade = CascadeType.ALL)
     Set<Picture> pictures;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)

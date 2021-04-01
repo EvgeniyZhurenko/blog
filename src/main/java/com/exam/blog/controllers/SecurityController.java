@@ -35,15 +35,14 @@ public class SecurityController {
         return "sign_in";
     }
 
-    @PostMapping(value={"/login","/authantication"})
+    @PostMapping(value = {"/login"})
     public String loginPost(@RequestParam(name = "error", required = false) Boolean error,
                             Model model){
 
         if(Boolean.TRUE.equals(error)){
             model.addAttribute("error" , true);
-            return "sign_in";
-        } else
-            return "main";
+        }
+        return "sign_in";
 
     }
 
@@ -66,7 +65,7 @@ public class SecurityController {
 
         if(Arrays.asList(userRepo.userRegistration(user)).contains(null)) {
             User userDB = userRepo.getUserByUserName(user.getUsername());
-            if (userDB == null) {
+            if (userDB == null && user.getUsername() != null) {
                 userRepo.saveBoolean(user);
                 return "redirect:/login";
             } else {

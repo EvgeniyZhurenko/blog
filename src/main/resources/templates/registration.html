@@ -54,7 +54,8 @@
     <button id="button" class="btn_disable" type="submit" name="button"
             disabled="disabled">Регистрация</button>
     <br>
-    <button class="btn" th:onclick="'document.location='/''">На главную</button>
+    <!--th:onclick="'document.location='/''"-->
+    <a class="btn" th:href="@{~/}" >На главную</a>
 </form>
 
 </body>

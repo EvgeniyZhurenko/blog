@@ -5,7 +5,6 @@ import com.exam.blog.models.Role;
 import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
 
-import net.bytebuddy.implementation.bytecode.constant.IntegerConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -13,8 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.persistence.EntityManager;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,9 +52,9 @@ public class UserRepoImpl implements UserDetailsService {
     }
 
     public boolean update(User user) {
-        User userFromDB = userRepo.getUserById(user.getId());
+        User userFromDB = userRepo.getOne(user.getId());
         if (userFromDB != null) {
-            userRepo.saveAndFlush(user);
+          userRepo.saveAndFlush(user);
             return true;
         }
         return false;
@@ -109,5 +107,45 @@ public class UserRepoImpl implements UserDetailsService {
         List<Float> ratingAllBlogsList = user.getBlogs().stream().map(Blog::getRating).collect(Collectors.toList());
         Float avarageRating =ratingAllBlogsList.stream().reduce((n1, n2)-> n1+n2).orElse((float) 0).floatValue() /ratingAllBlogsList.size();
         return avarageRating;
+    }
+
+
+    public void writeUser(User userForm, User userDB){
+//        if(userDB.getPassword() != userForm.getPassword() && (userForm.getPassword() != ""
+//        || userForm.getPassword() != null))
+//            userDB.setPassword(userForm.getPassword());
+//        if(userDB.getUsername() != userForm.getUsername() && (userForm.getUsername() != ""
+//        || userForm.getUsername() != null))
+//            userDB.setUsername(userForm.getUsername());
+//        if(userDB.getFirst_name() != userForm.getFirst_name())
+//            userDB.setFirst_name(userForm.getFirst_name());
+//        if(userDB.getLast_name() != userForm.getLast_name())
+//            userDB.setLast_name(userForm.getLast_name());
+//        if(userDB.getEmail() != userForm.getEmail())
+//            userDB.setEmail(userForm.getEmail());
+//        if(userDB.getBorn() != userForm.getBorn())
+//            userDB.setBorn(userForm.getBorn());
+//        if(userDB.getCity() != userForm.getCity())
+//            userDB.setCity(userForm.getCity());
+//        if(userDB.getCountry() != userForm.getCountry())
+//            userDB.setCountry(userForm.getCountry());
+//        if(userDB.getFoto() != userForm.getFoto())
+//            userDB.setFoto(userForm.getFoto());
+//        if(userDB.getGit_hub() != userForm.getGit_hub())
+//            userDB.setGit_hub(userForm.getGit_hub());
+//        if(userDB.getFacebook() != userForm.getFacebook())
+//            userDB.setFacebook(userForm.getFacebook());
+//        if(userDB.getInstagram() != userForm.getInstagram())
+//            userDB.setInstagram(userForm.getInstagram());
+//        if(userDB.getTwiter() != userForm.getTwiter())
+//            userDB.setTwiter(userForm.getTwiter());
+//        if(userDB.getPhone() != userForm.getPhone())
+//            userDB.setPhone(userForm.getPhone());
+//
+//        if(!userDB.getRoles().equals(userForm.getRoles()))
+//            userDB.setRoles();
+//        if(userDB.getInstagram() != userForm.getInstagram())
+//            userDB.setInstagram(userForm.getInstagram());
+
     }
 }
