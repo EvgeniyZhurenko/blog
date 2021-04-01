@@ -13,15 +13,14 @@
 <header th:insert="blocks/user :: user"></header>
 
 <div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
-     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; height: 60em;;'"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; height: 47.5em;;'"
      style="background-image: url('../../static/images/background-registration.jpg');
-       background-size: cover; height: 60em">
-
+       background-size: cover; height: 47.5em">
     <!--<div class="container rounded bg-white mt-5 mb-5">-->
     <div class="row" th:style="'margin-left:10em;'">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
-                <a th:href="@{/{id}(id = ${user.getId()})}">
+                <a th:href="@{~/user/{id}(id = ${user.getId()})}">
                     <img class="rounded-circle mt-5" width="150px"
                          th:src="@{|/${user.foto}|}"
                          th:alt="${user.username}"/>
