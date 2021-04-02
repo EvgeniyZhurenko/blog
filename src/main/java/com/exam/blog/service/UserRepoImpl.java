@@ -52,9 +52,9 @@ public class UserRepoImpl implements UserDetailsService {
     }
 
     public boolean update(User user) {
-        User userFromDB = userRepo.getOne(user.getId());
+        User userFromDB = userRepo.getUserById(user.getId());
         if (userFromDB != null) {
-          userRepo.saveAndFlush(user);
+          userRepo.save(user);
             return true;
         }
         return false;

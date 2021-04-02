@@ -79,26 +79,28 @@ public class UserController {
 
     @PostMapping("update")
     public String userUpdatePost(@ModelAttribute User user, Model model,
-                                 @RequestParam(name = "image", required = false) MultipartFile foto) throws IOException {
+                                 @RequestParam(name = "image", required = false) MultipartFile foto)
+            throws IOException, InterruptedException {
 
         if(foto != null || foto.getOriginalFilename() != user.getFoto()) {
             File folder = new File(uploadPath);
             if (!folder.isDirectory()) { // Если текущий каталог не существует
                 folder.mkdirs(); // Создать новый каталог
             }
-            foto.transferTo(new File(folder, Objects.requireNonNull(foto.getOriginalFilename())));
-            String filePath = "images/" + foto.getOriginalFilename();
 
-            model.asMap();
+            foto.transferTo(new File(folder, Objects.requireNonNull(foto.getOriginalFilename())));
+
+            String filePath = "images/profiles_images/" + foto.getOriginalFilename();
 
             user.setFoto(filePath);
         }
             User userDB = userRepo.getById(user.getId()) ;
             if(userDB != null) {
                 userRepo.update(user);
-                return "redirect: "+ user.getId();
+
+                return "redirect: " + user.getId();
             } else {
-                return "redirect: 6" ;
+                return "redirect: update";
             }
         }
 }
