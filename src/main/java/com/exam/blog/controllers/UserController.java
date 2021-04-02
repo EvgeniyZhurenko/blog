@@ -13,8 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -70,34 +75,26 @@ public class UserController {
         return "user/user_update_page";
     }
 
-    @PostMapping(value = "update", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public String userUpdatePost(@ModelAttribute User user,
-                                 @RequestParam(name = "foto", required = false) MultipartFile foto, HttpServletRequest req)
-                                {
+    @PostMapping("update")
+    public String userUpdatePost(@ModelAttribute User user, Model model,
+                                 @RequestParam(name = "image", required = false) MultipartFile foto) throws IOException {
 
-//        String realPath = req.getSession().getServletContext().getRealPath("/uploadFile");
-//        File folder = new File(realPath);
-//        if (!folder.isDirectory()){ // Если текущий каталог не существует
-//            folder.mkdirs(); // Создать новый каталог
-//        }
-//        String filePath = "";
-//        String oldName = foto.getOriginalFilename(); // Старое имя
-//        String newName = UUID.randomUUID().toString() + oldName.substring(oldName.lastIndexOf("."),oldName.length()); //Новое имя
-//        try {
-//            foto.transferTo(new File(folder,newName)); // сохранить документ
-//            filePath = req.getScheme() + "://" + req.getServerName() + ":" + req.getServerPort() + "/uploadFile/" + newName;
-////            return filePath; // Возвращаемся к пути доступа сгенерированного загруженного файла
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-//
-//        user.setFoto(filePath);
-        User userDB = userRepo.getById(user.getId()) ;
-        if(userDB != null) {
-            userRepo.update(user);
-            return "redirect: "+ user.getId();
-        } else {
-            return "redirect: update/" + user.getId();
+            File folder = new File("D:/ЛЕНОВО/Homework_java/Homework/Web/blog/src/main/resources/static/images");
+            if (!folder.isDirectory()){ // Если текущий каталог не существует
+                folder.mkdirs(); // Создать новый каталог
+            }
+             foto.transferTo(new File(folder,foto.getOriginalFilename()));
+            String filePath = "images/" + foto.getOriginalFilename();
+
+            model.asMap();
+
+            user.setFoto(filePath);
+            User userDB = userRepo.getById(user.getId()) ;
+            if(userDB != null) {
+                userRepo.update(user);
+                return "redirect: "+ user.getId();
+            } else {
+                return "redirect: 6" ;
+            }
         }
-    }
 }
