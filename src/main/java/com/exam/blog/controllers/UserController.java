@@ -4,6 +4,7 @@ import com.exam.blog.models.Blog;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.UserRepoImpl;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,8 +32,8 @@ public class UserController {
     private final UserRepoImpl userRepo;
     private final BlogService blogService;
 
-//    @Value("${upload.path}")
-//    private String uploadPath;
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
     public UserController(UserRepoImpl userRepo, BlogService blogService) {
@@ -79,16 +81,18 @@ public class UserController {
     public String userUpdatePost(@ModelAttribute User user, Model model,
                                  @RequestParam(name = "image", required = false) MultipartFile foto) throws IOException {
 
-            File folder = new File("D:/ЛЕНОВО/Homework_java/Homework/Web/blog/src/main/resources/static/images");
-            if (!folder.isDirectory()){ // Если текущий каталог не существует
+        if(foto != null || foto.getOriginalFilename() != user.getFoto()) {
+            File folder = new File(uploadPath);
+            if (!folder.isDirectory()) { // Если текущий каталог не существует
                 folder.mkdirs(); // Создать новый каталог
             }
-             foto.transferTo(new File(folder,foto.getOriginalFilename()));
+            foto.transferTo(new File(folder, Objects.requireNonNull(foto.getOriginalFilename())));
             String filePath = "images/" + foto.getOriginalFilename();
 
             model.asMap();
 
             user.setFoto(filePath);
+        }
             User userDB = userRepo.getById(user.getId()) ;
             if(userDB != null) {
                 userRepo.update(user);
