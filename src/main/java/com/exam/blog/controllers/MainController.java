@@ -43,7 +43,6 @@ public class MainController {
         if (!auth.getName().equalsIgnoreCase("anonymousUser")) {
 
             User userDB = userRepo.getUserByUserName(auth.getName());
-            model.addAttribute("anonymous", false);
 
             // проверка роли пользователя - ROLE_ADMIN
             if (userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"))) {

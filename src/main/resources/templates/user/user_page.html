@@ -26,7 +26,8 @@
 
 <div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
      th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
-     style="background-image: url('../../static/images/background-about-metrics-contact.jpg'); background-size: cover; display: grid; justify-items: center;" >
+     style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
+     background-size: cover; display: grid; justify-items: center;" >
 
     <h1 th:text="${title}"></h1>
 
@@ -46,10 +47,7 @@
             </div>
         </div>
     </div>
-    <p>Аккаунт : <span><a th:href="@{update/{id}(id = ${user.getId()})}"
-                          th:text="${user.first_name} + ' '  + ${user.last_name}">Имя Фамилия</a></span>
-        <br>
-        <i><small>(для редактирования аккаунта перейти по ссылке)</small></i>
+    <p><span><a th:href="@{update/{id}(id = ${user.getId()})}">Редактировать аккаунт</a></span>
     </p>
     <p>Дата рождения : <span th:text="${user.born}">Дата рождения</span></p>
     <p>Место проживания : <span th:text="${user.city} + ', ' + ${user.country}">Место проживания</span></p>
@@ -87,8 +85,10 @@
         </li>
     </ul>
     </p>
+    <div class="text-center">
+        <a class="btn btn-primary profile-button" th:href="@{delete/{id}(id = ${user.getId()})}">Удалить аккаунт</a>
+    </div>
 </div>
-
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 

@@ -37,13 +37,13 @@ public class CommentService {
         this.commentRepo = commentRepo;
     }
 
-    public void save(Comment comment, Long idUser, Long idBlog) {
+    public void save(Comment comment, Long idUser, Long idBlog, boolean bool) {
 
         commentRepo.save(comment);
 
         User user = userRepo.getById(idUser);
         user.getComments().add(comment);
-        userRepo.update(user);
+        userRepo.update(user, bool);
 
         Blog blog = blogService.getById(idBlog);
         blog.getComments().add(comment);

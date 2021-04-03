@@ -12,5 +12,7 @@ public interface BlogRepo extends JpaRepository<Blog, Long> {
 
     Blog getBlogById(Long id);
 
+    Blog getBlogByTitle(String title);
+
 }
 

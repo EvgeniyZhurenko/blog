@@ -31,6 +31,7 @@ import static javax.persistence.TemporalType.DATE;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@DynamicUpdate
 @Table(name = "user")
 
 public class User implements UserDetails {

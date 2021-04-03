@@ -5,7 +5,15 @@ import com.exam.blog.models.Blog;
 import com.exam.blog.models.Picture;
 import com.exam.blog.repository.PictureRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
+
 
 
 /**
@@ -16,24 +24,17 @@ import org.springframework.stereotype.Service;
 public class PictureService  {
 
     private PictureRepo pictureRepo;
-    private BlogService blogService;
 
-    @Autowired
-    public void setBlogService(BlogService blogService) {
-        this.blogService = blogService;
-    }
+    @Value("${upload.picture.path}")
+    private String uploadPicturePath;
 
     @Autowired
     public void setPictureRepo(PictureRepo pictureRepo) {
         this.pictureRepo = pictureRepo;
     }
 
-    public void save(Picture picture, Long idBlog) {
+    public void save(Picture picture) {
         pictureRepo.save(picture);
-
-        Blog blog = blogService.getById(idBlog);
-        blog.getPictures().add(picture);
-        blogService.update(blog);
     }
 
     public boolean update(Picture picture) {
@@ -51,5 +52,61 @@ public class PictureService  {
 
     public Picture getById(Long id) {
         return pictureRepo.getPictureById(id);
+    }
+
+    public Picture getByName(String namePicture){
+        return pictureRepo.getPictureByName(namePicture);
+    }
+
+    public boolean uploadPictureImage(Long idUser, Blog blog, MultipartFile image, Picture picture) throws IOException {
+
+        if(!image.isEmpty()) {
+
+            File folder = new File(uploadPicturePath + "/" + idUser);
+
+            if (!folder.isDirectory()) { // Если текущий каталог не существует
+                folder.mkdirs(); // Создать новый каталог
+            }
+
+            File[] files = folder.listFiles();
+
+            if(files.length != 0) {
+
+                File[] fotos = Arrays.stream(files).filter(pic -> pic.getName().equals(image.getOriginalFilename())).toArray(File[]::new);
+
+                if (fotos.length == 0) {
+
+                    for (File file : files) {
+                        file.delete();
+                    }
+
+                    loadPicture(idUser, blog, image, folder, picture);
+
+                } else {
+
+                    loadPicture(idUser, blog, image, folder, picture);
+
+                }
+            } else {
+
+                loadPicture(idUser, blog, image, folder, picture);
+
+            }
+            return true;
+
+        } else
+            return false;
+    }
+
+    private void loadPicture(Long idUser, Blog blog, MultipartFile image, File folder, Picture picture) throws IOException {
+
+
+        String filePath =  "images/blogs_images/";
+
+        image.transferTo(new File(folder, Objects.requireNonNull(image.getOriginalFilename())));
+
+        String filePathFoto = filePath + idUser + "/" + blog.getId() + "/" + image.getOriginalFilename();
+
+        picture.setUrl_image(filePathFoto);
     }
 }

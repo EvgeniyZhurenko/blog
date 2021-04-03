@@ -1,8 +1,8 @@
-<div th:fragment="user" >
+<div th:fragment="user" xmlns:th="http://www.thymeleaf.org">
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
             <div class="header-div">
                 <p class="h5 my-0 me-md-auto fw-normal" >
-                    <a th:href="@{/user/{id}(id = ${idUser})}" th:text="${name}"></a>
+                    <a th:href="@{~/user/{id}(id = ${idUser})}" th:text="${name}"></a>
                 </p>
 
                 <form class="d-flex" action="#" method="post">
@@ -14,24 +14,16 @@
 
                 </form>
             </div>
-            <nav class="my-2 my-md-0 me-md-3">
+            <nav class="my-2 my-md-0 me-md-3" >
 
-                    <div th:if="${blog}" >
+                <a class="p-2 text-dark"
+                   th:href="@{/user/all-blogs/{id}(id = ${idUser})}"
+                   th:text="|Список блогов|">Список ваших блогов </a>
 
-                        <a class="p-2 text-dark"
-                           th:href="@{/user/blogs/{id}(id = ${idUser})}"
-                           th:text="|Список блогов ${name}|">Список ваших блогов </a>
-
-                        <br>
-
-                        <a class="p-2 text-dark"
-                           th:href="@{/user/creat/blog/{id}(id = ${idUser})}"
-                           >Создать блог</a>
-
-                    </div>
-
+                <a class="p-2 text-dark"
+                   th:href="@{/user/creat-blog/{id}(id = ${idUser})}"
+                   >Создать блог</a>
                 <a class="p-2 text-dark" href="/user/main">На главную</a>
-                <!--<a class="p-2 text-dark" href="/user/blog/list">Все блоги</a>-->
                 <a class="p-2 text-dark" href="/user/metrics">Таблица мер продуктов</a>
                 <a class="p-2 text-dark" href="/user/about">О блогах</a>
                 <a class="p-2 text-dark" href="/user/contacts">Контакты</a>

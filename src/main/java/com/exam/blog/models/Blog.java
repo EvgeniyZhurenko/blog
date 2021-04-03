@@ -2,10 +2,8 @@ package com.exam.blog.models;
 
 
 import lombok.Data;
-import net.bytebuddy.implementation.bytecode.Throw;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.Set;
 
 
@@ -28,7 +26,7 @@ public class Blog {
     private String title;
     private String full_text;
     private String announcement;
-    private LocalDateTime date_create_blog;
+    private LocalDate date_create_blog;
     private Float rating;
     private Boolean ban_blog;
 

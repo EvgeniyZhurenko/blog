@@ -50,17 +50,17 @@
                     </div>
                     <div class="col-md-6">
                         <!--<label class="labels">Логин :</label>-->
-                        Логин : <input type="text" class="form-control" placeholder="Ваш логин" th:field="*{username}">
+                        Логин : <input type="text" class="form-control" placeholder="Ваш логин" th:field="*{username}" />
                     </div>
                 </div>
                 <div class="row mt-3" >
                     <div class="col-md-12">
                         <!--<label class="labels">Телефон :</label>-->
-                        Телефон : <input type="tel" class="form-control" placeholder="Ваш телефон" th:field="*{phone}">
+                        Телефон : <input type="tel" class="form-control" placeholder="Ваш телефон" th:field="*{phone}" />
                     </div>
                     <div class="col-md-12">
                         <!--<label class="labels">Email :</label>-->
-                        E-mail : <input type="email" class="form-control" placeholder="Электронная почта" th:field="*{email}">
+                        E-mail : <input type="email" class="form-control" placeholder="Электронная почта" th:field="*{email}" />
                     </div>
                     <div class="col-md-12">
                         <!--<label class="labels">Дата рождения :</label>-->
@@ -82,7 +82,7 @@
                     <div class="col-md-12">
                         <!--<label class="labels">Фото профиля :</label>-->
                         Фото : <input type="file" class="form-control" placeholder="Фото профиля"
-                                      th:multiple="true" th:attr="accept='image/*', name='image'">
+                                      th:multiple="true" th:attr="accept='image/*', name='image'" th:value="${user.foto}">
                     </div>
                 </div>
                 <div class="row mt-3" >
@@ -108,7 +108,5 @@
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
 </body>
-
-<script type="text/javascript" src="../../static/js/user_update_page.js" th:src="@{/js/user_update_page.js}"></script>
 
 </html>

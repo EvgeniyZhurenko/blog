@@ -6,15 +6,21 @@ import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -28,6 +34,9 @@ public class UserRepoImpl implements UserDetailsService {
     private UserRepo userRepo;
 
     private PasswordEncoder passwordEncoder;
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
     public void setUserRepo(UserRepo userRepo) {
@@ -44,17 +53,28 @@ public class UserRepoImpl implements UserDetailsService {
         if (userFromDB == null) {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            userRepo.saveAndFlush(user);
+            userRepo.save(user);
             return true;
         } else {
             return false;
         }
     }
 
-    public boolean update(User user) {
-        User userFromDB = userRepo.getUserById(user.getId());
-        if (userFromDB != null) {
-          userRepo.save(user);
+    public boolean update(User user, boolean bool) {
+        if (userRepo.existsById(user.getId())) {
+            if(!bool) {
+                User userExists = userRepo.getOne(user.getId());
+                user.setRoles(userExists.getRoles());
+                user.setPassword(userExists.getPassword());
+                user.setFoto(userExists.getFoto());
+                userRepo.save(user);
+
+            } else {
+                User userExists = userRepo.getOne(user.getId());
+                user.setRoles(userExists.getRoles());
+                user.setPassword(userExists.getPassword());
+                userRepo.save(user);
+            }
             return true;
         }
         return false;
@@ -63,6 +83,8 @@ public class UserRepoImpl implements UserDetailsService {
     public void delete(Long id) {
         User userDelete = userRepo.getUserById(id);
         userRepo.delete(userDelete);
+        File userDirectory = new File(uploadPath + "/" + id);
+        userDirectory.delete();
     }
 
     public User getById(Long id) {
@@ -109,43 +131,57 @@ public class UserRepoImpl implements UserDetailsService {
         return avarageRating;
     }
 
+    public boolean uploadFotoImage(User user, MultipartFile foto) throws IOException {
 
-    public void writeUser(User userForm, User userDB){
-//        if(userDB.getPassword() != userForm.getPassword() && (userForm.getPassword() != ""
-//        || userForm.getPassword() != null))
-//            userDB.setPassword(userForm.getPassword());
-//        if(userDB.getUsername() != userForm.getUsername() && (userForm.getUsername() != ""
-//        || userForm.getUsername() != null))
-//            userDB.setUsername(userForm.getUsername());
-//        if(userDB.getFirst_name() != userForm.getFirst_name())
-//            userDB.setFirst_name(userForm.getFirst_name());
-//        if(userDB.getLast_name() != userForm.getLast_name())
-//            userDB.setLast_name(userForm.getLast_name());
-//        if(userDB.getEmail() != userForm.getEmail())
-//            userDB.setEmail(userForm.getEmail());
-//        if(userDB.getBorn() != userForm.getBorn())
-//            userDB.setBorn(userForm.getBorn());
-//        if(userDB.getCity() != userForm.getCity())
-//            userDB.setCity(userForm.getCity());
-//        if(userDB.getCountry() != userForm.getCountry())
-//            userDB.setCountry(userForm.getCountry());
-//        if(userDB.getFoto() != userForm.getFoto())
-//            userDB.setFoto(userForm.getFoto());
-//        if(userDB.getGit_hub() != userForm.getGit_hub())
-//            userDB.setGit_hub(userForm.getGit_hub());
-//        if(userDB.getFacebook() != userForm.getFacebook())
-//            userDB.setFacebook(userForm.getFacebook());
-//        if(userDB.getInstagram() != userForm.getInstagram())
-//            userDB.setInstagram(userForm.getInstagram());
-//        if(userDB.getTwiter() != userForm.getTwiter())
-//            userDB.setTwiter(userForm.getTwiter());
-//        if(userDB.getPhone() != userForm.getPhone())
-//            userDB.setPhone(userForm.getPhone());
-//
-//        if(!userDB.getRoles().equals(userForm.getRoles()))
-//            userDB.setRoles();
-//        if(userDB.getInstagram() != userForm.getInstagram())
-//            userDB.setInstagram(userForm.getInstagram());
+        if(!foto.isEmpty()) {
 
+            File folder = new File(uploadPath + "/" + user.getId());
+
+            if (!folder.isDirectory()) { // Если текущий каталог не существует
+                folder.mkdirs(); // Создать новый каталог
+            }
+
+            File[] files = folder.listFiles();
+
+            if(files.length != 0) {
+
+                File[] fotos = Arrays.stream(files).filter(pic -> pic.getName().equals(foto.getOriginalFilename())).toArray(File[]::new);
+
+                if (fotos.length == 0) {
+
+                    for (File file : files) {
+                        file.delete();
+                    }
+
+                    loadFoto(user, foto, folder);
+
+                } else {
+
+                    loadFoto(user, foto, folder);
+
+                }
+            } else {
+
+                loadFoto(user, foto, folder);
+
+            }
+            return true;
+
+        } else
+            return false;
+    }
+
+    private void loadFoto(User user, MultipartFile foto, File folder) throws IOException {
+
+
+        String filePath =  "images/profiles_images/";
+
+        foto.transferTo(new File(folder, Objects.requireNonNull(foto.getOriginalFilename())));
+
+        String filePathFoto = filePath + user.getId() + "/" + foto.getOriginalFilename();
+
+        user.setFoto(filePathFoto);
     }
 }
+
+

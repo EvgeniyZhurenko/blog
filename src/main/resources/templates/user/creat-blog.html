@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+
+</head>
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+    <link rel="stylesheet" href="../../static/css/creat-blog.css" th:href="@{/css/creat-blog.css}">
+    <link rel="stylesheet" href="../../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
+
+</head>
+<body>
+
+<header th:insert="blocks/user :: user"></header>
+
+<!--<div class="container text-center">-->
+<div id="creat-blog" th:if="${boolean}" class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
+     style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
+     background-size: cover;">
+    <div class="card p-5">
+        <div class="row">
+            <form th:action="@{~/user/creat-blog/{id}(id = ${user.getId()})}"
+                  th:method="post"
+                  enctype="multipart/form-data"
+                  class="col-md-12">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" placeholder="Заголовок" class="form-control" th:field="${blog.title}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <input type="text" placeholder="Название заглавного фото" class="form-control" th:field="${picture.name_picture}"/>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="file" class="form-control" placeholder="Главное фото блога"
+                               th:multiple="true" th:attr="accept='image/*', name='image'" th:value="${picture.url_image}">
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <textarea class="form-control textarea" placeholder="Анонос" rows="4" th:field ="${blog.announcement}">message </textarea>
+                    </div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <textarea class="form-control textarea" placeholder="Основной текст" rows="4" th:field="${blog.full_text}">message </textarea>
+                    </div>
+                </div>
+                <div class="send-button mt-4">
+                    <button class="button" type="submit">Добавить блог</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+
+</body>
