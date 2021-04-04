@@ -38,12 +38,14 @@
 
                 <div class="row">
                     <div class="col-md-6">
-                        <input type="text" placeholder="Заголовок" class="form-control" th:field="${blog.title}"/>
+                        <input type="text" placeholder="Заголовок" class="form-control"
+                               th:name="title" th:field="${blog.title}"/>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
-                        <input type="text" placeholder="Название заглавного фото" class="form-control" th:field="${picture.name_picture}"/>
+                        <input type="text" placeholder="Название заглавного фото" class="form-control"
+                               th:name="name" th:field="${picture.name}"/>
                     </div>
                     <div class="col-md-6">
                         <input type="file" class="form-control" placeholder="Главное фото блога"
@@ -52,12 +54,14 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
-                        <textarea class="form-control textarea" placeholder="Анонос" rows="4" th:field ="${blog.announcement}">message </textarea>
+                        <textarea class="form-control textarea" placeholder="Анонос" rows="4"
+                                  th:name="announcement" th:field ="${blog.announcement}">message </textarea>
                     </div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-md-12">
-                        <textarea class="form-control textarea" placeholder="Основной текст" rows="4" th:field="${blog.full_text}">message </textarea>
+                        <textarea class="form-control textarea" placeholder="Основной текст" rows="4"
+                                  th:name="text" th:field="${blog.full_text}">message </textarea>
                     </div>
                 </div>
                 <div class="send-button mt-4">

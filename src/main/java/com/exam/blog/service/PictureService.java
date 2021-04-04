@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -38,9 +39,11 @@ public class PictureService  {
     }
 
     public boolean update(Picture picture) {
-        Picture pictureDB = pictureRepo.getPictureById(picture.getId());
-        if(pictureDB != null){
-            pictureRepo.saveAndFlush(picture);
+
+        if(pictureRepo.existsById(picture.getId())){
+            Picture existPicture = pictureRepo.getOne(picture.getId());
+            existPicture.setBlog(picture.getBlog());
+            pictureRepo.save(existPicture);
             return true;
         }
         return false;
@@ -54,8 +57,8 @@ public class PictureService  {
         return pictureRepo.getPictureById(id);
     }
 
-    public Picture getByName(String namePicture){
-        return pictureRepo.getPictureByName(namePicture);
+    public List<Picture> findAllPicture (){
+        return pictureRepo.findAll();
     }
 
     public boolean uploadPictureImage(Long idUser, Blog blog, MultipartFile image, Picture picture) throws IOException {

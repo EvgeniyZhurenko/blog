@@ -75,12 +75,12 @@ public class User implements UserDetails {
             inverseJoinColumns=@JoinColumn(name="roles_id_role"))
     Set<Role> roles = new HashSet<>();
 
-    @OneToMany( targetEntity = Blog.class, mappedBy = "user",
-                cascade = CascadeType.ALL)
+    @OneToMany( targetEntity = Blog.class, orphanRemoval = true, fetch = FetchType.LAZY)
     Set<Blog> blogs;
 
-    @OneToMany(targetEntity = Comment.class, mappedBy = "user", fetch = FetchType.LAZY,
-               cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "user",
+               fetch = FetchType.LAZY,
+               orphanRemoval = true )
     Set<Comment> comments;
 
     @Override

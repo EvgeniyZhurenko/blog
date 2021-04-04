@@ -41,31 +41,17 @@ public class BlogService {
     }
 
 
-    public void save(Blog blog, Picture picture) {
-
-        blogRepo.save(blog);
-
-        Blog blogDB = blogRepo.getBlogByTitle(blog.getTitle());
-
-        Picture pictureDB = pictureService.getByName(picture.getName());
-
-        System.out.println(blogDB.toString());
-
-        pictureDB.setBlog(blogDB);
-
-        pictureService.update(pictureDB);
-
-        System.out.println(picture.toString());
-    }
-
-    public void saveWithoutPicture(Blog blog){
+    public void save(Blog blog) {
         blogRepo.save(blog);
     }
 
-    public boolean update(Blog blog) {
-        Blog blogDB = blogRepo.getBlogById(blog.getId());
+//    public void saveWithoutPicture(Blog blog){
+//        blogRepo.save(blog);
+//    }
+
+    public boolean update(Blog blogDB) {
         if(blogDB != null){
-            blogRepo.save(blog);
+            blogRepo.save(blogDB);
             return true;
         }
         return false;
@@ -93,25 +79,30 @@ public class BlogService {
     }
 
     public List<Blog> getUserSortListBlogByRating(Long idUser){
-        return userRepo.getById(idUser).getBlogs().stream()
-                        .sorted((blog1, blog2) -> (int) (blog2.getRating()- blog1.getRating()))
+
+        return blogRepo.findAll().stream().filter(blog -> blog.getUser().getId() == idUser)
+                        .sorted((blog1, blog2) -> (blog2.getUser().getId().compareTo(blog1.getUser().getId())))
                         .collect(Collectors.toList());
+
+//        return userRepo.getById(idUser).getBlogs().stream()
+//                        .sorted((blog1, blog2) -> (int) (blog2.getRating()- blog1.getRating()))
+//                        .collect(Collectors.toList());
     }
 
-    public void addPictureBlog(Blog blog, Picture picture){
-
-        if(blog.getPictures() != null){
-            blog.getPictures().add(picture);
-        } else{
-            Set<Picture> pictureSet = new HashSet<>();
-            pictureSet.add(picture);
-            blog.setPictures(pictureSet);
-        }
-    }
-
-    public void addDateUserId(Blog blog, Long idUser){
-        blog.setDate_create_blog(LocalDate.now());
-        blog.setUser(userRepo.getById(idUser));
-    }
+//    public void addPictureBlog(Blog blog, Picture picture){
+//
+//        if(blog.getPictures() != null){
+//            blog.getPictures().add(picture);
+//        } else{
+//            Set<Picture> pictureSet = new HashSet<>();
+//            pictureSet.add(picture);
+//            blog.setPictures(pictureSet);
+//        }
+//    }
+//
+//    public void addDateUserId(Blog blog, Long idUser){
+//        blog.setDate_create_blog(LocalDate.now());
+//        blog.setUser(userRepo.getById(idUser));
+//    }
 
 }

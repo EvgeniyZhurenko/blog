@@ -15,8 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Controller
@@ -39,7 +43,9 @@ public class UserController {
                            Model model){
         User userDB = userRepo.getById(id_user);
 
-        List<Blog> userListBlog =blogService.getUserSortListBlogByRating(id_user);
+        List<Blog> userListBlog = blogService.getUserSortListBlogByRating(id_user);
+
+        List<Picture> pictures = pictureService.findAllPicture();
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
@@ -48,6 +54,9 @@ public class UserController {
             model.addAttribute("boolean", true);
             model.addAttribute("title", "Блоги " + userDB.getFirst_name() + " " + userDB.getLast_name());
             model.addAttribute("blogList", userListBlog);
+            model.addAttribute("localDate", LocalDate.now());
+            model.addAttribute("chrono", Duration.class);
+            model.addAttribute("pictures", pictures);
             model.addAttribute("user", userDB);
         } else {
             model.addAttribute("boolean", false);
@@ -76,43 +85,54 @@ public class UserController {
     }
 
     @PostMapping("creat-blog/{id}")
-    public String creatBlogUserPost(@ModelAttribute Blog blog,
-                                    @ModelAttribute Picture picture,
+    public String creatBlogUserPost(@ModelAttribute Picture picture,@ModelAttribute Blog blog,
                                     @PathVariable(value = "id", required = false) Long idUser,
                                     @RequestParam(value = "image",required = false) MultipartFile image) throws IOException {
 
+
         if(blog != null) {
 
-            pictureService.uploadPictureImage(idUser, blog, image, picture);
+            blogService.save(blog);
+
+            Blog blogDB = blogService.getBlogByTitle(blog.getTitle());
+
+            pictureService.uploadPictureImage(idUser, blogDB, image, picture);
 
             if (picture != null) {
-                pictureService.save(picture);
 
-                blogService.addPictureBlog(blog, picture);
+                if(blogDB != null){
 
-                blogService.addDateUserId(blog, idUser);
+                    blogDB.setUser(userRepo.getById(idUser));
 
-                blogService.save(blog, picture);
+                    blogDB.setDate_create_blog(LocalDate.now());
 
-                System.out.println(blog.getPictures().toArray(Blog[]::new)[0].getId());
+                    picture.setBlog(blogDB);
+
+                    pictureService.save(picture);
+
+                }
+
+                blogService.update(blogDB);
+
             } else {
 
-                blogService.addDateUserId(blog, idUser);
+                blogDB.setUser(userRepo.getById(idUser));
 
-                blogService.saveWithoutPicture(blog);
+                blogDB.setDate_create_blog(LocalDate.now());
+
+                blogService.update(blogDB);
             }
 
-            System.out.println(picture.getBlog().getId());
-
-            return "user/all-blogs/" + idUser;
+            return "redirect:/user/all-blogs/" + idUser;
 
         } else {
 
-            return "redirect: creat-blog/" +idUser;
+            return "redirect: /user/creat-blog/" +idUser;
 
         }
 
     }
+
 
     @GetMapping("{id}")
     public String userInfo(@PathVariable(name = "id", required = false) Long idUser,

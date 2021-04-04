@@ -25,11 +25,11 @@ public class Comment {
     private LocalDateTime dateCreateComment;
     private Boolean banComment;
 
-    @ManyToOne(targetEntity = Blog.class, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_blog")
     Blog blog;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     User user;
 

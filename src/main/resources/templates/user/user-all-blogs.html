@@ -33,11 +33,14 @@
         <div class="card p-3" th:each="blog : ${blogList}">
             <div class="row">
                 <div class="col-md-4">
-                    <div class="position-relative snipimage" th:each="picture : ${blog.getPictures()}">
-                        <img th:src="@{|/${picture.getUrl_image()}|}"
-                             th:alt="${user.username}"
-                             class="rounded img-fluid w-100 img-responsive">
-                        <span class="position-absolute user-timing" th:text="${blog.date_create_blog}">1 min</span></div>
+                    <div class="position-relative snipimage"
+                         th:each="picture : ${pictures}">
+                        <div th:if="${picture.blog.getId().equals(blog.getId())}">
+                            <img th:src="@{|/${picture.getUrl_image()}|}"
+                                 th:alt="${blog.getUser().username}"
+                                 class="rounded img-fluid w-100 img-responsive">
+                            <span class="position-absolute user-timing" th:text="${blog.date_create_blog}">1 min</span></div>
+                     </div>
                 </div>
                 <div class="col-md-8">
                     <div class="mt-2">
@@ -51,7 +54,7 @@
                                 <!--<span class="ms-1 views">453674</span>-->
                             <!--</div>-->
                             <div class="d-flex flex-row align-items-center ms-2">
-                                <i class="fa fa-heart"></i>-->
+                                <i class="fa fa-heart"></i>
                                 <span class="ms-1 views" th:text="${blog.rating}">4565</span>
                             </div>
                         </div>
@@ -61,7 +64,7 @@
                                 <div class="d-flex flex-row align-items-center">
                                     <h6 th:text="${user.getFirst_name()} + ' ' + ${user.getLast_name()}">Thomas Hope</h6>
                                     <span class="dots"></span>
-                                </div> <span class="days-ago">2 days ago</span>
+                                </div> <span class="days-ago" th:text="${localDate.compareTo(blog.getDate_create_blog())} + 'дня назад'">2 days ago</span>
                             </div>
                         </div>
                     </div>

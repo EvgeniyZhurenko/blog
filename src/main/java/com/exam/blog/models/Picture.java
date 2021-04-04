@@ -21,7 +21,7 @@ public class Picture {
     private String url_image;
     private String name;
 
-    @ManyToOne(targetEntity = Blog.class, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_blog")
     Blog blog;
 }
