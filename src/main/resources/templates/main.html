@@ -35,7 +35,7 @@
 
 
                     <strong class="d-inline-block mb-2 text-primary"
-                            th:text="'Рейтинг блога ' + ${blogList[1].rating}" >Рейтинг</strong>
+                            th:text="'Рейтинг блога ' + ${blogList.}" >Рейтинг</strong>
 
                     <h3 class="mb-0" th:text="${blogList[1].title}" >Заголовок блог 1</h3>
 
@@ -48,8 +48,8 @@
                 <div class="col-auto d-none d-lg-block" >
 
                     <img class="bd-placeholder-img" width="200" height="250"
-                         th:attr= "src=${blogList[1].pictures.stream().findFirst().get().getUrl_image()},
-                         alt=${blogList[1].pictures.stream().findFirst().get().getName_picture()}" />
+                         th:src="@{|${blogList[1].pictures.}|}",
+                         th:alt="${blogList[1].pictures.stream().findFirst().get().getName_picture()}" />
                 </div>
             </div>
         </div>

@@ -38,11 +38,13 @@ public class Blog {
     private Boolean ban_blog;
 
     @OneToMany(mappedBy = "blog",
-               cascade = CascadeType.ALL)
+               cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY)
     Set<Comment> comments;
 
     @OneToMany(mappedBy = "blog",
-               cascade = CascadeType.ALL)
+               cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY )
     Set<Picture> pictures;
 
     @ManyToOne

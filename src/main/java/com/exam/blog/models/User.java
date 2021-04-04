@@ -77,11 +77,13 @@ public class User implements UserDetails {
     Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "user",
-               cascade = CascadeType.ALL)
+               cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY )
     Set<Blog> blogs;
 
     @OneToMany(mappedBy = "user",
-               cascade = CascadeType.ALL)
+               cascade = CascadeType.ALL,
+               fetch = FetchType.LAZY)
     Set<Comment> comments;
 
     @Override
