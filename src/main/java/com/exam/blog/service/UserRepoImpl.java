@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.EntityManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -63,14 +61,14 @@ public class UserRepoImpl implements UserDetailsService {
     public boolean update(User user, boolean bool) {
         if (userRepo.existsById(user.getId())) {
             if(!bool) {
-                User userExists = userRepo.getOne(user.getId());
+                User userExists = userRepo.getUserById(user.getId());
                 user.setRoles(userExists.getRoles());
                 user.setPassword(userExists.getPassword());
                 user.setFoto(userExists.getFoto());
                 userRepo.save(user);
 
             } else {
-                User userExists = userRepo.getOne(user.getId());
+                User userExists = userRepo.getUserById(user.getId());
                 user.setRoles(userExists.getRoles());
                 user.setPassword(userExists.getPassword());
                 userRepo.save(user);
@@ -127,7 +125,8 @@ public class UserRepoImpl implements UserDetailsService {
     public Float countRating(User user){
 
         List<Float> ratingAllBlogsList = user.getBlogs().stream().map(Blog::getRating).collect(Collectors.toList());
-        Float avarageRating =ratingAllBlogsList.stream().reduce((n1, n2)-> n1+n2).orElse((float) 0).floatValue() /ratingAllBlogsList.size();
+        Float avarageRating = ratingAllBlogsList.stream()
+                    .reduce((n1, n2) -> Float.valueOf(Float.compare(n1,n2))).get() / ratingAllBlogsList.size();
         return avarageRating;
     }
 

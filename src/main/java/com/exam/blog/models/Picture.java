@@ -1,6 +1,8 @@
 package com.exam.blog.models;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 
@@ -10,6 +12,8 @@ import javax.persistence.*;
 
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@DynamicUpdate
 @Entity
 @Table(name = "picture")
 public class Picture {
@@ -21,7 +25,8 @@ public class Picture {
     private String url_image;
     private String name;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_blog")
+    @JoinColumn(name="id_blog", nullable=false)
     Blog blog;
 }

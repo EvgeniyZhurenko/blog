@@ -30,7 +30,7 @@ import javax.sql.DataSource;
 
 @Configuration
 @Import({WebSecurityBeanConfig.class})
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         private PasswordEncoder passwordEncoder;

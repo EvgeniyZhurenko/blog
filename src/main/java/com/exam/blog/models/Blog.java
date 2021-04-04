@@ -2,9 +2,14 @@ package com.exam.blog.models;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicUpdate;
+
 import javax.persistence.*;
+import javax.swing.event.*;
 import java.time.LocalDate;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 
 
 /**
@@ -13,6 +18,8 @@ import java.util.Set;
 
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@DynamicUpdate
 @Entity
 @Table(name = "blog")
 public class Blog {
@@ -30,16 +37,47 @@ public class Blog {
     private Float rating;
     private Boolean ban_blog;
 
-    @OneToMany(targetEntity = Comment.class, mappedBy = "blog",
-               fetch = FetchType.LAZY,
-                orphanRemoval = true)
+    @OneToMany(mappedBy = "blog",
+               cascade = CascadeType.ALL)
     Set<Comment> comments;
 
-    @OneToMany(targetEntity = Picture.class, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "blog",
+               cascade = CascadeType.ALL)
     Set<Picture> pictures;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
+    @ManyToOne
+    @JoinColumn(name="id_user", nullable=false)
     User user;
+
+    public List<String> compareDate(LocalDate date_creat_blog){
+
+        List<String> listData = new ArrayList<>();
+        long res = ChronoUnit.DAYS.between(date_creat_blog, LocalDate.now());
+
+        if(res > 30) {
+            if(res > 365) {
+                res = ChronoUnit.YEARS.between(date_creat_blog, LocalDate.now());
+                if(res > 4) {
+                    listData.add(String.valueOf(LocalDate.of(0, 1, 1)
+                            .plusYears(res).getYear()));
+                    listData.add("л назад");
+                } else {
+                    listData.add(String.valueOf(LocalDate.of(0, 1, 1)
+                            .plusYears(res).getYear()));
+                    listData.add("г назад");
+                }
+                return listData;
+            }
+           res = ChronoUnit.MONTHS.between(date_creat_blog, LocalDate.now());
+           listData.add(String.valueOf(LocalDate.of(0,1,1).plusMonths(res - 1).getMonthValue()));
+           listData.add("мес назад");
+           return listData;
+        }
+
+        listData.add(String.valueOf(LocalDate.of(0,1,1)
+                .plusDays(res - 1).getDayOfMonth()));
+        listData.add("дн назад");
+        return listData;
+    }
 
 }

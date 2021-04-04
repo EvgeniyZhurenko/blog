@@ -4,6 +4,7 @@ package com.exam.blog.service;
 import com.exam.blog.models.Blog;
 import com.exam.blog.models.Picture;
 import com.exam.blog.repository.PictureRepo;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -65,7 +66,7 @@ public class PictureService  {
 
         if(!image.isEmpty()) {
 
-            File folder = new File(uploadPicturePath + "/" + idUser);
+            File folder = new File(uploadPicturePath + "/" + idUser + "/" + blog.getId());
 
             if (!folder.isDirectory()) { // Если текущий каталог не существует
                 folder.mkdirs(); // Создать новый каталог

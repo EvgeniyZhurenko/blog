@@ -32,6 +32,7 @@ import static javax.persistence.TemporalType.DATE;
 @NoArgsConstructor
 @Entity
 @DynamicUpdate
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @Table(name = "user")
 
 public class User implements UserDetails {
@@ -71,16 +72,16 @@ public class User implements UserDetails {
 
     @ManyToMany
     @JoinTable (name="user_roles",
-            joinColumns=@JoinColumn (name="users_id_user"),
-            inverseJoinColumns=@JoinColumn(name="roles_id_role"))
+                joinColumns=@JoinColumn (name="id_role"),
+                inverseJoinColumns=@JoinColumn(name="id_user"))
     Set<Role> roles = new HashSet<>();
 
-    @OneToMany( targetEntity = Blog.class, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user",
+               cascade = CascadeType.ALL)
     Set<Blog> blogs;
 
     @OneToMany(mappedBy = "user",
-               fetch = FetchType.LAZY,
-               orphanRemoval = true )
+               cascade = CascadeType.ALL)
     Set<Comment> comments;
 
     @Override

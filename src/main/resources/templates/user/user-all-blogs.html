@@ -34,18 +34,18 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="position-relative snipimage"
-                         th:each="picture : ${pictures}">
-                        <div th:if="${picture.blog.getId().equals(blog.getId())}">
-                            <img th:src="@{|/${picture.getUrl_image()}|}"
-                                 th:alt="${blog.getUser().username}"
+                         th:each="picture : ${blog.pictures}">
+                        <!--<div th:if="${picture.blog.getId().equals(blog.getId())}">-->
+                            <img th:src="@{|/${picture.url_image}|}"
+                                 th:alt="${picture.getName()}"
                                  class="rounded img-fluid w-100 img-responsive">
                             <span class="position-absolute user-timing" th:text="${blog.date_create_blog}">1 min</span></div>
-                     </div>
+                     <!--</div>-->
                 </div>
                 <div class="col-md-8">
                     <div class="mt-2">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="mb-1" th:text="${blog.title}">How to do basic jumping </h5>
+                            <h5 class="mb-1"><a th:href="@{~/user/blog/{id_user}/{id_blog}(id_user = ${blog.getUser().id}, id_blog = ${blog.id})}" th:text="${blog.title}"></a> </h5>
                             <span><i class="fa fa-heart text-danger"></i> </span>
                         </div>
                         <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
@@ -55,7 +55,7 @@
                             <!--</div>-->
                             <div class="d-flex flex-row align-items-center ms-2">
                                 <i class="fa fa-heart"></i>
-                                <span class="ms-1 views" th:text="${blog.rating}">4565</span>
+                                <span class="ms-1 views" th:text="'Рэйтинг ' + ${blog.rating}">4565</span>
                             </div>
                         </div>
                         <div class="d-flex flex-row mt-3">
@@ -64,7 +64,9 @@
                                 <div class="d-flex flex-row align-items-center">
                                     <h6 th:text="${user.getFirst_name()} + ' ' + ${user.getLast_name()}">Thomas Hope</h6>
                                     <span class="dots"></span>
-                                </div> <span class="days-ago" th:text="${localDate.compareTo(blog.getDate_create_blog())} + 'дня назад'">2 days ago</span>
+                                </div> <span class="days-ago"
+                                             th:text="${blog.compareDate(blog.date_create_blog).get(0)} + ' ' +
+                                                      ${blog.compareDate(blog.date_create_blog).get(1)}">2 days ago</span>
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,8 @@ package com.exam.blog.models;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,6 +14,8 @@ import java.time.LocalDateTime;
 
 
 @Data
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@DynamicUpdate
 @Entity
 @Table(name = "comment")
 public class Comment {
@@ -25,12 +29,14 @@ public class Comment {
     private LocalDateTime dateCreateComment;
     private Boolean banComment;
 
+
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_blog")
+    @JoinColumn(name="id_blog", nullable=false)
     Blog blog;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name="id_user", nullable=false)
     User user;
 
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -38,25 +40,21 @@ public class UserController {
         this.pictureService = pictureService;
     }
 
+
     @GetMapping("all-blogs/{id}")
     public String blogListUser(@PathVariable(value = "id", required = false) Long id_user,
                            Model model){
         User userDB = userRepo.getById(id_user);
 
-        List<Blog> userListBlog = blogService.getUserSortListBlogByRating(id_user);
-
-        List<Picture> pictures = pictureService.findAllPicture();
+        Set<Blog> blogs = userDB.getBlogs();
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
 
-        if(userListBlog.size() > 0) {
+        if(userDB.getBlogs().size() > 0) {
             model.addAttribute("boolean", true);
             model.addAttribute("title", "Блоги " + userDB.getFirst_name() + " " + userDB.getLast_name());
-            model.addAttribute("blogList", userListBlog);
-            model.addAttribute("localDate", LocalDate.now());
-            model.addAttribute("chrono", Duration.class);
-            model.addAttribute("pictures", pictures);
+            model.addAttribute("blogList", blogs);
             model.addAttribute("user", userDB);
         } else {
             model.addAttribute("boolean", false);
@@ -92,6 +90,16 @@ public class UserController {
 
         if(blog != null) {
 
+            blog.setId(null);
+
+            User userDB = userRepo.getById(idUser);
+
+            blog.setUser(userDB);
+
+            blog.setDate_create_blog(LocalDate.now());
+
+            blog.setRating(0F);
+
             blogService.save(blog);
 
             Blog blogDB = blogService.getBlogByTitle(blog.getTitle());
@@ -102,10 +110,6 @@ public class UserController {
 
                 if(blogDB != null){
 
-                    blogDB.setUser(userRepo.getById(idUser));
-
-                    blogDB.setDate_create_blog(LocalDate.now());
-
                     picture.setBlog(blogDB);
 
                     pictureService.save(picture);
@@ -114,13 +118,13 @@ public class UserController {
 
                 blogService.update(blogDB);
 
+                userRepo.update(userDB, true);
+
             } else {
 
-                blogDB.setUser(userRepo.getById(idUser));
-
-                blogDB.setDate_create_blog(LocalDate.now());
-
                 blogService.update(blogDB);
+
+                userRepo.update(userDB, true);
             }
 
             return "redirect:/user/all-blogs/" + idUser;
@@ -202,5 +206,21 @@ public class UserController {
         auth.setAuthenticated(false);
 
         return "main";
+    }
+
+    @GetMapping("blog/{id_user}/{id_blog}")
+    public String blogShow(@PathVariable(value = "id_user", required = false) Long id_user,
+                           @PathVariable(value = "id_blog", required = false) Long id_blog,
+                           Model model){
+
+        User userDB = userRepo.getById(id_user);
+        Blog blogDB = blogService.getById(id_blog);
+        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("idUser" , id_user);
+        model.addAttribute("title", "Блог " + blogDB.getTitle());
+        model.addAttribute("blog", blogDB);
+        model.addAttribute("comment", blogDB.getComments());
+
+        return "user/user-blog";
     }
 }
