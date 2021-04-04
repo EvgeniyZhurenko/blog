@@ -12,7 +12,9 @@
 
 <header  th:insert="blocks/header :: header"></header>
 
-<div th:if="${boolean}" >
+<div th:if="${boolean}"
+     th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
+     style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
     <div class="alert alert-info mt-2" >
         <p class="blog-post-meta" th:text="*{blog.date_create_blog}"> Дата &nbsp;&nbsp;
             <a  th:href="@{user/{id}(id = ${blog.user.getId()})}"
@@ -33,15 +35,18 @@
     </div>
 </div>
 
-<div class="container" th:unless="${boolean}">
+<div th:unless="${boolean}"
+     th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
+     style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
     <h3 th:text="${title}"></h3>
-    <div th:each="blog : ${blogList}" class="alert alert-info mt-2">
+    <div th:each="blog : ${blogList}" class="alert alert-info mt-2 mb-10"
+         th:style="'margin-left: 10em; margin-right: 10em;'">
         <h3 th:text="${blog.title}"></h3>
         <div>
             <p th:text="${blog.announcement}"></p>
             <p th:text="${blog.rating}"></p>
         </div>
-        <a th:href="@{blog/{id}(id= ${blog.id})}">Читать полностью</a>
+        <a th:href="@{~/blog/{id}(id= ${blog.id})}">Читать полностью</a>
     </div>
 </div>
 

@@ -77,7 +77,7 @@ public class Blog {
         }
 
         listData.add(String.valueOf(LocalDate.of(0,1,1)
-                .plusDays(res - 1).getDayOfMonth()));
+                .plusDays(res).getDayOfMonth()));
         listData.add("дн назад");
         return listData;
     }

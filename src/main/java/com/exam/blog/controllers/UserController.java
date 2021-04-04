@@ -102,27 +102,29 @@ public class UserController {
 
             blogService.save(blog);
 
-            Blog blogDB = blogService.getBlogByTitle(blog.getTitle());
+//            Blog blogDB = blogService.getById(blog.getId());
 
-            pictureService.uploadPictureImage(idUser, blogDB, image, picture);
+            pictureService.uploadPictureImage(idUser, blog, image, picture);
 
             if (picture != null) {
 
-                if(blogDB != null){
+                if(blog != null){
 
-                    picture.setBlog(blogDB);
+                    picture.setId(null);
+
+                    picture.setBlog(blog);
 
                     pictureService.save(picture);
 
                 }
 
-                blogService.update(blogDB);
+                blogService.update(blog);
 
                 userRepo.update(userDB, true);
 
             } else {
 
-                blogService.update(blogDB);
+                blogService.update(blog);
 
                 userRepo.update(userDB, true);
             }

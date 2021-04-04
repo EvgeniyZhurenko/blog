@@ -19,10 +19,10 @@
         <div class="col-md-6 px-0">
             <h1 class="display-4 fst-italic"  th:text="${blogList[0].title}" >Заголовок блога с наибольшим рейтингом</h1>
 
-            <p class="lead-my-3" th:text="${blogList[0].full_text}">Текст блога</p>
+            <p class="lead-my-3" th:text="${blogList[0].announcement}">Текст блога</p>
 
             <p class="lead-mb-0"><a  class="text-white fw-bold"
-                                     th:href="@{blog/{id}(id_user = ${blogList[0].user.id})}">Продолжить читать...</a></p>
+                                     th:href="@{blog/{id}(id = ${blogList[0].getId()})}">Продолжить читать...</a></p>
         </div>
     </div>
 
@@ -40,15 +40,15 @@
 
                     <div class="mb-1 text-muted" th:text="${blog.date_create_blog}" >Дата поста</div>
 
-                    <p class="card-text mb-auto"  th:text="${blog.full_text}" >Текст блога.</p>
+                    <p class="card-text mb-auto"  th:text="${blog.announcement}" >Текст блога.</p>
 
-                    <a  class="stretched-link" th:href="@{blog/{id}(id_user = ${blog.user.id})}"  >Продолжить читать...</a>
+                    <a  class="stretched-link" th:href="@{blog/{id}(id = ${blog.getId()})}"  >Продолжить читать...</a>
                 </div>
                 <div class="col-auto d-none d-lg-block" >
 
-                    <img class="bd-placeholder-img" width="200" height="250"
-                         th:attr= "src=${blog.pictures.stream().findFirst().get().getUrl_image()},
-                         alt=${blog.pictures.stream().findFirst().get().getName_picture()}" />
+                    <img class="bd-placeholder-img" width="250" height="250"
+                         th:src="@{|${blog.getPictures().stream().findFirst().get().getUrl_image()}|}",
+                         th:alt="${blog.getPictures().stream().findFirst().get().getName()}" />
                 </div>
             </div>
         </div>

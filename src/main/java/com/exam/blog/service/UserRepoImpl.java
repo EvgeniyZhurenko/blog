@@ -125,6 +125,10 @@ public class UserRepoImpl implements UserDetailsService {
     public Float countRating(User user){
 
         List<Float> ratingAllBlogsList = user.getBlogs().stream().map(Blog::getRating).collect(Collectors.toList());
+
+        if(ratingAllBlogsList.size()== 0){
+            return 0F;
+        }
         Float avarageRating = ratingAllBlogsList.stream()
                     .reduce((n1, n2) -> Float.valueOf(Float.compare(n1,n2))).get() / ratingAllBlogsList.size();
         return avarageRating;
