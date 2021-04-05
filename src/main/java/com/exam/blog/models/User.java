@@ -28,7 +28,6 @@ import static javax.persistence.TemporalType.DATE;
 
 @Setter
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @DynamicUpdate

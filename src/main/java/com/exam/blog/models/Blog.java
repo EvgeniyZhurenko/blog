@@ -1,12 +1,14 @@
 package com.exam.blog.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.swing.event.*;
+import javax.xml.bind.annotation.XmlTransient;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -47,8 +49,10 @@ public class Blog {
                fetch = FetchType.LAZY )
     Set<Picture> pictures;
 
-    @ManyToOne
-    @JoinColumn(name="id_user", nullable=false)
+    @JsonIgnore
+    @XmlTransient
+    @ManyToOne(cascade=CascadeType.PERSIST)
+    @JoinColumn(name="id_user", referencedColumnName="id_user", nullable=false)
     User user;
 
     public List<String> compareDate(LocalDate date_creat_blog){
