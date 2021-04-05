@@ -68,30 +68,8 @@ public class UserRepoImpl implements UserDetailsService {
     public boolean update(User user, boolean bool) {
         if (userRepo.existsById(user.getId())) {
             if(!bool) {
-//                User userExists = userRepo.getUserById(user.getId());
-//                user.setRoles(userExists.getRoles());
-//                user.setPassword(userExists.getPassword());
-//                user.setFoto(userExists.getFoto());
-//                user.setComments(userExists.getComments());
-//                Blog blog1 = blogService.getById(7L);
-//                Blog blog2 = blogService.getById(8L);
-//                Blog blog = user.getBlogs().stream().toArray(value -> new Blog[value])[0];
-//                user.getBlogs().add(blog1);
-//                user.getBlogs().add(blog2);
-//                user.getBlogs().add(blog);
                 userRepo.save(user);
-//
             } else {
-//                User userExists = userRepo.getUserById(user.getId());
-//                user.setRoles(userExists.getRoles());
-//                user.setPassword(userExists.getPassword());
-//                user.setComments(userExists.getComments());
-//                Blog blog1 = blogService.getById(7L);
-//                Blog blog2 = blogService.getById(8L);
-//                Blog blog = user.getBlogs().stream().toArray(value -> new Blog[value])[0];
-//                user.getBlogs().add(blog1);
-//                user.getBlogs().add(blog2);
-//                user.getBlogs().add(blog);
                 userRepo.save(user);
             }
             return true;
