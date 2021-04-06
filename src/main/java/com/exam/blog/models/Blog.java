@@ -49,7 +49,8 @@ public class Blog {
                fetch = FetchType.LAZY )
     Set<Picture> pictures;
 
-
+//    @JsonIgnore
+//    @XmlTransient
     @ManyToOne
     @JoinColumn(name="id_user", referencedColumnName="id_user", nullable=false)
     User user;
