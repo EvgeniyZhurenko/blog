@@ -10,19 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -90,6 +85,8 @@ public class UserController {
 
         if(blog != null) {
 
+            picture.setId(null);
+
             blog.setId(null);
 
             User userDB = userRepo.getById(idUser);
@@ -102,7 +99,19 @@ public class UserController {
 
             blogService.save(blog);
 
-//            Blog blogDB = blogService.getById(blog.getId());
+            Set<Blog> bloges = userDB.getBlogs();
+            System.out.println(bloges.toArray(Blog[]::new)[0].getTitle());
+
+            bloges.add(blog);
+
+           Arrays.stream(bloges.toArray(Blog[]::new)).forEach(b -> System.out.println(b.getTitle()));
+
+            bloges.add(blogService.getById(2L));
+            bloges.add(blogService.getById(3L));
+            bloges.add(blogService.getById(10L));
+            bloges.add(blogService.getById(12L));
+
+            userDB.setBlogs(bloges);
 
             pictureService.uploadPictureImage(idUser, blog, image, picture);
 

@@ -1,5 +1,6 @@
 package com.exam.blog.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -26,8 +27,8 @@ import static javax.persistence.TemporalType.DATE;
  */
 
 
-@Setter
 @Getter
+@Setter
 @NoArgsConstructor
 @Entity
 @DynamicUpdate

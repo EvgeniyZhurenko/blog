@@ -68,6 +68,7 @@ public class UserRepoImpl implements UserDetailsService {
     public boolean update(User user, boolean bool) {
         if (userRepo.existsById(user.getId())) {
             if(!bool) {
+                User exists = userRepo.getUserById(user.getId());
                 userRepo.save(user);
             } else {
                 userRepo.save(user);

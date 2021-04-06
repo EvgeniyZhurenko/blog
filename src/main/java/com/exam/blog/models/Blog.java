@@ -2,8 +2,7 @@ package com.exam.blog.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -19,7 +18,8 @@ import java.util.*;
  */
 
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @DynamicUpdate
 @Entity
@@ -49,8 +49,7 @@ public class Blog {
                fetch = FetchType.LAZY )
     Set<Picture> pictures;
 
-    @JsonIgnore
-    @XmlTransient
+
     @ManyToOne
     @JoinColumn(name="id_user", referencedColumnName="id_user", nullable=false)
     User user;
