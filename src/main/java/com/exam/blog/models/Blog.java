@@ -42,7 +42,7 @@ public class Blog {
     @OneToMany(mappedBy = "blog",
                cascade = CascadeType.ALL,
                fetch = FetchType.LAZY)
-    Set<Comment> comments;
+    List<Comment> comments;
 
     @OneToMany(mappedBy = "blog",
                cascade = CascadeType.ALL,

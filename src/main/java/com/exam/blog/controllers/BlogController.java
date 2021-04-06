@@ -2,8 +2,9 @@ package com.exam.blog.controllers;
 
 
 import com.exam.blog.models.Blog;
-import com.exam.blog.models.User;
+import com.exam.blog.models.Comment;
 import com.exam.blog.service.BlogService;
+import com.exam.blog.service.CommentService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,12 @@ public class BlogController {
 
 
     private final BlogService blogService;
-    private final UserRepoImpl userRepo;
+    private final CommentService commentService;
 
     @Autowired
-    public BlogController(BlogService blogService, UserRepoImpl userRepo) {
+    public BlogController(BlogService blogService, CommentService commentService) {
         this.blogService = blogService;
-        this.userRepo = userRepo;
+        this.commentService = commentService;
     }
 
     @GetMapping("/blog/list")
@@ -44,8 +45,24 @@ public class BlogController {
     public String blogSee(@PathVariable(name = "id", required = false) Long idBlog,
                           Model model){
         Blog blog = blogService.getById(idBlog);
+        Comment comment = new Comment();
         model.addAttribute("blog", blog);
+        model.addAttribute("comment", comment);
         return "blog";
+    }
+
+    @GetMapping("blog/range/{id_blog}/{raiting}")
+    public String blogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
+                           @PathVariable(value = "raiting", required = false) Long raiting,
+                           Model model){
+        Blog blogDB = blogService.getById(id_blog);
+        if(blogDB.getRating() == 0F){
+            blogDB.setRating(blogDB.getRating() + raiting);
+        } else {
+            blogDB.setRating((blogDB.getRating() + raiting) / 2);
+        }
+        blogService.update(blogDB);
+        return "redirect:/blog/" + id_blog;
     }
 
 }

@@ -153,7 +153,7 @@ public class MainController {
                                Model model) {
 
         User userDB = userRepo.getById(id_user);
-        Set<Blog> blogs = userDB.getBlogs();
+        List<Blog> blogs = userDB.getBlogs();
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser", id_user);

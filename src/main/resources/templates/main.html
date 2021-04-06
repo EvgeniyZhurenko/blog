@@ -52,11 +52,11 @@
 
                     <a  class="stretched-link" th:href="@{blog/{id}(id = ${blog.getId()})}"  >Продолжить читать...</a>
                 </div>
-                <div class="col-auto d-none d-lg-block" >
+                <div class="col-auto d-none d-lg-block" th:each="picture : ${blog.getPictures()}">
 
                     <img class="bd-placeholder-img" width="250" height="200"
-                         th:src="@{|${blog.getPictures().stream().findFirst().get().getUrl_image()}|}",
-                         th:alt="${blog.getPictures().stream().findFirst().get().getName()}" />
+                         th:src="@{|${picture.getUrl_image()}|}",
+                         th:alt="${picture.getName()}" />
                 </div>
             </div>
         </div>

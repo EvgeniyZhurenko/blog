@@ -16,8 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Set;
+import java.util.List;
 
 
 @Controller
@@ -41,7 +40,7 @@ public class UserController {
                            Model model){
         User userDB = userRepo.getById(id_user);
 
-        Set<Blog> blogs = userDB.getBlogs();
+        List<Blog> blogs = userDB.getBlogs();
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
@@ -82,61 +81,9 @@ public class UserController {
                                     @PathVariable(value = "id", required = false) Long idUser,
                                     @RequestParam(value = "image",required = false) MultipartFile image) throws IOException {
 
-
         if(blog != null) {
 
-            picture.setId(null);
-
-            blog.setId(null);
-
-            User userDB = userRepo.getById(idUser);
-
-            blog.setUser(userDB);
-
-            blog.setDate_create_blog(LocalDate.now());
-
-            blog.setRating(0F);
-
-            blogService.save(blog);
-
-            Set<Blog> bloges = userDB.getBlogs();
-            System.out.println(bloges.toArray(Blog[]::new)[0].getTitle());
-
-            bloges.add(blog);
-
-           Arrays.stream(bloges.toArray(Blog[]::new)).forEach(b -> System.out.println(b.getTitle()));
-
-            bloges.add(blogService.getById(2L));
-            bloges.add(blogService.getById(3L));
-            bloges.add(blogService.getById(10L));
-            bloges.add(blogService.getById(12L));
-
-            userDB.setBlogs(bloges);
-
-            pictureService.uploadPictureImage(idUser, blog, image, picture);
-
-            if (picture != null) {
-
-                if(blog != null){
-
-                    picture.setId(null);
-
-                    picture.setBlog(blog);
-
-                    pictureService.save(picture);
-
-                }
-
-                blogService.update(blog);
-
-                userRepo.update(userDB, true);
-
-            } else {
-
-                blogService.update(blog);
-
-                userRepo.update(userDB, true);
-            }
+            blogService.addProperiesBlog(blog, picture, idUser, image);
 
             return "redirect:/user/all-blogs/" + idUser;
 

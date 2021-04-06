@@ -3,9 +3,11 @@
 <head>
     <title th:text="${blog.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+    <link rel="stylesheet" href="../static/css/rayting.css" th:href="@{/css/rayting.css}">
 
 </head>
 <body>
@@ -14,7 +16,6 @@
 
 <div class="container mt-5">
     <h1 th:text="${blog.title}"></h1>
-
 
     <div class="alert alert-info mt-2" >
         <div>
@@ -41,9 +42,59 @@
 
         <p th:text="${blog.full_text}"></p>
         <a href="/">На главную</a>
+
+        <div id="rate">
+            <p>Оцените : </p>
+            <div id="first"><a th:href="@{~/blog/range/{id}/1(id = ${blog.getId()})}">&emsp;</a></div>
+            <div id="second"><a th:href="@{~/blog/range/{id}/2(id = ${blog.getId()})}">&emsp;</a></div>
+            <div id="third"><a th:href="@{~/blog/range/{id}/3(id = ${blog.getId()})}">&emsp;</a></div>
+            <div id="forth"><a th:href="@{~/blog/range/{id}/4(id = ${blog.getId()})}">&emsp;</a></div>
+            <div id="fifth"><a th:href="@{~/blog/range/{id}/5(id = ${blog.getId()})}">&emsp;</a></div>
+
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="well well-sm" th:if="${blog.comments}">
+                        <div class="row" th:each="comment : ${blog.comments}">
+                            <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
+                            ${comment.dateCreateComment}"></p>
+                            <p th:text="${comment.text}"></p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
+
+
+
+    <div class="comment">
+        <div class="listComments"></div>
+        <form  th:action="@{~/comment/creat/{id}(id = ${blog.getId()})}" th:method="post" class="leave">
+            <h2>Оставьте свой комментарий :</h2>
+            <p id="p"  >Имя пользователя : Guest </p>
+            <!--<textarea id="name" th:style="'height: 15px; width: 200px; font-size: 15px;'"></textarea>-->
+            <p>Комментарий :<br>
+                <textarea id="inputText" th:field="*{comment.text}" th:style="'width: 600px; height: 100px'"></textarea>
+            </p>
+
+            <input id="input" type="submit" value="Отправить" />
+        </form>
+    </div>
+
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
+
+
 </body>
+
+<script type="text/javascript" src="../static/js/rayting.js" th:src="@{/js/rayting.js}"></script>
+<script type="text/javascript" src="../static/js/comment.js" th:src="@{/js/comment.js}"></script>
+
+</html>

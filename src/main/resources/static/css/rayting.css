@@ -1,0 +1,17 @@
+#rate{
+    width: 250px;
+    height: 100px;
+    /*background-color: blanchedalmond;*/
+    /*border:1px solid;*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#rate>div{
+    margin-top: -8px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid;
+    border-radius: 5px;
+    background-color: black;
+}

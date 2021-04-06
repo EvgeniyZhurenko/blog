@@ -1,25 +1,13 @@
 package com.exam.blog.models;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static javax.persistence.TemporalType.DATE;
 
 
 /**
@@ -64,6 +52,10 @@ public class User implements UserDetails {
     private String instagram;
     private String git_hub;
 
+    public User(String username) {
+        this.username = username;
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;
@@ -74,17 +66,17 @@ public class User implements UserDetails {
     @JoinTable (name="user_roles",
                 joinColumns=@JoinColumn (name="id_role"),
                 inverseJoinColumns=@JoinColumn(name="id_user"))
-    Set<Role> roles = new HashSet<>();
+    Set<Role> roles ;
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL,
                fetch = FetchType.LAZY )
-    Set<Blog> blogs;
+    List<Blog> blogs;
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL,
                fetch = FetchType.LAZY)
-    Set<Comment> comments;
+    List<Comment> comments;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
