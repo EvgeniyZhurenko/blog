@@ -3,10 +3,7 @@ package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
 import com.exam.blog.models.Comment;
-import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
-import com.exam.blog.service.CommentService;
-import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,14 +17,11 @@ public class BlogController {
 
 
     private final BlogService blogService;
-    private final UserRepoImpl userRepo;
-    private final CommentService commentService;
+
 
     @Autowired
-    public BlogController(BlogService blogService, UserRepoImpl userRepo, CommentService commentService) {
+    public BlogController(BlogService blogService) {
         this.blogService = blogService;
-        this.userRepo = userRepo;
-        this.commentService = commentService;
     }
 
     @GetMapping(value = {"/blog/list"})

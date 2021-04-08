@@ -42,10 +42,10 @@
                                th:name="title" th:field="*{blog.title}"/>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" th:each="picture : ${blog.pictures}">
                     <div class="col-md-6">
                         <input type="text" placeholder="Название заглавного фото" class="form-control"
-                               th:name="name" th:field="*{picture.name}"/>
+                               th:name="name" th:value="*{picture.name}"/>
                     </div>
                     <div class="col-md-6">
                         <input type="file" class="form-control" placeholder="Главное фото блога"

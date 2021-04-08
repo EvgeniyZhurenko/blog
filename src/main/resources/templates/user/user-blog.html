@@ -55,7 +55,7 @@
         <p th:text="${blog.full_text}"></p>
         <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
 
-        <span><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a></span>
+        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a></span>
 
         <div id="rate">
             <p>Оцените : </p>
