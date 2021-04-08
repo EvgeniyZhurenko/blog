@@ -5,13 +5,14 @@ import com.exam.blog.repository.UserRepo;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
 @Controller
-@RequestMapping(value = {"comment/"})
+@RequestMapping(value = {"comment/", "/user/"})
 public class CommentController {
 
     private final BlogService blogService;
@@ -36,5 +37,20 @@ public class CommentController {
         commentService.save(comment);
 
         return "redirect:/blog/" + idBlog;
+    }
+
+    @PostMapping("comment/creat/{id_user}/{id_blog}/{id_user_blog}")
+    public String creatUserComment(@ModelAttribute Comment comment,
+                                   @PathVariable(value = "id_user", required = false) Long id_user,
+                                   @PathVariable(value = "id_blog", required = false) Long idBlog,
+                                   @PathVariable(value = "id_user_blog", required = false) Long id_user_blog){
+        comment.setId(null);
+        comment.setDateCreateComment(LocalDateTime.now());
+        comment.setBlog(blogService.getById(idBlog));
+        comment.setBanComment(false);
+        comment.setUser(userRepo.getUserById(id_user));
+        commentService.save(comment);
+
+        return "redirect:/user/blog/" + id_user + "/" + idBlog + "/" + id_user_blog;
     }
 }

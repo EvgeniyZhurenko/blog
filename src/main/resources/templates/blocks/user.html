@@ -17,8 +17,8 @@
             <nav class="my-2 my-md-0 me-md-3" >
 
                 <a class="p-2 text-dark"
-                   th:href="@{/user/all-blogs/{id}(id = ${idUser})}"
-                   th:text="|Список блогов|">Список ваших блогов </a>
+                   th:href="@{/user/blog/list/{id}(id = ${idUser})}"
+                   th:text="|Список всех блогов|">Список всех блогов </a>
 
                 <a class="p-2 text-dark"
                    th:href="@{/user/creat-blog/{id}(id = ${idUser})}"

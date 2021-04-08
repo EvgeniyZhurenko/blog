@@ -62,9 +62,6 @@ public class BlogService {
         return blogRepo.getBlogById(id);
     }
 
-    public Blog getBlogByTitle(String title){
-        return blogRepo.getBlogByTitle(title);
-    }
 
     public List<Blog> getAllBlog(){
         return blogRepo.findAll();
@@ -82,7 +79,7 @@ public class BlogService {
                 .collect(Collectors.toList());
     }
 
-    public void addProperiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image) throws IOException {
+    public void addPropertiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image) throws IOException {
 
         if(picture != null){
 
@@ -115,6 +112,13 @@ public class BlogService {
         blog.setRating(0F);
 
         save(blog);
+    }
+
+    public void updatePropertiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image) throws IOException{
+        if(picture != null){
+           pictureService.uploadPictureImage(idUser, blog, image, picture);
+
+        }
     }
 
 }

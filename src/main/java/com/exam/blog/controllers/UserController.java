@@ -1,12 +1,14 @@
 package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
+import com.exam.blog.models.Comment;
 import com.exam.blog.models.Picture;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.PictureService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,9 +16,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 
 @Controller
@@ -26,6 +29,9 @@ public class UserController {
     private final UserRepoImpl userRepo;
     private final BlogService blogService;
     private final PictureService pictureService;
+
+    @Value("${upload.picture.path}")
+    private String uploadPicturePath;
 
     @Autowired
     public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService) {
@@ -83,7 +89,7 @@ public class UserController {
 
         if(blog != null) {
 
-            blogService.addProperiesBlog(blog, picture, idUser, image);
+            blogService.addPropertiesBlog(blog, picture, idUser, image);
 
             return "redirect:/user/all-blogs/" + idUser;
 
@@ -166,19 +172,122 @@ public class UserController {
         return "main";
     }
 
-    @GetMapping("blog/{id_user}/{id_blog}")
-    public String blogShow(@PathVariable(value = "id_user", required = false) Long id_user,
-                           @PathVariable(value = "id_blog", required = false) Long id_blog,
-                           Model model){
+    @GetMapping("blog/{id_user}/{id_blog}/{id_user_blog}")
+    public String userBlogShow(@PathVariable(value = "id_user", required = false) Long id_user,
+                               @PathVariable(value = "id_blog", required = false) Long id_blog,
+                               @PathVariable(value = "id_user_blog", required = false) Long id_user_blog,
+                               Model model){
 
         User userDB = userRepo.getById(id_user);
         Blog blogDB = blogService.getById(id_blog);
+        Comment comment = new Comment();
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
+
+        model.addAttribute("user", userRepo.getById(id_user));
+        model.addAttribute("idUserBlog", id_user_blog);
         model.addAttribute("title", "Блог " + blogDB.getTitle());
         model.addAttribute("blog", blogDB);
-        model.addAttribute("comment", blogDB.getComments());
+        model.addAttribute("comment", comment);
 
         return "user/user-blog";
+    }
+
+    @GetMapping(value = {"blog/list/{id}"})
+    public String userBlogMain(@PathVariable(value = "id", required = false) Long id_user,
+                           Model model) {
+
+        User userDB = userRepo.getById(id_user);
+        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("idUser" , id_user);
+
+        List<Blog> blogs = blogService.getSortListBlogByRating();
+        if (blogs.size() == 0) {
+            model.addAttribute("list", false);
+            model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
+        }
+        model.addAttribute("user", userRepo.getById(id_user));
+        model.addAttribute("blogList", blogs);
+        model.addAttribute("boolean", true);
+        model.addAttribute("anonymous", false);
+        model.addAttribute("blog", false);
+        return "blog-list";
+    }
+
+    @GetMapping("blog/range/{id_user}/{id_blog}/{raiting}")
+    public String userBlogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
+                               @PathVariable(value = "id_user", required = false) Long id_user,
+                                @PathVariable(value = "raiting", required = false) Long raiting){
+        Blog blogDB = blogService.getById(id_blog);
+        if(blogDB.getRating() == 0F){
+            blogDB.setRating(blogDB.getRating() + raiting);
+        } else {
+            blogDB.setRating((blogDB.getRating() + raiting) / 2);
+        }
+        blogService.update(blogDB);
+
+        return "redirect:/user/blog/" + id_user + "/" + id_blog + "/" + blogDB.getUser().getId();
+    }
+
+
+    @GetMapping("update-blog/{id_user}/{id_blog}")
+    public String updateUserBlogGet(@PathVariable(name = "id_user", required = false) Long idUser,
+                                 @PathVariable(name = "id_blog", required = false) Long idBlog,
+                                 Model model){
+
+        User userDB = userRepo.getById(idUser);
+        Blog blogDB = blogService.getById(idBlog);
+        Picture picture = new Picture();
+
+        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("idUser" , idUser);
+
+        model.addAttribute("boolean", true);
+        model.addAttribute("blog", blogDB);
+        model.addAttribute("picture", picture);
+
+        return "user/user-update-blog";
+    }
+
+    @PostMapping("update-blog/{id}")
+    public String updateUserBlogPost(@ModelAttribute Picture picture,@ModelAttribute Blog blog,
+                                     @PathVariable(value = "id", required = false) Long idUser,
+                                     @RequestParam(value = "image",required = false) MultipartFile image) throws IOException {
+
+        if(blog != null) {
+            Blog blogDB = blogService.getById(blog.getId());
+            blog.setRating(blogDB.getRating());
+            blog.setDate_create_blog(blogDB.getDate_create_blog());
+            blog.setUser(blogDB.getUser());
+            blog.setBan_blog(blogDB.getBan_blog());
+            blog.setPictures(blogDB.getPictures());
+            if(picture != null){
+                blog.getPictures().toArray(Picture[]::new)[0].setName(picture.getName());
+            }
+            if(image != null){
+                File folder = new File(uploadPicturePath + "/" + idUser + "/" + blog.getId());
+
+                File[] files = folder.listFiles();
+
+                if(files.length != 0){
+                    for(File file : files){
+                        file.delete();
+                    }
+                    image.transferTo(new File(folder, Objects.requireNonNull(image.getOriginalFilename())));
+                }
+            }
+
+            blogService.updatePropertiesBlog(blog, picture, idUser, image);
+
+            blogService.update(blog);
+
+            return "redirect:/user/blog/" + idUser + "/" + blog.getId() + "/" + blog.getUser().getId();
+
+        } else {
+
+            return "redirect:/user/update-blog/" +idUser + "/" + blog.getId();
+
+        }
+
     }
 }

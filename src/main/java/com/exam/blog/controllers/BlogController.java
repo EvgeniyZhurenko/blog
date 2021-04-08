@@ -3,6 +3,7 @@ package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
 import com.exam.blog.models.Comment;
+import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.CommentService;
 import com.exam.blog.service.UserRepoImpl;
@@ -19,15 +20,17 @@ public class BlogController {
 
 
     private final BlogService blogService;
+    private final UserRepoImpl userRepo;
     private final CommentService commentService;
 
     @Autowired
-    public BlogController(BlogService blogService, CommentService commentService) {
+    public BlogController(BlogService blogService, UserRepoImpl userRepo, CommentService commentService) {
         this.blogService = blogService;
+        this.userRepo = userRepo;
         this.commentService = commentService;
     }
 
-    @GetMapping("/blog/list")
+    @GetMapping(value = {"/blog/list"})
     public String blogMain(Model model){
         List<Blog> blogs = blogService.getSortListBlogByRating();
         if(blogs.size() == 0) {
@@ -41,8 +44,8 @@ public class BlogController {
         return "blog-list";
     }
 
-    @GetMapping("/blog/{id}")
-    public String blogSee(@PathVariable(name = "id", required = false) Long idBlog,
+    @GetMapping(value = {"/blog/{id_blog}"})
+    public String blogSee(@PathVariable(name = "id_blog", required = false) Long idBlog,
                           Model model){
         Blog blog = blogService.getById(idBlog);
         Comment comment = new Comment();
@@ -53,8 +56,7 @@ public class BlogController {
 
     @GetMapping("blog/range/{id_blog}/{raiting}")
     public String blogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
-                           @PathVariable(value = "raiting", required = false) Long raiting,
-                           Model model){
+                           @PathVariable(value = "raiting", required = false) Long raiting){
         Blog blogDB = blogService.getById(id_blog);
         if(blogDB.getRating() == 0F){
             blogDB.setRating(blogDB.getRating() + raiting);

@@ -22,7 +22,7 @@
             <p class="lead-my-3" th:text="${blogList[0].announcement}">Текст блога</p>
 
             <p class="lead-mb-0"><a  class="text-white fw-bold"
-                                     th:href="@{blog/{id}(id = ${blogList[0].getId()})}">Продолжить читать...</a></p>
+                                     th:href="@{~/user/blog/{id}(id = ${blogList[0].getId()})}">Продолжить читать...</a></p>
         </div>
     </div>
 

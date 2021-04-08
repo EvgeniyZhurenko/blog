@@ -10,26 +10,26 @@
 </head>
 <body>
 
-<header  th:insert="blocks/header :: header"></header>
+<header th:if="${anonymous}" th:insert="blocks/header :: header"></header>
+
+<header th:unless="${anonymous}" th:insert="blocks/user :: user"></header>
 
 <div th:if="${boolean}"
      th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
      style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
-    <div class="alert alert-info mt-2" >
-        <p class="blog-post-meta" th:text="*{blog.date_create_blog}"> Дата &nbsp;&nbsp;
-            <a  th:href="@{user/{id}(id = ${blog.user.getId()})}"
-                th:text="${blog.user.getFirst_name()} + ' '  + ${blog.user.getLast_name()}" >Имя блогера</a>
-        </p>
-    </div>
     <div class="container mt-5">
         <h3 th:text="${title}"></h3>
         <div th:each="blog : ${blogList}" class="alert alert-info mt-2">
             <h3 th:text="${blog.title}"></h3>
             <div>
                 <p th:text="${blog.announcement}"></p>
-                <p th:text="${blog.rating}"></p>
+                <p th:text="'Рейтинг ' + ${blog.rating}"></p>
+                <p ><span th:text="${blog.date_create_blog}"></span>
+                    <span th:text="${blog.user.getFirst_name()} + ' ' + ${blog.user.getLast_name()}"></span>
+                </p>
             </div>
-            <a th:href="@{blog/{id}(id= ${blog.id})}">Читать полностью</a>
+            <a th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}(id_user =${idUser}, id_blog= ${blog.id},
+                id_user_blog = ${blog.user.getId()})}">Читать полностью</a>
         </div>
 
     </div>
@@ -44,7 +44,10 @@
         <h3 th:text="${blog.title}"></h3>
         <div>
             <p th:text="${blog.announcement}"></p>
-            <p th:text="${blog.rating}"></p>
+            <p th:text="'Рейтинг ' + ${blog.rating}"></p>
+            <p ><span th:text="${blog.date_create_blog}"></span>
+                <span th:text="${blog.user.getFirst_name()} + ' ' + ${blog.user.getLast_name()}"></span>
+            </p>
         </div>
         <a th:href="@{~/blog/{id}(id= ${blog.id})}">Читать полностью</a>
     </div>

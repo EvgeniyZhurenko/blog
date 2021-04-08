@@ -13,10 +13,12 @@
 <head>
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
     <link rel="stylesheet" href="../../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
+    <link rel="stylesheet" href="../../static/css/rayting.css" th:href="@{/css/rayting.css}">
 
 </head>
 <body>
@@ -51,14 +53,57 @@
             </div>
         </div>
         <p th:text="${blog.full_text}"></p>
-        <a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>
+        <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+
+        <span><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a></span>
+
+        <div id="rate">
+            <p>Оцените : </p>
+            <div id="first"><a th:href="@{~/user/blog/range/{id_user}/{id_blog}/1(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a></div>
+            <div id="second"><a th:href="@{~/user/blog/range/{id_user}/{id_blog}/2(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a></div>
+            <div id="third"><a th:href="@{~/user/blog/range/{id_user}/{id_blog}/3(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a></div>
+            <div id="forth"><a th:href="@{~/user/blog/range/{id_user}/{id_blog}/4(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a></div>
+            <div id="fifth"><a th:href="@{~/user/blog/range/{id_user}/{id_blog}/5(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a></div>
+
+        </div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-md-6">
+                    <div class="well well-sm" th:if="${blog.comments}">
+                        <div class="row" th:each="comment : ${blog.comments}">
+                            <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
+                            ${comment.dateCreateComment}"></p>
+                            <p th:text="${comment.text}"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
+<div class="comment">
+    <div class="listComments"></div>
+    <form  th:action="@{~/user/comment/creat/{id_user}/{id_blog}/{id_user_blog}(id_user = ${idUser}, id_blog = ${blog.getId()},
+                        id_user_blog = ${idUserBlog})}" th:method="post" class="leave">
+        <h2>Оставьте свой комментарий :</h2>
+        <p id="p"  >Имя пользователя : <span th:text="${user.first_name} + ' ' + ${user.last_name}"></span> </p>
+        <!--<textarea id="name" th:style="'height: 15px; width: 200px; font-size: 15px;'"></textarea>-->
+        <p>Комментарий :<br>
+            <textarea id="inputText" th:field="*{comment.text}" th:style="'width: 600px; height: 100px'"></textarea>
+        </p>
 
+        <input id="input" type="submit" value="Отправить" />
+    </form>
+</div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
 
 </body>
+
+<script type="text/javascript" src="../../static/js/rayting.js" th:src="@{/js/rayting.js}"></script>
+<script type="text/javascript" src="../../static/js/comment.js" th:src="@{/js/comment.js}"></script>
+
 </html>
