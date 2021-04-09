@@ -214,20 +214,20 @@ public class UserController {
         return "blog-list";
     }
 
-    @GetMapping("blog/range/{id_user}/{id_blog}/{raiting}")
-    public String userBlogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
-                               @PathVariable(value = "id_user", required = false) Long id_user,
-                                @PathVariable(value = "raiting", required = false) Long raiting){
-        Blog blogDB = blogService.getById(id_blog);
-        if(blogDB.getRating() == 0F){
-            blogDB.setRating(blogDB.getRating() + raiting);
-        } else {
-            blogDB.setRating((blogDB.getRating() + raiting) / 2);
-        }
-        blogService.update(blogDB);
-
-        return "redirect:/user/blog/" + id_user + "/" + id_blog + "/" + blogDB.getUser().getId();
-    }
+//    @GetMapping("blog/range/{id_user}/{id_blog}/{raiting}")
+//    public String userBlogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
+//                               @PathVariable(value = "id_user", required = false) Long id_user,
+//                                @PathVariable(value = "raiting", required = false) Long raiting){
+//        Blog blogDB = blogService.getById(id_blog);
+//        if(blogDB.getRating() == 0F){
+//            blogDB.setRating(blogDB.getRating() + raiting);
+//        } else {
+//            blogDB.setRating((blogDB.getRating() + raiting) / 2);
+//        }
+//        blogService.update(blogDB);
+//
+//        return "redirect:/user/blog/" + id_user + "/" + id_blog + "/" + blogDB.getUser().getId();
+//    }
 
 
     @GetMapping("update-blog/{id_user}/{id_blog}")

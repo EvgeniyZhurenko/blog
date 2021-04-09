@@ -48,18 +48,18 @@ public class BlogController {
         return "blog";
     }
 
-    @GetMapping("blog/range/{id_blog}/{raiting}")
-    public String blogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
-                           @PathVariable(value = "raiting", required = false) Long raiting){
-        Blog blogDB = blogService.getById(id_blog);
-        if(blogDB.getRating() == 0F){
-            blogDB.setRating(blogDB.getRating() + raiting);
-        } else {
-            blogDB.setRating((blogDB.getRating() + raiting) / 2);
-        }
-        blogService.update(blogDB);
-        return "redirect:/blog/" + id_blog;
-    }
+//    @GetMapping("blog/range/{id_blog}/{raiting}")
+//    public String blogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
+//                           @PathVariable(value = "raiting", required = false) Long raiting){
+//        Blog blogDB = blogService.getById(id_blog);
+//        if(blogDB.getRating() == 0F){
+//            blogDB.setRating(blogDB.getRating() + raiting);
+//        } else {
+//            blogDB.setRating((blogDB.getRating() + raiting) / 2);
+//        }
+//        blogService.update(blogDB);
+//        return "redirect:/blog/" + id_blog;
+//    }
 
 }
 

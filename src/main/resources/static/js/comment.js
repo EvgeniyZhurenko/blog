@@ -1,24 +1,30 @@
+
 function send(){
-    let div = document.querySelector('.listComments');
 
-    // let elem = [0,0];
-    // elem[0] = "name";
-    // elem[1] = "inputText";
+    ajax_func_comment(idBlog, $('#name').attr('value'), $('#inputText').val(),
+        $('#id_user').attr('value'))
+};
 
-    let elem = ["name","inputText"];
-
-    for(let i = 0;i < elem.length; i++){
-        let p = document.createElement('p');
-        p.textContent = document.querySelector(`#${elem[i]}`).value;
-        div.appendChild(p);
-        let item = document.querySelector(`textarea[id = ${elem[i]}]`);
-        item.value = "";
-        if(i == 0){
-            let hr = document.createElement('hr');
-            div.appendChild(hr);
+let ajax_func_comment = function(idBlog, name, comment, idUser) {
+    $.ajax({
+        type:"GET",
+        contentType : 'application/json',
+        url: '/ajax/comment',
+        data: {idBlog: idBlog, name: name, comment: comment, idUser: idUser},
+        dataType: 'json',
+        success: function (response) {
+            console.dir(response);
+            let div = $('#comment');
+            let pName = document.createElement('p');
+            pName.text(new Date().toISOString() + " " + name );
+            let br = document.createElement('br');
+            let pComment = document.createElement('p');
+            pComment.text(comment);
+            div.append(pName).append(br).append(pComment);
+            console.dir(div);
+        },
+        error: function(jqXhr, textStatus, errorMessage){
+            console.log("Error: ", errorMessage);
         }
-    }
-    let pDate = document.createElement('p');
-    pDate.innerHTML = new Date().toDateString();
-    div.appendChild(pDate);
-}
+    });
+};

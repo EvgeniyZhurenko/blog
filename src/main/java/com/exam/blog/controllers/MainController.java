@@ -32,7 +32,7 @@ public class MainController {
     }
 
 
-    @GetMapping(value = {"user/main", "", "main"})
+    @GetMapping(value = {"user/main", "", "main","admin/main"})
     public String mainPage(Model model) {
         model.addAttribute("title", "Главная страница");
 
@@ -64,31 +64,49 @@ public class MainController {
                     model.addAttribute("msg", "У вас пока что нет блогов!");
                     model.addAttribute("anonymous", false);
                 }
+            } else if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+
+                namePage = "user/admin-menu";
+
+                List<Blog> bloges = blogService.getSortListBlogByRating();
+
+                if (bloges.size() != 0) {
+                    model.addAttribute("list", true);
+                    model.addAttribute("blogList", bloges);
+                    model.addAttribute("idUser", userDB.getId());
+                    model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+                } else {
+                    model.addAttribute("list", false);
+                    model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
+                    model.addAttribute("idUser", userDB.getId());
+                    model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+                }
             }
+
         } else {
 
-            namePage = "main";
+                namePage = "main";
 
-            model.addAttribute("anonymous", true);
+                model.addAttribute("anonymous", true);
 
-            List<Blog> bloges = blogService.getSortListBlogByRating();
+                List<Blog> bloges = blogService.getSortListBlogByRating();
 
-            // проверка на наличие блогов вообще на сайте
-            if (bloges.size() != 0) {
-                model.addAttribute("list", true);
-                model.addAttribute("blogList", bloges);
-            } else {
-                model.addAttribute("list", false);
-                model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
+                // проверка на наличие блогов вообще на сайте
+                if (bloges.size() != 0) {
+                    model.addAttribute("list", true);
+                    model.addAttribute("blogList", bloges);
+                } else {
+                    model.addAttribute("list", false);
+                    model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
+                }
+
             }
-
-        }
 
         return namePage;
     }
 
 
-    @GetMapping(value = {"metrics", "user/metrics"})
+    @GetMapping(value = {"metrics", "user/metrics", "admin/metrics"})
     public String aboutPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "ТАБЛИЦА МЕР ПРОДУКТОВ");
@@ -103,7 +121,7 @@ public class MainController {
         return "menu_bar_pages/metrics";
     }
 
-    @GetMapping(value = {"about", "user/about"})
+    @GetMapping(value = {"about", "user/about", "admin/about"})
     public String supportPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "О БЛОГЕ");
@@ -118,7 +136,7 @@ public class MainController {
         return "menu_bar_pages/about";
     }
 
-    @GetMapping(value = {"contacts", "user/contacts"})
+    @GetMapping(value = {"contacts", "user/contacts", "admin/contacts"})
     public String contactsPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "Котнакты");
