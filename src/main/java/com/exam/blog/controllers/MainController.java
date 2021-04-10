@@ -1,6 +1,7 @@
 package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
+import com.exam.blog.models.Comment;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.UserRepoImpl;
@@ -66,15 +67,16 @@ public class MainController {
                 }
             } else if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
 
-                namePage = "user/admin-menu";
+                namePage = "admin/admin-menu";
 
                 List<Blog> bloges = blogService.getSortListBlogByRating();
 
                 if (bloges.size() != 0) {
+                    model.addAttribute("menu", "Сделайте выбор :");
                     model.addAttribute("list", true);
                     model.addAttribute("blogList", bloges);
                     model.addAttribute("idUser", userDB.getId());
-                    model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+                    model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
                 } else {
                     model.addAttribute("list", false);
                     model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
@@ -110,14 +112,7 @@ public class MainController {
     public String aboutPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "ТАБЛИЦА МЕР ПРОДУКТОВ");
-        if (auth.getName().equalsIgnoreCase("anonymousUser"))
-            model.addAttribute("anonymous", true);
-        else {
-            User userDB = userRepo.getUserByUserName(auth.getName());
-            model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
-            model.addAttribute("idUser", userDB.getId());
-            model.addAttribute("anonymous", false);
-        }
+        addMenu(auth, model);
         return "menu_bar_pages/metrics";
     }
 
@@ -125,14 +120,7 @@ public class MainController {
     public String supportPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "О БЛОГЕ");
-        if (auth.getName().equalsIgnoreCase("anonymousUser"))
-            model.addAttribute("anonymous", true);
-        else {
-            User userDB = userRepo.getUserByUserName(auth.getName());
-            model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
-            model.addAttribute("idUser", userDB.getId());
-            model.addAttribute("anonymous", false);
-        }
+        addMenu(auth,model);
         return "menu_bar_pages/about";
     }
 
@@ -140,14 +128,7 @@ public class MainController {
     public String contactsPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "Котнакты");
-        if (auth.getName().equalsIgnoreCase("anonymousUser"))
-            model.addAttribute("anonymous", true);
-        else {
-            User userDB = userRepo.getUserByUserName(auth.getName());
-            model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
-            model.addAttribute("idUser", userDB.getId());
-            model.addAttribute("anonymous", false);
-        }
+        addMenu(auth,model);
         return "menu_bar_pages/contacts";
     }
 
@@ -155,14 +136,7 @@ public class MainController {
     public String accountInfo(@PathVariable(value = "id", required = false) Long idUser,
                               Model model) {
 
-        User userDB = userRepo.getById(idUser);
-        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
-        model.addAttribute("idUser", idUser);
-
-        model.addAttribute("title", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
-        model.addAttribute("user", userDB);
-        model.addAttribute("idUser", idUser);
-
+        account(idUser, model);
         return "account";
     }
 
@@ -187,5 +161,45 @@ public class MainController {
             model.addAttribute("msg", "У вас пока что нет блогов!");
         }
         return "account-all-blogs";
+    }
+
+    @GetMapping("blog/{id_user}/{id_blog}")
+    public String blogUser(@PathVariable(value = "id_user", required = false) Long idUser,
+                           @PathVariable(value = "id_blog", required = false) Long idBLog,
+                           Model model){
+        User UserDB = userRepo.getById(idUser);
+        Blog blogDB = blogService.getById(idBLog);
+        Comment comment = new Comment();
+        model.addAttribute("blog", blogDB );
+        model.addAttribute("comment", comment);
+
+        return "blog";
+    }
+
+    public void addMenu (Authentication auth, Model model){
+        if (auth.getName().equalsIgnoreCase("anonymousUser"))
+            model.addAttribute("anonymous", true);
+        else {
+            User userDB = userRepo.getUserByUserName(auth.getName());
+            if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"))) {
+                model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+                model.addAttribute("idUser", userDB.getId());
+                model.addAttribute("user", true);
+            } else if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))){
+                model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
+                model.addAttribute("idUser", userDB.getId());
+                model.addAttribute("admin", true);
+            }
+        }
+    }
+
+    public void account(Long idUser, Model model){
+        User userDB = userRepo.getById(idUser);
+        model.addAttribute("name", "Аккаунт " + " " + userDB.getLast_name());
+        model.addAttribute("idUser", idUser);
+
+        model.addAttribute("title", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("user", userDB);
+
     }
 }

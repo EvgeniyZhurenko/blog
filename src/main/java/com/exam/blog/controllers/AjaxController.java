@@ -2,6 +2,7 @@ package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
 import com.exam.blog.models.Comment;
+import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.CommentService;
 import com.exam.blog.service.UserRepoImpl;
@@ -38,7 +39,6 @@ public class AjaxController {
                                             @RequestParam(value = "rating", required = false) String str_rating,
                                             Model model) {
 
-        System.out.println(id_blog + " " + str_rating);
         Long idBlog = Long.valueOf(id_blog);
         float rating = Float.valueOf(str_rating);
         Blog blogDB = blogService.getById(idBlog);
@@ -55,6 +55,45 @@ public class AjaxController {
         model.addAttribute("blog", blogService.getById(idBlog));
 
         return ResponseEntity.ok(blogDB.getRating());
+    }
+
+    @GetMapping(value = "ajax/ban/blog")
+    public ResponseEntity<Boolean> banBlog(@RequestParam(value = "idBlog", required = false) String id_blog,
+                                            @RequestParam(value = "bunBlog", required = false) String str_ban) {
+        Long idBlog = Long.valueOf(id_blog);
+        Boolean banBlog = Boolean.valueOf(str_ban);
+
+        Blog blogDB = blogService.getById(idBlog);
+        blogDB.setBan_blog(banBlog);
+        blogService.update(blogDB);
+
+        return ResponseEntity.ok(banBlog);
+    }
+
+    @GetMapping(value = "ajax/ban/user")
+    public ResponseEntity<Boolean> banUser(@RequestParam(value = "idUser", required = false) String id_user,
+                                           @RequestParam(value = "bunUser", required = false) String str_ban) {
+        Long idUser = Long.valueOf(id_user);
+        Boolean banUser = Boolean.valueOf(str_ban);
+
+        User userDB = userRepo.getById(idUser);
+        userDB.setBan_user(banUser);
+        userRepo.update(userDB,false);
+
+        return ResponseEntity.ok(banUser);
+    }
+
+    @GetMapping(value = "ajax/ban/comment")
+    public ResponseEntity<Boolean> banComment(@RequestParam(value = "idComment", required = false) String id_comment,
+                                              @RequestParam(value = "bunComment", required = false) String str_ban) {
+        Long idComment = Long.valueOf(id_comment);
+        Boolean banComment = Boolean.valueOf(str_ban);
+
+        Comment commentDB = commentService.getById(idComment);
+        commentDB.setBanComment(banComment);
+        commentService.update(commentDB);
+
+        return ResponseEntity.ok(banComment);
     }
 
 //    @GetMapping(value = "ajax/comment")

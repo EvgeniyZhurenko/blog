@@ -16,10 +16,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 
 @Controller
@@ -29,15 +27,17 @@ public class UserController {
     private final UserRepoImpl userRepo;
     private final BlogService blogService;
     private final PictureService pictureService;
+    private final MainController mainController;
 
     @Value("${upload.picture.path}")
     private String uploadPicturePath;
 
     @Autowired
-    public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService) {
+    public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService, MainController mainController) {
         this.userRepo = userRepo;
         this.blogService = blogService;
         this.pictureService = pictureService;
+        this.mainController = mainController;
     }
 
 
@@ -106,13 +106,8 @@ public class UserController {
     public String userInfo(@PathVariable(name = "id", required = false) Long idUser,
                            Model model) {
 
-        User userDB = userRepo.getById(idUser);
-        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
-        model.addAttribute("idUser" , idUser);
+       mainController.account(idUser,model);
 
-        model.addAttribute("title", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
-        model.addAttribute("user", userDB);
-        model.addAttribute("idUser" , idUser);
         return "user/user_page";
     }
 

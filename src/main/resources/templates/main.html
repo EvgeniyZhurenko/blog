@@ -23,7 +23,7 @@
 
             <p class="lead-mb-0"><a  class="text-white fw-bold" th:text="${blogList[0].getUser().getFirst_name()} + ' ' +
                                       ${blogList[0].getUser().getLast_name()}"
-                                     th:href="@{blog/{id}(id = ${blogList[0].getUser().getUsername()})}">Блогер...</a></p>
+                                     th:href="@{account/{id}(id = ${blogList[0].getUser().getId()})}">Блогер...</a></p>
 
             <p class="lead-mb-0"><a  class="text-white fw-bold"
                                      th:href="@{blog/{id}(id = ${blogList[0].getId()})}">Продолжить читать...</a></p>
@@ -46,11 +46,15 @@
 
                     <p class="card-text mb-auto"  th:text="${blog.announcement}" >Текст блога.</p>
 
-                    <p class="lead-mb-0"><a  class="text-white fw-bold" th:text="${blog.getUser().getFirst_name()} + ' ' +
+                    <p class="lead-mb-0">
+                        <a  class="text-white fw-bold" th:text="${blog.getUser().getFirst_name()} + ' ' +
                                       ${blog.getUser().getLast_name()}"
-                                             th:href="@{blog/{id}(id = ${blog.getUser().getUsername()})}">Блогер...</a></p>
+                                             th:href="@{account/{id}(id = ${blog.getUser().getId()})}">Блогер...</a>
+                    </p>
 
-                    <a  class="stretched-link" th:href="@{blog/{id}(id = ${blog.getId()})}"  >Продолжить читать...</a>
+                    <p class="lead-mb-0" >
+                        <a  class="text-white fw-bold" th:href="@{blog/{id}(id = ${blog.getId()})}"  >Продолжить читать...</a>
+                    </p>
                 </div>
                 <div class="col-auto d-none d-lg-block" th:each="picture : ${blog.getPictures()}">
 

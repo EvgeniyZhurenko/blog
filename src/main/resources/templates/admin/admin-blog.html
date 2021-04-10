@@ -27,17 +27,30 @@
 </head>
 <body>
 
-<header th:insert="blocks/user :: user"></header>
+<header th:insert="blocks/admin :: admin"></header>
 
 <div th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
      style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
      background-size: cover; padding: 0 10em; max-width: 100em!important;">
 
-    <h1 th:text="${blog.title}"></h1>
+    <h1 th:text="${blog.title}" th:value="${blog.getId()}"></h1>
+    <div class="div_ban" th:if="${blog.ban_blog}">
+        <label for="chek" th:text="'Cнять бан с блога'"></label>
+        <input class="chek" th:type="checkbox" checked="checked" id="chek" >
+        <p th:text="'Этот блог забанен администратором'" th:style="'color: red'" ></p>
+    </div>
+    <div class="div_ban" th:unless="${blog.ban_blog}">
+        <label for="unchek" th:text="'Пометить блог в бан'"></label>
+        <input class="chek" th:type="checkbox" id="unchek">
+    </div>
+    <div class="text-center">
+        <a class="btn btn-primary profile-button" th:href="@{~/admin/delete/blog/{id_admin}/{id_blog}
+                (id_admin = ${idAdmin}, id_blog = ${blog.id})}">Удалить блог</a>
+    </div>
 
     <div class="alert alert-info mt-2" >
         <div>
-            <a th:href="@{user/account/{id}(id = ${blog.user.id})}" th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
+            <a th:href="@{~/admin/account/{id}(id = ${blog.user.id})}" th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
             <span th:text="'Дата блога ' + ${blog.date_create_blog} + ' Рейтинг ' "></span>
             <span id ="rating" th:text="${blog.rating}"></span>
         </div>
@@ -58,60 +71,40 @@
             </div>
         </div>
         <p th:text="${blog.full_text}"></p>
-        <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
-
-        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a></span>
-
-        <div id="rate">
-            <p id="p_rate" th:value="${blog.getId()}">Оцените : </p>
-            <div id="first">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/1(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
-            </div>
-            <div id="second">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/2(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
-            </div>
-            <div id="third">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/3(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
-            </div>
-            <div id="forth">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/4(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
-            </div>
-            <div id="fifth">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/5(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
-            </div>
-
-        </div>
-
         <div class="container">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
                     <div class="well well-sm" th:if="${blog.comments}">
-                        <div id="comment" class="row" th:each="comment : ${blog.comments}">
+                        <div class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}">
+                            <hr/>
                             <p th:text="${comment.user.username} + ' ' +
                             ${comment.dateCreateComment} + ' '"></p>
-                            <p th:text="${comment.text}"></p>
+                            <p th:text="'' + ${comment.text}" th:style="'float: rigth'"></p>
+                            <hr/>
+
+                            <div class="comment_ban" th:if="${comment.banComment}" th:value="${comment.id}">
+                                <label for="chek_comment" th:text="'Cнять бан с комментария'"></label>
+                                <input class="comment_chek" th:type="checkbox" checked="checked" id="chek_comment" >
+                                <p th:text="'Этот комментарий забанен администратором'" th:style="'color: red'"></p>
+                            </div>
+                            <div class="comment_ban" th:unless="${comment.banComment}" th:value="${comment.id}">
+                                <label for="unchek_comment" th:text="'Пометить комментарий в бан'"></label>
+                                <input class="comment_chek" th:type="checkbox" id="unchek_comment">
+                            </div>
+                            <div >
+                                <a class="btn btn-primary profile-button" th:href="@{~/admin/delete/comment/{id_admin}/{id_comment}
+                                            (id_admin = ${idAdmin}, id_blog = ${comment.id})}">Удалить комментарий</a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <span><a th:href="@{~/admin/user/all-blogs/{id_admin}/{id_user}(id_admin = ${idAdmin},id_user = ${blog.user.id})}">К списку блогов пользователя</a>&emsp;</span>
+        <span><a th:href="@{~/admin/blog/list/{id_admin}(id_admin = ${idAdmin})}">К списку всех блогов</a>&emsp;</span>
 </div>
 
-<div class="comment">
-    <div class="listComments"></div>
-    <form  th:action="@{~/user/comment/creat/{id_user}/{id_blog}/{id_user_blog}(id_user = ${idUser}, id_blog = ${blog.getId()},
-                        id_user_blog = ${idUserBlog})}" th:method="post" class="leave">
-
-        <h2 id="id_user" th:value="${idUser}" >Оставьте свой комментарий :</h2>
-        <p>Имя пользователя :  <span id="name" th:value="${user.first_name} + ' ' + ${user.last_name}" th:text="${user.first_name} + ' ' + ${user.last_name}"></span> </p>
-        <!--<textarea id="name" th:style="'height: 15px; width: 200px; font-size: 15px;'"></textarea>-->
-        <p>Комментарий :<br>
-            <textarea id="inputText" th:field="*{comment.text}" th:style="'width: 600px; height: 100px'"></textarea>
-        </p>
-
-        <input id="input" type="submit" value="Отправить" />
-    </form>
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
@@ -119,7 +112,7 @@
 
 </body>
 
-<script type="text/javascript" src="../../static/js/rating.js" th:src="@{/js/rating.js}"></script>
-<script type="text/javascript" src="../../static/js/comment.js" th:src="@{/js/comment.js}"></script>
+<script type="text/javascript" src="../../static/js/bun_blog.js" th:src="@{/js/bun_blog.js}"></script>
+<script type="text/javascript" src="../../static/js/bun_comment.js" th:src="@{/js/bun_comment.js}"></script>
 
 </html>

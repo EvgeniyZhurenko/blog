@@ -7,6 +7,8 @@ import com.exam.blog.repository.UserRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -58,6 +60,7 @@ public class UserRepoImpl implements UserDetailsService {
         if (userFromDB == null) {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setBan_user(false);
             userRepo.save(user);
             return true;
         } else {
@@ -66,10 +69,13 @@ public class UserRepoImpl implements UserDetailsService {
     }
 
     public boolean update(User user, boolean bool) {
-        if (userRepo.existsById(user.getId())) {
+        User exist = userRepo.getUserById(user.getId());
+        if (exist != null) {
             if(!bool) {
+                setProps(exist,user);
                 userRepo.save(user);
             } else {
+                setProps(exist,user);
                 userRepo.save(user);
             }
             return true;
@@ -185,6 +191,20 @@ public class UserRepoImpl implements UserDetailsService {
         user.setFoto(filePathFoto);
     }
 
+    public void setProps(User exist, User user){
+        user.setRoles(exist.getRoles());
+        user.setPassword(exist.getPassword());
+        user.setBan_user(exist.getBan_user());
+        if(user.getFoto() == null){
+            user.setFoto(exist.getFoto());
+        }
+    }
+
+    public List<User> sortUserListFirstName(){
+        return userRepo.findAll().stream()
+                .sorted((u1, u2) -> u1.getFirst_name().compareToIgnoreCase(u2.getFirst_name()))
+                .collect(Collectors.toList());
+    }
 }
 
 

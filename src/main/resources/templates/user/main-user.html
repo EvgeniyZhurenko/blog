@@ -22,7 +22,9 @@
             <p class="lead-my-3" th:text="${blogList[0].announcement}">Текст блога</p>
 
             <p class="lead-mb-0"><a  class="text-white fw-bold"
-                                     th:href="@{~/user/blog/{id}(id = ${blogList[0].getId()})}">Продолжить читать...</a></p>
+                                     th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}
+                                     (id_user = ${idUser}, id_blog = ${blogList[0].getId()},
+                                      id_user_blog = ${blogList[0].user.id})}">Продолжить читать...</a></p>
         </div>
     </div>
 
@@ -42,7 +44,8 @@
 
                     <p class="card-text mb-auto"  th:text="${blog.announcement}" >Текст блога.</p>
 
-                    <a  class="stretched-link" th:href="@{blog/{id}(id = ${blog.getId()})}"  >Продолжить читать...</a>
+                    <a  class="stretched-link" th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}
+                        (id_user = ${idUser}, id_blog = ${blog.getId()}, id_user_blog = ${blog.user.id})}"  >Продолжить читать...</a>
                 </div>
                 <div class="col-auto d-none d-lg-block" >
 

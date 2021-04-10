@@ -113,6 +113,8 @@ public class BlogService {
 
         blog.setRating(0F);
 
+        blog.setBan_blog(false);
+
         save(blog);
     }
 

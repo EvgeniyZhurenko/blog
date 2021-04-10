@@ -39,6 +39,7 @@ public class CommentService {
 
     public void save(Comment comment) {
 
+        comment.setBanComment(false);
         commentRepo.save(comment);
 
     }
