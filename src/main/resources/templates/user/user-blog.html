@@ -60,7 +60,11 @@
         <p th:text="${blog.full_text}"></p>
         <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a></span>
+        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a>&emsp;</span>
+
+        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/delete-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить блог</a>&emsp;</span>
+
+        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/delete-picture-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить фото блога</a>&emsp;</span>
 
         <div id="rate">
             <p id="p_rate" th:value="${blog.getId()}">Оцените : </p>
@@ -105,7 +109,7 @@
 
         <h2 id="id_user" th:value="${idUser}" >Оставьте свой комментарий :</h2>
         <p>Имя пользователя :  <span id="name" th:value="${user.first_name} + ' ' + ${user.last_name}" th:text="${user.first_name} + ' ' + ${user.last_name}"></span> </p>
-        <!--<textarea id="name" th:style="'height: 15px; width: 200px; font-size: 15px;'"></textarea>-->
+
         <p>Комментарий :<br>
             <textarea id="inputText" th:field="*{comment.text}" th:style="'width: 600px; height: 100px'"></textarea>
         </p>

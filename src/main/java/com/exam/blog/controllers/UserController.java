@@ -5,6 +5,7 @@ import com.exam.blog.models.Comment;
 import com.exam.blog.models.Picture;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
+import com.exam.blog.service.CommentService;
 import com.exam.blog.service.PictureService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,19 @@ public class UserController {
     private final UserRepoImpl userRepo;
     private final BlogService blogService;
     private final PictureService pictureService;
+    private final CommentService commentService;
+
     private final MainController mainController;
 
     @Value("${upload.picture.path}")
     private String uploadPicturePath;
 
     @Autowired
-    public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService, MainController mainController) {
+    public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService, CommentService commentService, MainController mainController) {
         this.userRepo = userRepo;
         this.blogService = blogService;
         this.pictureService = pictureService;
+        this.commentService = commentService;
         this.mainController = mainController;
     }
 
@@ -209,21 +213,6 @@ public class UserController {
         return "blog-list";
     }
 
-//    @GetMapping("blog/range/{id_user}/{id_blog}/{raiting}")
-//    public String userBlogShow(@PathVariable(value = "id_blog", required = false) Long id_blog,
-//                               @PathVariable(value = "id_user", required = false) Long id_user,
-//                                @PathVariable(value = "raiting", required = false) Long raiting){
-//        Blog blogDB = blogService.getById(id_blog);
-//        if(blogDB.getRating() == 0F){
-//            blogDB.setRating(blogDB.getRating() + raiting);
-//        } else {
-//            blogDB.setRating((blogDB.getRating() + raiting) / 2);
-//        }
-//        blogService.update(blogDB);
-//
-//        return "redirect:/user/blog/" + id_user + "/" + id_blog + "/" + blogDB.getUser().getId();
-//    }
-
 
     @GetMapping("update-blog/{id_user}/{id_blog}")
     public String updateUserBlogGet(@PathVariable(name = "id_user", required = false) Long idUser,
@@ -251,5 +240,26 @@ public class UserController {
 
         return blogService.updatePropertiesExsistingBlog(blog,picture,image,idUser,uploadPicturePath);
 
+    }
+
+    @GetMapping("delete-blog/{idUser}/{idBlog}")
+    public String deleteBlog(@PathVariable(value = "idUser", required = false) Long idUser,
+                             @PathVariable(value = "idBlog", required = false) Long idBlog){
+
+        User userDB = userRepo.getById(idUser);
+        Blog blogDB = blogService.getById(idBlog);
+        blogService.deleteBlog(userDB, blogDB);
+
+        return "redirect:blog/list/" + idUser;
+    }
+
+    @GetMapping("delete-picture-blog/{idUser}/{idBlog}")
+    public String deletePicture(@PathVariable(value = "idUser", required = false) Long idUser,
+                                @PathVariable(value = "idBlog", required = false) Long idBlog){
+
+        Blog blogDB = blogService.getById(idBlog);
+        pictureService.deletePictureBlog(blogDB);
+
+        return "redirect:blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId();
     }
 }

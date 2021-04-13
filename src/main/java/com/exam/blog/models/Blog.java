@@ -47,7 +47,7 @@ public class Blog {
     @OneToMany(mappedBy = "blog",
                cascade = CascadeType.ALL,
                fetch = FetchType.LAZY )
-    Set<Picture> pictures;
+    List<Picture> pictures;
 
     @ManyToOne
     @JoinColumn(name="id_user", referencedColumnName="id_user", nullable=false)

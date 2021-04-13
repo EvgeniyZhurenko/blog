@@ -7,6 +7,8 @@ import com.exam.blog.repository.CommentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 /**
  * author Zhurenko Evgeniy
@@ -16,20 +18,8 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private CommentRepo commentRepo;
-    private UserRepoImpl userRepo;
-    private BlogService blogService;
-
-    @Autowired
-    public void setBlogService(BlogService blogService) {
-        this.blogService = blogService;
-    }
 
     public CommentService() {
-    }
-
-    @Autowired
-    public void setUserRepo(UserRepoImpl userRepo) {
-        this.userRepo = userRepo;
     }
 
     @Autowired
@@ -59,5 +49,9 @@ public class CommentService {
 
     public Comment getById(Long id) {
         return commentRepo.getCommentById(id);
+    }
+
+    public List<Comment> findAllCommentsBlog(){
+        return commentRepo.findAll();
     }
 }
