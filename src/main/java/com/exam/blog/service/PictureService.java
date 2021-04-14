@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
+import java.util.stream.Collectors;
 
 
 /**
@@ -66,6 +66,12 @@ public class PictureService  {
 
     public List<Picture> findAllPicture (){
         return pictureRepo.findAll();
+    }
+
+    public List<Picture> findAllPictureByUserId(Long idUser) {
+        return pictureRepo.findAll().stream()
+                .filter(pic -> pic.getBlog().getUser()
+                .getId()==(idUser)).collect(Collectors.toList());
     }
 
     public boolean updateBlogLoadPictureImage(Long idUser, Blog blog, MultipartFile image, Picture picture) throws IOException {
@@ -147,7 +153,7 @@ public class PictureService  {
 
     public void deletePictureBlog(Blog blogDB) {
 
-        for(Picture picture: pictureRepo.findAll()){
+        for(Picture picture: findAllPictureByUserId(blogDB.getUser().getId())){
             if(picture.getId() == blogDB.getPictures().get(0).getId()){
                 blogDB.getPictures().remove(picture);
                 blogService.update(blogDB);

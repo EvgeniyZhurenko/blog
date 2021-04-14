@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -50,7 +51,9 @@ public class UserController {
                            Model model){
         User userDB = userRepo.getById(id_user);
 
-        List<Blog> blogs = userDB.getBlogs();
+        List<Blog> blogs = userDB.getBlogs().stream()
+                                 .sorted((b1,b2) -> b2.getRating().compareTo(b1.getRating()))
+                                 .collect(Collectors.toList());
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
@@ -250,7 +253,7 @@ public class UserController {
         Blog blogDB = blogService.getById(idBlog);
         blogService.deleteBlog(userDB, blogDB);
 
-        return "redirect:blog/list/" + idUser;
+        return "redirect:/user/blog/list/" + idUser;
     }
 
     @GetMapping("delete-picture-blog/{idUser}/{idBlog}")
@@ -260,6 +263,6 @@ public class UserController {
         Blog blogDB = blogService.getById(idBlog);
         pictureService.deletePictureBlog(blogDB);
 
-        return "redirect:blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId();
+        return "redirect:/user/blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId();
     }
 }

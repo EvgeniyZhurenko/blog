@@ -14,6 +14,4 @@ public interface PictureRepo extends JpaRepository<Picture, Long> {
 
     Picture getPictureById(Long id);
 
-    Picture getPictureByName(String name_picture);
-
 }

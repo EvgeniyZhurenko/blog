@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -51,7 +52,9 @@ public class CommentService {
         return commentRepo.getCommentById(id);
     }
 
-    public List<Comment> findAllCommentsBlog(){
-        return commentRepo.findAll();
+    public List<Comment> findAllCommentsBlog(Long idBlog){
+        return commentRepo.findAll().stream()
+                          .filter(comment -> comment.getBlog().getId()==(idBlog))
+                          .collect(Collectors.toList());
     }
 }

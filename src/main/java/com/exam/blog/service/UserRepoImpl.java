@@ -205,6 +205,11 @@ public class UserRepoImpl implements UserDetailsService {
                 .sorted((u1, u2) -> u1.getFirst_name().compareToIgnoreCase(u2.getFirst_name()))
                 .collect(Collectors.toList());
     }
+
+    public Blog findBlogById(User user, Blog blog){
+
+        return user.getBlogs().stream().filter(b -> b.getId() == blog.getId()).collect(Collectors.toList()).get(0);
+    }
 }
 
 

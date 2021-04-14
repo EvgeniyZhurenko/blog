@@ -7,6 +7,7 @@ import com.exam.blog.models.Picture;
 import com.exam.blog.models.User;
 import com.exam.blog.repository.BlogRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +28,9 @@ public class BlogService {
     private UserRepoImpl userRepo;
     private PictureService pictureService;
     private CommentService commentService;
+
+    @Value("${upload.picture.path}")
+    private String uploadPicturePath;
 
     @Autowired
     public void setCommentService(CommentService commentService) {
@@ -157,7 +161,10 @@ public class BlogService {
 
             Picture pictureDB = pictureService.getById(picture.getId());
 
-            blogDB.getPictures().remove(0);
+            if(blogDB.getPictures().size() != 0) {
+
+                blogDB.getPictures().remove(0);
+            }
 
             blogDB.getPictures().add(pictureDB);
 
@@ -174,25 +181,30 @@ public class BlogService {
 
     public void deleteBlog(User userDB, Blog blogDB){
 
-        for(Blog blog : userDB.getBlogs()) {
-            if (blog.getId() == blogDB.getId()) {
-                userDB.getBlogs().remove(blog);
-            }
-        }
-
-        for (Comment comment: commentService.findAllCommentsBlog()) {
-            for (Comment commentBlog : blogDB.getComments()) {
-                if (comment.getId() == commentBlog.getId()) {
+        for (Comment comment: commentService.findAllCommentsBlog(blogDB.getId())) {
+                    blogDB.getComments().remove(comment);
+                    userDB.getComments().remove(comment);
+                    userRepo.update(userDB, true);
                     commentService.delete(comment.getId());
+        }
+         for(Picture picture: pictureService.findAllPictureByUserId(blogDB.getUser().getId())){
+            if(picture.getId() == blogDB.getPictures().get(0).getId()){
+                pictureService.delete(picture.getId());
+                File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
+                File[] files = folder.listFiles();
+                if(files.length != 0) {
+                    for (File file : files) {
+                        file.delete();
+                    }
+                    folder.delete();
                 }
             }
         }
 
-        for(Picture picture : pictureService.findAllPicture()){
-            if(picture.getId() == blogDB.getPictures().get(0).getId()){
-                blogDB.getPictures().remove(picture);
-            }
-        }
+       if(blogDB.getId() ==  userRepo.findBlogById(userDB, blogDB).getId()){
+
+           userDB.getBlogs().remove(blogDB);
+       }
 
         delete(blogDB.getId());
     }
