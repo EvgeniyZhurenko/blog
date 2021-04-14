@@ -5,19 +5,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-
-</head>
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-    <link rel="stylesheet" href="../../static/css/user-all-blogs.css" th:href="@{/css/user-all-blogs.css}">
-    <link rel="stylesheet" href="../../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
+    <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+    <link rel="stylesheet" href="../static/css/user-all-blogs.css" th:href="@{/css/user-all-blogs.css}">
+    <link rel="stylesheet" href="../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
 
 </head>
 <body>
@@ -30,7 +20,7 @@
      background-size: cover;">
 
     <div class="container mt-4" >
-        <div class="card p-3" th:each="blog : ${blogList}">
+        <div class="card p-3" th:each="blog : ${blogList}" th:unless="${blog.ban_blog}">
             <div class="row">
                 <div class="col-md-4">
                     <div class="position-relative snipimage"
@@ -48,10 +38,6 @@
                             <span><i class="fa fa-heart text-danger"></i> </span>
                         </div>
                         <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
-                            <!--<div class="d-flex flex-row align-items-center"> -->
-                            <!--<i class="fa fa-eye"></i> -->
-                            <!--<span class="ms-1 views">453674</span>-->
-                            <!--</div>-->
                             <div class="d-flex flex-row align-items-center ms-2">
                                 <i class="fa fa-heart"></i>
                                 <span class="ms-1 views" th:text="'Рэйтинг ' + ${blog.rating}">4565</span>
@@ -71,6 +57,46 @@
                     </div>
                 </div>
             </div>
+        </div>
+
+    </div>
+
+    <div class="container mt-4" >
+        <div class="card p-3" th:each="blog : ${blogList}" th:if="${blog.ban_blog}">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="position-relative snipimage"
+                         th:each="picture : ${blog.pictures}">
+                        <img th:src="@{|/${picture.url_image}|}"
+                             th:alt="${picture.getName()}"
+                             class="rounded img-fluid w-100 img-responsive">
+                        <span class="position-absolute user-timing" th:text="${blog.date_create_blog}">1 min</span></div>
+                    <!--</div>-->
+                </div>
+                <div class="col-md-8">
+                    <div class="mt-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h5 class="mb-1" th:style="'color: #007bff; '" th:text="${blog.title}"></h5>
+                        </div>
+                        <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
+                            <div class="d-flex flex-row align-items-center ms-2">
+                                <i class="fa fa-heart"></i>
+                                <span class="ms-1 views" th:text="'Рэйтинг ' + ${blog.rating}">4565</span>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
+                            <div class="d-flex flex-row align-items-center ms-2">
+                                <p th:text="'заблокированно администратором сайта!'" th:style="'color: red;'" ></p>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
+                            <div class="d-flex flex-row align-items-center ms-2">
+                                <p th:text="'для разблокирования свяжитесь с тех поддержкой сайта!'" th:style="'color: red;'" ></p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
         </div>
     </div>
 

@@ -5,19 +5,8 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-
-</head>
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
     <link rel="stylesheet" href="../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
-
 
 </head>
 <body>
@@ -28,7 +17,7 @@
 <div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
      th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
      style="background-image: url('../static/images/background-about-metrics-contact.jpg');
-     background-size: cover; display: grid; justify-items: center;" >
+     background-size: cover; display: grid; justify-items: center;" th:unless="${user.ban_user}">
 
     <h1 th:text="${title}"></h1>
 
@@ -86,6 +75,17 @@
         </li>
     </ul>
     </p>
+</div>
+
+<div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
+     style="background-image: url('../static/images/background-about-metrics-contact.jpg');
+     background-size: cover; display: grid; justify-items: center;" th:if="${user.ban_user}">
+
+    <h1 th:text="${title}"></h1>
+    <p th:text="'заблокированно администратором сайта!'" th:style="'color: red;'" ></p>
+    <p th:text="'для разблокирования свяжитесь с тех поддержкой сайта!'" th:style="'color: red;'" ></p>
+
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
