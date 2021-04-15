@@ -45,6 +45,9 @@ public class UserRepoImpl implements UserDetailsService {
     @Value("${upload.path}")
     private String uploadPath;
 
+    @Value("${upload.picture.path}")
+    private String picturePath;
+
     @Autowired
     public void setUserRepo(UserRepo userRepo) {
         this.userRepo = userRepo;
@@ -85,9 +88,16 @@ public class UserRepoImpl implements UserDetailsService {
 
     public void delete(Long id) {
         User userDelete = userRepo.getUserById(id);
+        if(userDelete.getBlogs().size() != 0 || userDelete.getBlogs() != null){
+            for(Blog blog : userDelete.getBlogs()) {
+                blogService.deleteBlog(userDelete, blog);
+            }
+        }
         userRepo.delete(userDelete);
         File userDirectory = new File(uploadPath + "/" + id);
         userDirectory.delete();
+        File pictureDirectory = new File(picturePath + "/" + id);
+        pictureDirectory.delete();
     }
 
     public User getById(Long id) {

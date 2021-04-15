@@ -1,8 +1,6 @@
 #rate{
-    width: 250px;
-    height: 100px;
-    /*background-color: blanchedalmond;*/
-    /*border:1px solid;*/
+    width: 20em;
+    height: 5em;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -12,6 +10,6 @@
     width: 24px;
     height: 24px;
     border: 1px solid;
-    border-radius: 5px;
+    border-radius: 15px;
     background-color: black;
 }

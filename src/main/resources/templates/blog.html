@@ -51,19 +51,14 @@
         <div id="rate">
             <p id="p_rate" th:value="${blog.getId()}" >Оцените : </p>
             <div id="first">
-                <!--<a th:href="@{~/blog/range/{id}/1(id = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="second">
-                <!--<a th:href="@{~/blog/range/{id}/2(id = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="third">
-                <!--<a th:href="@{~/blog/range/{id}/3(id = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="forth">
-                <!--<a th:href="@{~/blog/range/{id}/4(id = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="fifth">
-                <!--<a th:href="@{~/blog/range/{id}/5(id = ${blog.getId()})}">&emsp;</a>-->
             </div>
 
         </div>
@@ -72,13 +67,14 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
                     <div class="well well-sm" th:if="${blog.comments}">
-                        <div id="comment" class="row" th:each="comment : ${blog.comments}" >
+                        <div id="comment" class="row" th:each="comment : ${blog.comments}" th:if="${commentStat.index <= 1}" >
                             <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment}"></p>
-                            <p th:text="${comment.text}" th:unless="${comment.banComment}"></p>
-                            <p th:style="'color:red;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
+                            ${comment.dateCreateComment}" th:style="'margin-bottom: 0;'" ></p>
+                            <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
+                            <p th:style="'color:red; margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
                         </div>
                      </div>
+                    <a th:href="@{~/all-comments}">Посмтреть все комментарии</a>
                 </div>
             </div>
         </div>

@@ -54,12 +54,14 @@ public class MainController {
                 //проверка на наличи блогов у пользователя
                 if (userDB.getBlogs().toArray().length >= 1) {
                     model.addAttribute("blog", true);
+                    model.addAttribute("user", userDB);
                     model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
                     model.addAttribute("idUser", userDB.getId());
                     model.addAttribute("blogList", blogService.getUserSortListBlogByRating(userDB.getId()));
                     model.addAttribute("anonymous", false);
                 } else {
                     model.addAttribute("blog", false);
+                    model.addAttribute("user", userDB);
                     model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
                     model.addAttribute("idUser", userDB.getId());
                     model.addAttribute("msg", "У вас пока что нет блогов!");

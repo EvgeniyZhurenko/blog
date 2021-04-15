@@ -230,6 +230,7 @@ public class UserController {
         model.addAttribute("idUser" , idUser);
 
         model.addAttribute("boolean", true);
+        model.addAttribute("user", userDB);
         model.addAttribute("blog", blogDB);
         model.addAttribute("picture", picture);
 
@@ -256,7 +257,7 @@ public class UserController {
         return "redirect:/user/blog/list/" + idUser;
     }
 
-    @GetMapping("delete-picture-blog/{idUser}/{idBlog}")
+    @GetMapping("delete/user/{idUser}/{idBlog}")
     public String deletePicture(@PathVariable(value = "idUser", required = false) Long idUser,
                                 @PathVariable(value = "idBlog", required = false) Long idBlog){
 

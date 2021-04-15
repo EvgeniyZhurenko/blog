@@ -181,30 +181,69 @@ public class BlogService {
 
     public void deleteBlog(User userDB, Blog blogDB){
 
-        for (Comment comment: commentService.findAllCommentsBlog(blogDB.getId())) {
-                    blogDB.getComments().remove(comment);
-                    userDB.getComments().remove(comment);
-                    userRepo.update(userDB, true);
-                    commentService.delete(comment.getId());
+        if(commentService.findAllCommentsBlog(blogDB.getId()).size() != 0 || commentService.findAllCommentsBlog(blogDB.getId()) != null) {
+            for (Comment comment : commentService.findAllCommentsBlog(blogDB.getId())) {
+                blogDB.getComments().remove(comment);
+                userDB.getComments().remove(comment);
+                userRepo.update(userDB, true);
+                commentService.delete(comment.getId());
+            }
         }
-         for(Picture picture: pictureService.findAllPictureByUserId(blogDB.getUser().getId())){
-            if(picture.getId() == blogDB.getPictures().get(0).getId()){
-                pictureService.delete(picture.getId());
-                File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
-                File[] files = folder.listFiles();
-                if(files.length != 0) {
-                    for (File file : files) {
-                        file.delete();
+        if(pictureService.findAllPictureByUserId(blogDB.getUser().getId()).size()!= 0 ||
+                pictureService.findAllPictureByUserId(blogDB.getUser().getId()) != null) {
+            for (Picture picture : pictureService.findAllPictureByUserId(blogDB.getUser().getId())) {
+                if (picture.getId() == blogDB.getPictures().get(0).getId()) {
+                    pictureService.delete(picture.getId());
+                    File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
+                    File[] files = folder.listFiles();
+                    if (files.length != 0) {
+                        for (File file : files) {
+                            file.delete();
+                        }
+                        folder.delete();
                     }
-                    folder.delete();
                 }
             }
         }
 
-       if(blogDB.getId() ==  userRepo.findBlogById(userDB, blogDB).getId()){
+        if(blogDB.getId() ==  userRepo.findBlogById(userDB, blogDB).getId()){
 
-           userDB.getBlogs().remove(blogDB);
-       }
+            userDB.getBlogs().remove(blogDB);
+        }
+
+        delete(blogDB.getId());
+    }
+
+    public void deleteAdminBlog(User userDB, Blog blogDB){
+
+        if(commentService.findAllCommentsBlog(blogDB.getId()).size() != 0 || commentService.findAllCommentsBlog(blogDB.getId()) != null) {
+            for (Comment comment : commentService.findAllCommentsBlog(blogDB.getId())) {
+                blogDB.getComments().remove(comment);
+                userDB.getComments().remove(comment);
+                commentService.delete(comment.getId());
+            }
+        }
+        if(pictureService.findAllPictureByUserId(blogDB.getUser().getId()).size()!= 0 ||
+                pictureService.findAllPictureByUserId(blogDB.getUser().getId()) != null) {
+            for (Picture picture : pictureService.findAllPictureByUserId(blogDB.getUser().getId())) {
+                if (picture.getId() == blogDB.getPictures().get(0).getId()) {
+                    pictureService.delete(picture.getId());
+                    File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
+                    File[] files = folder.listFiles();
+                    if (files.length != 0) {
+                        for (File file : files) {
+                            file.delete();
+                        }
+                        folder.delete();
+                    }
+                }
+            }
+        }
+
+        if(blogDB.getId() ==  userRepo.findBlogById(userDB, blogDB).getId()){
+
+            userDB.getBlogs().remove(blogDB);
+        }
 
         delete(blogDB.getId());
     }

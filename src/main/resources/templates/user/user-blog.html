@@ -3,16 +3,6 @@
 <head>
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-
-</head>
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
     <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}">
         <!--th:integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="-->
@@ -32,7 +22,7 @@
 
 <div th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
      style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
-     background-size: cover; padding: 0 10em; max-width: 100em!important;">
+     background-size: cover; padding: 0 10em; max-width: 100em!important;" th:unless="${blog.ban_blog}">
 
     <h1 th:text="${blog.title}"></h1>
 
@@ -61,29 +51,27 @@
         <p th:text="${blog.full_text}"></p>
         <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a>&emsp;</span>
+        <span th:if="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/delete-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить блог</a>&emsp;</span>
+        <span th:if="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/delete-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить блог</a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}"><a th:href="@{~/user/delete-picture-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить фото блога</a>&emsp;</span>
+        <span th:if="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/delete-picture-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить фото блога</a>&emsp;</span>
 
         <div id="rate">
             <p id="p_rate" th:value="${blog.getId()}">Оцените : </p>
 
             <div id="first">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/1(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="second">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/2(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="third">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/3(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="forth">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/4(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
             </div>
             <div id="fifth">
-                <!--<a th:href="@{~/user/blog/range/{id_user}/{id_blog}/5(id_user = ${user.id},id_blog = ${blog.getId()})}">&emsp;</a>-->
             </div>
 
         </div>
@@ -92,32 +80,82 @@
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6">
                     <div class="well well-sm" th:if="${blog.comments}">
-                        <div id="comment" class="row" th:each="comment : ${blog.comments}">
+                        <div id="comment" class="row" th:each="comment : ${blog.comments}" th:if="${commentStat.index <= 1}">
                             <p th:text="${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment} + ' '"></p>
-                            <p th:text="${comment.text}"></p>
+                            ${comment.dateCreateComment} + ' '" th:style="'margin-bottom: 0'"></p>
+                            <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
+                            <p th:style="'color:red;margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
+                        </div>
+                    </div>
+                    <a th:href="@{~/user/all-comments}">Посмотреть все комментарии</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="comment">
+        <div class="listComments"></div>
+        <form  th:action="@{~/user/comment/creat/{id_user}/{id_blog}/{id_user_blog}(id_user = ${idUser}, id_blog = ${blog.getId()},
+                        id_user_blog = ${idUserBlog})}" th:method="post" class="leave">
+
+            <h2 id="id_user" th:value="${idUser}" >Оставьте свой комментарий :</h2>
+            <p>Имя пользователя :  <span id="name" th:value="${user.first_name} + ' ' + ${user.last_name}" th:text="${user.first_name} + ' ' + ${user.last_name}"></span> </p>
+
+            <p>Комментарий :<br>
+                <textarea id="inputText" th:field="*{comment.text}" th:style="'width: 600px; height: 100px'"></textarea>
+            </p>
+
+            <input id="input" type="submit" value="Отправить" />
+        </form>
+    </div>
+</div>
+
+
+
+<div th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
+     style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
+     background-size: cover; padding: 0 10em; max-width: 100em!important;" th:if="${blog.ban_blog}">
+
+    <h1 th:text="${blog.title}"></h1>
+
+    <div class="alert alert-info mt-2" >
+        <div>
+            <a th:href="@{user/account/{id}(id = ${blog.user.id})}" th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
+            <span th:text="'Дата блога ' + ${blog.date_create_blog} + ' Рейтинг ' "></span>
+            <span id ="rating" th:text="${blog.rating}"></span>
+        </div>
+        <div class="div-about-metrics-contact" th:style="'float: left; margin: 0;'">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-6">
+                        <div class="well well-sm">
+                            <div class="row" th:if="${blog.pictures}">
+                                <div class="col-sm-6 col-md-4" th:each="picture : ${blog.pictures}">
+                                    <img th:src="@{|/${picture.url_image}|}"
+                                         th:alt="${picture.name}" class="img-rounded img-responsive" th:style="'width: 15em; heigth: 20em'">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
+            <div class="d-flex flex-row align-items-center ms-2">
+                <p th:text="'заблокированно администратором сайта!'" th:style="'color: red;'" ></p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-md-start justify-content-between views-content mt-2">
+            <div class="d-flex flex-row align-items-center ms-2">
+                <p th:text="'для разблокирования свяжитесь с тех поддержкой сайта!'" th:style="'color: red;'" ></p>
+            </div>
+        </div>
+
+
+        <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
     </div>
-</div>
-
-<div class="comment">
-    <div class="listComments"></div>
-    <form  th:action="@{~/user/comment/creat/{id_user}/{id_blog}/{id_user_blog}(id_user = ${idUser}, id_blog = ${blog.getId()},
-                        id_user_blog = ${idUserBlog})}" th:method="post" class="leave">
-
-        <h2 id="id_user" th:value="${idUser}" >Оставьте свой комментарий :</h2>
-        <p>Имя пользователя :  <span id="name" th:value="${user.first_name} + ' ' + ${user.last_name}" th:text="${user.first_name} + ' ' + ${user.last_name}"></span> </p>
-
-        <p>Комментарий :<br>
-            <textarea id="inputText" th:field="*{comment.text}" th:style="'width: 600px; height: 100px'"></textarea>
-        </p>
-
-        <input id="input" type="submit" value="Отправить" />
-    </form>
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>

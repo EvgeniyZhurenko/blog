@@ -22,7 +22,7 @@
 
                 <a class="p-2 text-dark"
                    th:href="@{/user/creat-blog/{id}(id = ${idUser})}"
-                   >Создать блог</a>
+                   th:unless="${user.ban_user}">Создать блог</a>
                 <a class="p-2 text-dark" href="/user/main">На главную</a>
                 <a class="p-2 text-dark" href="/user/metrics">Таблица мер продуктов</a>
                 <a class="p-2 text-dark" href="/user/about">О блогах</a>

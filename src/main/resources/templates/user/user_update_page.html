@@ -15,9 +15,8 @@
 <div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
      th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; height: 47.5em;;'"
      style="background-image: url('../../static/images/background-registration.jpg');
-       background-size: cover; height: 47.5em">
-    <!--<div class="container rounded bg-white mt-5 mb-5">-->
-    <div class="row" th:style="'margin-left:10em;'">
+     background-size: cover; height: 47.5em">
+    <div class="row" th:style="'margin-left:10em;'" th:unless="${user.ban_user}">
         <div class="col-md-3 border-right">
             <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <a th:href="@{~/user/{id}(id = ${user.getId()})}">
@@ -41,57 +40,44 @@
 
                         <input type="hidden" class="form-control" placeholder="Ваше имя" th:field="*{id}">
 
-                        <!--<label class="labels">Имя :</label>-->
                         Имя :<input type="text" class="form-control" placeholder="Ваше имя" th:field="*{first_name}">
                     </div>
                     <div class="col-md-6">
-                        <!--<label class="labels">Фамилия :</label>-->
                         Фамилия : <input type="text" class="form-control" th:field="*{last_name}" placeholder="Ваша фамилия" >
                     </div>
                     <div class="col-md-6">
-                        <!--<label class="labels">Логин :</label>-->
                         Логин : <input type="text" class="form-control" placeholder="Ваш логин" th:field="*{username}" />
                     </div>
                 </div>
                 <div class="row mt-3" >
                     <div class="col-md-12">
-                        <!--<label class="labels">Телефон :</label>-->
                         Телефон : <input type="tel" class="form-control" placeholder="Ваш телефон" th:field="*{phone}" />
                     </div>
                     <div class="col-md-12">
-                        <!--<label class="labels">Email :</label>-->
                         E-mail : <input type="email" class="form-control" placeholder="Электронная почта" th:field="*{email}" />
                     </div>
                     <div class="col-md-12">
-                        <!--<label class="labels">Дата рождения :</label>-->
-                        <!--<input id="data" type="date" class="form-control" placeholder="Дата рождения" th:text = "${#temporals.format(#myDialect.parseISODate(someStringISODate), 'dd/MMM/yyyy')}">-->
-                        Дата рождения : <input type="date" class="form-control" placeholder="Дата рождения" th:field="*{born}">
+                       Дата рождения : <input type="date" class="form-control" placeholder="Дата рождения" th:field="*{born}">
                     </div>
                     <div class="col-md-12">
-                        <!--<label class="labels">Twiter :</label>-->
                         Twitter : <input type="text" class="form-control" placeholder="Twiter" th:field="*{twiter}">
                     </div>
                     <div class="col-md-12">
-                        <!--<label class="labels">Facebook :</label>-->
                         Facebook : <input type="text" class="form-control" placeholder="Facebook" th:field="*{facebook}">
                     </div>
                     <div class="col-md-12">
-                        <!--<label class="labels">Instagram</label>-->
                         Instagram : <input type="text" class="form-control" placeholder="Instagram" th:field="*{instagram}">
                     </div>
                     <div class="col-md-12">
-                        <!--<label class="labels">Фото профиля :</label>-->
                         Фото : <input type="file" class="form-control" placeholder="Фото профиля"
                                       th:multiple="true" th:attr="accept='image/*', name='image'" th:value="${user.foto}">
                     </div>
                 </div>
                 <div class="row mt-3" >
                     <div class="col-md-6">
-                        <!--<label class="labels">Страна проживания :</label>-->
                         Страна проживания : <input type="text" class="form-control" placeholder="Страна проживания" th:field="*{country}">
                     </div>
                     <div class="col-md-6">
-                        <!--<label class="labels">Город проживания :</label>-->
                         Город проживания : <input type="text" class="form-control" th:field="*{city}" placeholder="Город проживания">
                     </div>
                 </div>
@@ -102,7 +88,20 @@
         </form>
     </div>
 </div>
-<!--</div>-->
+
+<div class="align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+     th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; height: 47.5em;;'"
+     style="background-image: url('../../static/images/background-registration.jpg');
+     background-size: cover; height: 47.5em">
+    <div class="row" th:style="'margin-left:10em;'" th:if="${user.ban_user}">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <p th:text="'заблокированно администратором сайта!'" th:style="'color: red;'" ></p>
+                <p th:text="'для разблокирования свяжитесь с тех поддержкой сайта!'" th:style="'color: red;'" ></p>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>

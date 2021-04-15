@@ -1,5 +1,6 @@
 package com.exam.blog.controllers;
 
+import com.exam.blog.models.Blog;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.UserRepoImpl;
@@ -131,5 +132,27 @@ public class AdminController {
         model.addAttribute("blog", blogService.getById(idBlog));
 
         return "admin/admin-blog";
+    }
+
+    @GetMapping("delete/blog/{idBlog}")
+    public String deleteBlog(@PathVariable(value = "idBlog", required = false) Long idBlog){
+
+        Blog blogDB = blogService.getById(idBlog);
+        User userDB = userRepo.getById(blogDB.getUser().getId());
+        blogService.deleteBlog(userDB, blogDB);
+
+        return "redirect:/admin/blog/list/4";
+    }
+
+    @GetMapping("delete/user/{idUser}")
+    public String deleteUser(@PathVariable(value = "idUser", required = false) Long idUser){
+
+        User userDB = userRepo.getById(idUser);
+        for(Blog blog: userDB.getBlogs()) {
+            Blog blogDB = blogService.getById(blog.getId());
+            blogService.deleteAdminBlog(userDB, blogDB);
+        }
+        userRepo.delete(idUser);
+        return "redirect:/admin/all-accounts/4";
     }
 }
