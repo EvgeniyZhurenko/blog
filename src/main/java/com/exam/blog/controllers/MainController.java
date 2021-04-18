@@ -179,13 +179,11 @@ public class MainController {
     }
 
     @PostMapping("search")
-    public String search(@RequestParam(name = "search",required = false) String search){
-        List<User> user = userRepo.findUserBySearch(search);
-        if(user.size() == 0){
-            return "search";
-        }else {
-            return "redirect:/account/" + user.get(0).getId();
-        }
+    public String search(@RequestParam(name = "search",required = false) String search,
+                         Model model){
+        List<User> users = userRepo.findUserBySearch(search);
+        model.addAttribute("users", users);
+        return "all-accounts";
     }
 
     public void addMenu (Authentication auth, Model model){

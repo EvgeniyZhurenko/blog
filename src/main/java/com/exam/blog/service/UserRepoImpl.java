@@ -1,13 +1,9 @@
 package com.exam.blog.service;
 
 import com.exam.blog.models.Blog;
-import com.exam.blog.models.Comment;
 import com.exam.blog.models.Role;
 import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -253,7 +248,7 @@ public class UserRepoImpl implements UserDetailsService {
                 }
                 if(field.getName().toLowerCase().equals(search.toLowerCase()))
                     continue;
-                if(field.get(user).getClass() == Date.class){
+                if(field.getName() == "born"){
                     Date get = (Date)field.get(user);
                     if(get.toString().contains(search)){
                         bool = true;

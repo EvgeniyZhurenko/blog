@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private String foto;
 
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Temporal(TemporalType.DATE)
     private Date born;
 
