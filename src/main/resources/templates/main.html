@@ -26,7 +26,7 @@
                                      th:href="@{account/{id}(id = ${blogList[0].getUser().getId()})}">Блогер...</a></p>
 
             <p class="lead-mb-0"><a  class="text-white fw-bold"
-                                     th:href="@{blog/{id}(id = ${blogList[0].getId()})}">Продолжить читать...</a></p>
+                                     th:href="@{blog/{id}/{bool}(id = ${blogList[0].getId()}, bool = true)}">Продолжить читать...</a></p>
         </div>
     </div>
 
@@ -53,7 +53,8 @@
                     </p>
 
                     <p class="lead-mb-0" >
-                        <a  class="text-white fw-bold" th:href="@{blog/{id}(id = ${blog.getId()})}"  >Продолжить читать...</a>
+                        <a  class="text-white fw-bold" th:href="@{blog/{id}/{bool}(id = ${blog.getId()},
+                                                                bool = true)}"  >Продолжить читать...</a>
                     </p>
                 </div>
                 <div class="col-auto d-none d-lg-block" th:each="picture : ${blog.getPictures()}">

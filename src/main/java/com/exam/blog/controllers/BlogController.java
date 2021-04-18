@@ -31,20 +31,22 @@ public class BlogController {
             model.addAttribute("list", false);
             model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
         }
+        model.addAttribute("title", "Все блоги");
         model.addAttribute("blogList", blogs);
-        model.addAttribute("boolean", false);
         model.addAttribute("anonymous", true);
         model.addAttribute("blog", false);
         return "blog-list";
     }
 
-    @GetMapping(value = {"/blog/{id_blog}"})
+    @GetMapping(value = {"/blog/{id_blog}/{bool}"})
     public String blogSee(@PathVariable(name = "id_blog", required = false) Long idBlog,
+                          @PathVariable(name = "bool", required = false) Boolean bool,
                           Model model){
         Blog blog = blogService.getById(idBlog);
         Comment comment = new Comment();
         model.addAttribute("blog", blog);
         model.addAttribute("comment", comment);
+        model.addAttribute("state", bool);
         return "blog";
     }
 

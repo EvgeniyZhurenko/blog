@@ -4,10 +4,7 @@
     <title th:text="${blog.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
-    <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}">
-            <!--th:integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="-->
-            <!--th:crossorigin="anonymous">-->
-    </script>
+    <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
@@ -18,7 +15,10 @@
 
 <header  th:insert="blocks/header :: header"></header>
 
-<div class="container mt-5" th:unless="${blog.ban_blog}">
+<div class="container mt-5" th:unless="${blog.ban_blog}"
+     th:style="'background-image: url(/images/background-main.jpg); background-size: cover; display: grid; justify-items: center;padding: 0 10em; max-width: 100em!important;'"
+     style="background-image: url('../static/images/background-main.jpg'); background-size: cover;
+     padding: 0 10em; max-width: 100em!important;">
     <h1 th:text="${blog.title}"></h1>
 
     <div class="alert alert-info mt-2" >
@@ -65,7 +65,7 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
+                <div class="col-xs-12 col-sm-6 col-md-6" th:if="${state}">
                     <div class="well well-sm" th:if="${blog.comments}">
                         <div id="comment" class="row" th:each="comment : ${blog.comments}" th:if="${commentStat.index <= 1}" >
                             <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
@@ -74,7 +74,20 @@
                             <p th:style="'color:red; margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
                         </div>
                      </div>
-                    <a th:href="@{~/all-comments}">Посмтреть все комментарии</a>
+                    <a th:href="@{~/blog/{idUser}/{idBlog}/{bool}(idUser = ${blog.getUser().getId()},
+                                  idBlog = ${blog.getId()}, bool = false)}">Посмтреть все комментарии</a>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6" th:unless="${state}">
+                    <div class="well well-sm" th:if="${blog.comments}">
+                        <div id="comment" class="row" th:each="comment : ${blog.comments}" >
+                            <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
+                            ${comment.dateCreateComment}" th:style="'margin-bottom: 0;'" ></p>
+                            <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
+                            <p th:style="'color:red; margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
+                        </div>
+                    </div>
+                    <a th:href="@{~/blog/{idUser}/{idBlog}/{bool}(idUser = ${blog.getUser().getId()},
+                                  idBlog = ${blog.getId()}, bool = true)}">Свернуть все комментарии</a>
                 </div>
             </div>
         </div>
@@ -99,7 +112,10 @@
 
 </div>
 
-<div class="container mt-5" th:if="${blog.ban_blog}">
+<div class="container mt-5" th:if="${blog.ban_blog}"
+     th:style="'background-image: url(/images/background-main.jpg); background-size: cover; display: grid; justify-items: center;padding: 0 10em; max-width: 100em!important;'"
+     style="background-image: url('../static/images/background-main.jpg'); background-size: cover;
+     padding: 0 10em; max-width: 100em!important;">
     <h1 th:text="${blog.title}"></h1>
     <div class="alert alert-info mt-2" th:style="'padding-bottom: 5em;'">
         <div>

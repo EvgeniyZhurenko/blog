@@ -13,12 +13,13 @@ import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.springframework.data.repository.init.ResourceReader.Type.JSON;
 
 @Controller
-@Transactional
 @RequestMapping("/")
 public class AjaxController {
 
@@ -43,10 +44,11 @@ public class AjaxController {
         float rating = Float.valueOf(str_rating);
         Blog blogDB = blogService.getById(idBlog);
         if (blogDB != null) {
-            if (blogDB.getRating() == null) {
+            if (blogDB.getRating() == null || blogDB.getRating() == 0F) {
                 blogDB.setRating(rating);
             } else {
                 Float ratingDB = (blogDB.getRating() + rating) / 2;
+                ratingDB =  Math.round(ratingDB*100.0F)/100.0F;
                 blogDB.setRating(ratingDB);
             }
             blogService.update(blogDB);
@@ -95,6 +97,16 @@ public class AjaxController {
 
         return ResponseEntity.ok(banComment);
     }
+
+    // не передает User в Comment-ax
+//    @GetMapping(value = "ajax/show/all-comment-blog/{idBlog}")
+//    public ResponseEntity<List<Comment>> showAllComment(@PathVariable(value = "idBlog", required = false) Long idBlog){
+//
+//        List<Comment> allCommentOfBlog = blogService.getById(idBlog).getComments();
+//
+//        return ResponseEntity.ok(allCommentOfBlog);
+//    }
+
 
 //    @GetMapping(value = "ajax/comment")
 //    public ResponseEntity<Comment> addCommentBlog(@RequestParam(value = "idBlog", required = false) String idBlog,

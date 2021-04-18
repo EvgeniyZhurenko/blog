@@ -174,10 +174,11 @@ public class UserController {
         return "main";
     }
 
-    @GetMapping("blog/{id_user}/{id_blog}/{id_user_blog}")
+    @GetMapping("blog/{id_user}/{id_blog}/{id_user_blog}/{bool}")
     public String userBlogShow(@PathVariable(value = "id_user", required = false) Long id_user,
                                @PathVariable(value = "id_blog", required = false) Long id_blog,
                                @PathVariable(value = "id_user_blog", required = false) Long id_user_blog,
+                               @PathVariable(value = "bool", required = false) Boolean bool,
                                Model model){
 
         User userDB = userRepo.getById(id_user);
@@ -190,6 +191,7 @@ public class UserController {
         model.addAttribute("idUserBlog", id_user_blog);
         model.addAttribute("title", "Блог " + blogDB.getTitle());
         model.addAttribute("blog", blogDB);
+        model.addAttribute("state", bool);
         model.addAttribute("comment", comment);
 
         return "user/user-blog";

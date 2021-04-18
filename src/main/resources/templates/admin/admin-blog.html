@@ -3,16 +3,6 @@
 <head>
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-
-</head>
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
     <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}">
         <!--th:integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="-->
@@ -71,11 +61,11 @@
             </div>
         </div>
         <p th:text="${blog.full_text}"></p>
-        <div class="container">
+        <div class="container" id="value_blog" th:value="${blog.getId()}">
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6">
-                    <div class="well well-sm" th:if="${blog.comments}">
-                        <div class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}">
+                <div class="col-xs-12 col-sm-6 col-md-6" th:if="${state}">
+                    <div id="comment" class="well well-sm" th:if="${blog.comments}">
+                        <div  class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}" th:if="${commentStat.index <= 1}">
                             <hr/>
                             <p th:text="${comment.user.username} + ' ' +
                             ${comment.dateCreateComment} + ' '"></p>
@@ -93,26 +83,61 @@
                             </div>
                             <div >
                                 <a class="btn btn-primary profile-button" th:href="@{~/admin/delete/comment/{id_admin}/{id_comment}
-                                            (id_admin = ${idAdmin}, id_blog = ${comment.id})}">Удалить комментарий</a>
+                                            (id_admin = ${idAdmin}, id_comment = ${comment.id})}">Удалить комментарий</a>
                             </div>
 
                         </div>
                     </div>
                 </div>
+                <div class="col-xs-12 col-sm-6 col-md-6" th:unless="${state}">
+                        <div id="comment" class="well well-sm" th:if="${blog.comments}">
+                            <div  class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}">
+                                <hr/>
+                                <p th:text="${comment.user.username} + ' ' +
+                            ${comment.dateCreateComment} + ' '"></p>
+                                <p th:text="'' + ${comment.text}" th:style="'float: rigth'"></p>
+                                <hr/>
+
+                                <div class="comment_ban" th:if="${comment.banComment}" th:value="${comment.id}">
+                                    <label for="chek_comment" th:text="'Cнять бан с комментария'"></label>
+                                    <input class="comment_chek" th:type="checkbox" checked="checked" id="chek_comment" >
+                                    <p th:text="'Этот комментарий забанен администратором'" th:style="'color: red'"></p>
+                                </div>
+                                <div class="comment_ban" th:unless="${comment.banComment}" th:value="${comment.id}">
+                                    <label for="unchek_comment" th:text="'Пометить комментарий в бан'"></label>
+                                    <input class="comment_chek" th:type="checkbox" id="unchek_comment">
+                                </div>
+                                <div >
+                                    <a class="btn btn-primary profile-button" th:href="@{~/admin/delete/comment/{id_admin}/{id_comment}
+                                            (id_admin = ${idAdmin}, id_comment = ${comment.id})}">Удалить комментарий</a>
+                                </div>
+
+                            </div>
+                        </div>
+                </div>
             </div>
         </div>
+        <span th:if="${state}"><a id="show_comment" th:href="@{~/admin/user/blog/{id_admin}/{id_user}/{id_blog}/{bool}(id_admin = ${idAdmin},
+            id_user = ${blog.getUser().getId()}, id_blog= ${blog.id}, bool = false)}">Посмотреть все комментарии</a>&emsp;</span>
+        <span th:unless="${state}"><a id="show_comment" th:href="@{~/admin/user/blog/{id_admin}/{id_user}/{id_blog}/{bool}(id_admin = ${idAdmin},
+            id_user = ${blog.getUser().getId()}, id_blog= ${blog.id}, bool = true)}">Свернуть все комментарии</a>&emsp;</span>
+
         <span><a th:href="@{~/admin/user/all-blogs/{id_admin}/{id_user}(id_admin = ${idAdmin},id_user = ${blog.user.id})}">К списку блогов пользователя</a>&emsp;</span>
         <span><a th:href="@{~/admin/blog/list/{id_admin}(id_admin = ${idAdmin})}">К списку всех блогов</a>&emsp;</span>
-</div>
+
+
+    </div>
 
 </div>
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 
 
+
 </body>
 
 <script type="text/javascript" src="../../static/js/bun_blog.js" th:src="@{/js/bun_blog.js}"></script>
 <script type="text/javascript" src="../../static/js/bun_comment.js" th:src="@{/js/bun_comment.js}"></script>
+<script type="text/javascript" src="../../static/js/show_all_comment.js" th:src="@{/js/show_all_comment.js}"></script>
 
 </html>

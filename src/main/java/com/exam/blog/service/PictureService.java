@@ -158,18 +158,13 @@ public class PictureService  {
                 blogDB.getPictures().remove(picture);
                 blogService.update(blogDB);
                 delete(picture.getId());
-                File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
-                File[] files = folder.listFiles();
-                if(files.length != 0) {
-                    for (File file : files) {
-                        file.delete();
-                    }
-                    folder.delete();
+
                 }
             }
+
+        deleteFolder(blogDB);
         }
 
-    }
 
     public void loadPictureImage(Long idUser, Blog blog, MultipartFile image, Picture picture) throws IOException {
         if(!image.isEmpty()) {
@@ -203,4 +198,14 @@ public class PictureService  {
         picture.setUrl_image(filePathFoto);
     }
 
+    public void deleteFolder(Blog blogDB) {
+        File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
+        File[] files = folder.listFiles();
+        if (files.length != 0) {
+            for (File file : files) {
+                file.delete();
+            }
+            folder.delete();
+        }
+    }
 }

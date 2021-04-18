@@ -95,9 +95,11 @@ public class UserRepoImpl implements UserDetailsService {
         }
         userRepo.delete(userDelete);
         File userDirectory = new File(uploadPath + "/" + id);
-        userDirectory.delete();
+        if(userDirectory.exists())
+            userDirectory.delete();
         File pictureDirectory = new File(picturePath + "/" + id);
-        pictureDirectory.delete();
+        if(pictureDirectory.exists())
+            pictureDirectory.delete();
     }
 
     public User getById(Long id) {

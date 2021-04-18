@@ -19,6 +19,18 @@ import java.util.stream.Collectors;
 public class CommentService {
 
     private CommentRepo commentRepo;
+    private BlogService blogService;
+    private UserRepoImpl userRepo;
+
+    @Autowired
+    public void setUserRepo(UserRepoImpl userRepo) {
+        this.userRepo = userRepo;
+    }
+
+    @Autowired
+    public void setBlogService(BlogService blogService) {
+        this.blogService = blogService;
+    }
 
     public CommentService() {
     }
@@ -45,6 +57,12 @@ public class CommentService {
     }
 
     public void delete(Long id) {
+
+        Comment commentDB = commentRepo.getCommentById(id);
+        Blog blogDB = blogService.getById(commentDB.getBlog().getId());
+        User userDB = userRepo.getById(commentDB.getUser().getId());
+        blogDB.getComments().remove(commentDB);
+        userDB.getComments().remove(commentDB);
         commentRepo.deleteById(id);
     }
 

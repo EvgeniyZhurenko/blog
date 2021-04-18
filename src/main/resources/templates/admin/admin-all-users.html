@@ -50,10 +50,6 @@
             <label for="unchek" th:text="'Забанить пользователя'"></label>
             <input class="chek" th:type="checkbox" id="unchek">
         </div>
-        <div class="text-center">
-            <a class="btn btn-primary profile-button" th:href="@{~/admin/delete/user/{id_user}
-                    (id_user = ${user.getId()})}">Удалить аккаунт</a>
-        </div>
 
         </p>
         <p>Блогер : <span th:text="${user.first_name} + ' ' + ${user.last_name} ">Имя и фамилия</span></p>
@@ -62,7 +58,7 @@
         <p>E-mail : <span><a th:href="@{https://mail.google.com/mail/u/0/#inbox?compose=new}" th:text="${user.email}">Почта</a></span></p>
         <p>Блоги : <span><a th:href="@{~/admin/user/all-blogs/{id_admin}/{id_user}(id_admin = ${idAdmin},id_user = ${user.getId()})}" th:text="Блоги"></a></span></p>
 
-        <p th:style="'margin-top: 2.5em;'"></p>
+        <div th:style="'margin-top: 2.5em;'">
             <ul class="social" th:style="'padding-left: 0;'">
                 <li class="social-icon" >
                     <form th:action="@{user.facebook}" th:method="get">
@@ -92,7 +88,11 @@
                     </form>
                 </li>
             </ul>
-        </p>
+        </div>
+        <div class="text-center">
+            <a class="btn btn-primary profile-button" th:href="@{~/admin/delete/user/{id_user}
+                        (id_user = ${user.getId()})}">Удалить аккаунт</a>
+        </div>
 
 </div>
 

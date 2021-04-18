@@ -165,18 +165,21 @@ public class MainController {
         return "account-all-blogs";
     }
 
-    @GetMapping("blog/{id_user}/{id_blog}")
+    @GetMapping("blog/{id_user}/{id_blog}/{bool}")
     public String blogUser(@PathVariable(value = "id_user", required = false) Long idUser,
                            @PathVariable(value = "id_blog", required = false) Long idBLog,
+                           @PathVariable(value = "bool", required = false) Boolean bool,
                            Model model){
         User UserDB = userRepo.getById(idUser);
         Blog blogDB = blogService.getById(idBLog);
         Comment comment = new Comment();
         model.addAttribute("blog", blogDB );
+        model.addAttribute("state", bool);
         model.addAttribute("comment", comment);
 
         return "blog";
     }
+
 
     public void addMenu (Authentication auth, Model model){
         if (auth.getName().equalsIgnoreCase("anonymousUser"))

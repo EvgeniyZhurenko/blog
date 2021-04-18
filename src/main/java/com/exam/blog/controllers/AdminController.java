@@ -1,10 +1,13 @@
 package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
+import com.exam.blog.models.Comment;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
+import com.exam.blog.service.CommentService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +21,14 @@ public class AdminController {
 
     private final UserRepoImpl userRepo;
     private final BlogService blogService;
+    private final CommentService commentService;
     private final MainController mainController;
 
     @Autowired
-    public AdminController(UserRepoImpl userRepo, BlogService blogService, MainController mainController) {
+    public AdminController(UserRepoImpl userRepo, BlogService blogService, CommentService commentService, MainController mainController) {
         this.userRepo = userRepo;
         this.blogService = blogService;
+        this.commentService = commentService;
         this.mainController = mainController;
     }
 
@@ -116,10 +121,11 @@ public class AdminController {
         return "admin/admin-user-blogs";
     }
 
-    @GetMapping("user/blog/{id_admin}/{id_user}/{id_blog}")
+    @GetMapping("user/blog/{id_admin}/{id_user}/{id_blog}/{bool}")
     public String userBlog(@PathVariable(value = "id_admin", required = false) Long idAdmin,
                            @PathVariable(value = "id_user", required = false) Long idUser,
                            @PathVariable(value = "id_blog", required = false) Long idBlog,
+                           @PathVariable(value = "bool", required = false) Boolean bool,
                            Model model){
 
         User adminDB = userRepo.getById(idAdmin);
@@ -129,9 +135,20 @@ public class AdminController {
         model.addAttribute("title", "Блог пользователя :" + userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("user", userDB);
         model.addAttribute("idAdmin", idAdmin);
+        model.addAttribute("state", bool);
         model.addAttribute("blog", blogService.getById(idBlog));
 
         return "admin/admin-blog";
+    }
+
+    @GetMapping("delete/comment/{idAdmin}/{idComment}")
+    public String deleteComment(@PathVariable(value = "idComment", required = false) Long idComment,
+                                @PathVariable(value = "idAdmin", required = false) Long idAdmin){
+
+        Comment commentDB = commentService.getById(idComment);
+        commentService.delete(idComment);
+        return "redirect:/admin/user/blog/" + idAdmin + "/" + commentDB.getUser().getId() +
+                        "/" + commentDB.getBlog().getId() + "/" + true;
     }
 
     @GetMapping("delete/blog/{idBlog}")

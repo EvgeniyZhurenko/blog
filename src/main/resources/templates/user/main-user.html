@@ -44,8 +44,9 @@
 
                     <p class="card-text mb-auto"  th:text="${blog.announcement}" >Текст блога.</p>
 
-                    <a  class="stretched-link" th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}
-                        (id_user = ${idUser}, id_blog = ${blog.getId()}, id_user_blog = ${blog.user.id})}"  >Продолжить читать...</a>
+                    <a  class="stretched-link" th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}/{bool}
+                        (id_user = ${idUser}, id_blog = ${blog.getId()}, id_user_blog = ${blog.user.id},
+                         bool = true)}"  >Продолжить читать...</a>
                 </div>
                 <div class="col-auto d-none d-lg-block" >
 

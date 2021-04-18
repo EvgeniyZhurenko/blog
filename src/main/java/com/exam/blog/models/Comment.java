@@ -1,6 +1,7 @@
 package com.exam.blog.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -32,11 +33,11 @@ public class Comment {
     private LocalDateTime dateCreateComment;
     private Boolean banComment;
 
-
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_blog", nullable=false)
     Blog blog;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="id_user", nullable=false)
