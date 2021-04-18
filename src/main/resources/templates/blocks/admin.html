@@ -5,11 +5,12 @@
                 <a th:href="@{~/admin/account/{id}(id = ${idUser})}" th:text="${name}"></a>
             </p>
 
-            <form class="d-flex" action="#" method="post">
+            <form class="d-flex" action="admin/search" method="post">
 
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control me-2" type="search" placeholder="Поиск"
+                       aria-label="Search" th:name="search">
                 <button class="btn btn-outline-success" type="submit">Поиск</button>
 
             </form>

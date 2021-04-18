@@ -1,14 +1,15 @@
 package com.exam.blog.service;
 
 import com.exam.blog.models.Blog;
+import com.exam.blog.models.Comment;
 import com.exam.blog.models.Role;
 import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,10 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
+import java.lang.reflect.Field;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -222,6 +222,56 @@ public class UserRepoImpl implements UserDetailsService {
 
         return user.getBlogs().stream().filter(b -> b.getId() == blog.getId()).collect(Collectors.toList()).get(0);
     }
+
+    public List<User> findUserBySearch(String search){
+
+        List<User> users = userRepo.findAll().stream()
+                .filter(user -> user.getId()!= 1)
+                .filter(user -> user.getId() != 4)
+                .collect(Collectors.toList());
+        users = users.stream().filter(user -> findByProps(user,search))
+                .collect(Collectors.toList());
+        return users;
+    }
+
+    private static Boolean findByProps(User user, String search) {
+        Field[] fields = user.getClass().getDeclaredFields();
+        boolean bool = false;
+        for (Field field : fields) {
+            try {
+                field.setAccessible(true);
+                if(field.get(user) == null){
+                    continue;
+                }
+                if(field.getName() == "admin" ||  field.getName() == "guest")
+                    continue;
+                if(field.get(user).getClass() == Long.class){
+                    continue;
+                }
+                if(field.get(user).getClass() == Boolean.class){
+                    continue;
+                }
+                if(field.getName().toLowerCase().equals(search.toLowerCase()))
+                    continue;
+                if(field.get(user).getClass() == Date.class){
+                    Date get = (Date)field.get(user);
+                    if(get.toString().contains(search)){
+                        bool = true;
+                        break;
+                    }
+                }
+                if(field.get(user).getClass() == String.class) {
+                    String get = (String) field.get(user);
+                    bool = get.toLowerCase().contains(search.toLowerCase());
+                    if (bool) break;
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return bool;
+    }
 }
+
 
 

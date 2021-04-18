@@ -10,9 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Set;
@@ -180,6 +178,15 @@ public class MainController {
         return "blog";
     }
 
+    @PostMapping("search")
+    public String search(@RequestParam(name = "search",required = false) String search){
+        List<User> user = userRepo.findUserBySearch(search);
+        if(user.size() == 0){
+            return "search";
+        }else {
+            return "redirect:/account/" + user.get(0).getId();
+        }
+    }
 
     public void addMenu (Authentication auth, Model model){
         if (auth.getName().equalsIgnoreCase("anonymousUser"))
