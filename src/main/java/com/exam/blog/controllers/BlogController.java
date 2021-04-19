@@ -33,7 +33,6 @@ public class BlogController {
         }
         model.addAttribute("title", "Все блоги");
         model.addAttribute("blogList", blogs);
-        model.addAttribute("anonymous", true);
         model.addAttribute("blog", false);
         return "blog-list";
     }

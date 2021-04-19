@@ -28,7 +28,8 @@
 
     <div class="alert alert-info mt-2" >
         <div>
-            <a th:href="@{user/account/{id}(id = ${blog.user.id})}" th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
+            <a th:href="@{~/user/account/{idUser}/{idAccount}(idUser = ${idUser}, idAccount = ${blog.getUser().id})}"
+               th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
             <span th:text="'Дата блога ' + ${blog.date_create_blog} + ' Рейтинг ' "></span>
             <span id ="rating" th:text="${blog.rating}"></span>
         </div>
@@ -49,7 +50,12 @@
             </div>
         </div>
         <p th:text="${blog.full_text}"></p>
-        <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+
+        <span th:if="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+        <span th:unless="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/all-account-blogs/{idUser}/{idAccount}(idUser = ${idUser},
+                idAccount = ${blog.getUser().id})}">Назад к списку блогов</a>&emsp;</span>
 
         <span th:if="${idUser} == ${blog.user.getId()}">
             <a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a>&emsp;</span>
@@ -135,7 +141,8 @@
 
     <div class="alert alert-info mt-2" >
         <div>
-            <a th:href="@{user/account/{id}(id = ${blog.user.id})}" th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
+            <a th:href="@{~/user/account/{idUser}/{idAccount}(idUser = ${idUser}, idAccount = ${blog.getUser().id})}"
+               th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
             <span th:text="'Дата блога ' + ${blog.date_create_blog} + ' Рейтинг ' "></span>
             <span id ="rating" th:text="${blog.rating}"></span>
         </div>
@@ -168,7 +175,11 @@
             </div>
         </div>
 
-        <span><a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+        <span th:if="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+        <span th:unless="${idUser} == ${blog.user.getId()}">
+            <a th:href="@{~/user/all-account-blogs/{idUser}/{idAccount}(idUser = ${idUser},
+                idAccount = ${blog.getUser().id})}">Назад к списку блогов</a>&emsp;</span>
     </div>
 </div>
 

@@ -204,6 +204,7 @@ public class UserController {
         User userDB = userRepo.getById(id_user);
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
+        model.addAttribute("title", "Все блоги");
 
         List<Blog> blogs = blogService.getSortListBlogByRating();
         if (blogs.size() == 0) {
@@ -213,9 +214,8 @@ public class UserController {
         model.addAttribute("user", userRepo.getById(id_user));
         model.addAttribute("blogList", blogs);
         model.addAttribute("boolean", true);
-        model.addAttribute("anonymous", false);
         model.addAttribute("blog", false);
-        return "blog-list";
+        return "user/user-account-all-blog-list";
     }
 
 
@@ -267,5 +267,67 @@ public class UserController {
         pictureService.deletePictureBlog(blogDB);
 
         return "redirect:/user/blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId();
+    }
+
+    @PostMapping("search/{id}")
+    public String search(@RequestParam(name = "search",required = false) String search,
+                         @PathVariable(value = "id", required = false) Long idUser,
+                         Model model){
+        List<User> users = userRepo.findUserBySearch(search);
+        List<Blog> bloges = blogService.findBlogBySearch(search);
+        List<Comment> comments = commentService.findCommentBySearch(search);
+        User userDB = userRepo.getById(idUser);
+
+        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("user",userDB);
+
+        model.addAttribute("title", "Страница поиска");
+        model.addAttribute("idUser", idUser);
+        model.addAttribute("users", users);
+        model.addAttribute("bloges", bloges);
+        model.addAttribute("comments", comments);
+        if(users.size() == 0 && bloges.size()== 0 && comments.size() == 0)
+            model.addAttribute("msg", "По вашему запросу ничего не найдено");
+        return "user/user-search-page";
+    }
+
+    @GetMapping("account/{idUser}/{idAccount}")
+    public String accountUser(@PathVariable(value = "idUser", required = false) Long idUser,
+                              @PathVariable(value = "idAccount", required = false) Long idAccount,
+                              Model model){
+
+        User userDB = userRepo.getById(idUser);
+        User account = userRepo.getById(idAccount);
+
+        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("user",userDB);
+        model.addAttribute("account", account);
+
+        model.addAttribute("title", "Страница поиска");
+        return "user/user-account";
+    }
+
+    @GetMapping("all-account-blogs/{idUser}/{idAccount}")
+    public String listBLogAccount(@PathVariable(value = "idUser", required = false) Long idUser,
+                              @PathVariable(value = "idAccount", required = false) Long idAccount,
+                              Model model){
+        User userDB = userRepo.getById(idUser);
+        User account = userRepo.getById(idAccount);
+
+        model.addAttribute("title", "Блоги " + account.getFirst_name() + " " + account.getLast_name());
+        model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("idUser",idUser);
+        model.addAttribute("user", userDB);
+        List<Blog> blogs = account.getBlogs();
+        if (blogs.size() == 0) {
+            model.addAttribute("list", false);
+            model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
+        }
+        model.addAttribute("account", account);
+        model.addAttribute("blogList", blogs);
+        model.addAttribute("boolean", true);
+        model.addAttribute("blog", false);
+
+        return "user/user-account-blog-list";
     }
 }

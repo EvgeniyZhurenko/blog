@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -212,7 +214,6 @@ public class BlogService {
         delete(blogDB.getId());
     }
 
-
     public void deletePicture(Blog blogDB){
         if(pictureService.findAllPictureByUserId(blogDB.getUser().getId()).size()!= 0 ||
                 pictureService.findAllPictureByUserId(blogDB.getUser().getId()) != null) {
@@ -223,4 +224,48 @@ public class BlogService {
                 }
             }
         }}
+
+    public List<Blog> findBlogBySearch(String search){
+        List<Blog> blogs = blogRepo.findAll();
+        return blogs.stream().filter(blog -> findPropsBlog(blog,search)).collect(Collectors.toList());
+    }
+
+    public Boolean findPropsBlog(Blog blog, String search){
+        Field[] fields = blog.getClass().getDeclaredFields();
+        boolean bool = false;
+        for(Field field : fields){
+            try {
+                field.setAccessible(true);
+                if(field.get(blog) == null){
+                    continue;
+                }
+                if(field.get(blog).getClass() == Long.class){
+                    continue;
+                }
+                if(field.get(blog).getClass() == Float.class){
+                    continue;
+                }
+                if(field.get(blog).getClass() == Boolean.class){
+                    continue;
+                }
+                if(field.getName().toLowerCase().equals(search.toLowerCase()))
+                    continue;
+                if(field.getName() == "date_create_blog"){
+                    LocalDate get = (LocalDate) field.get(blog);
+                    if(get.toString().contains(search)){
+                        bool = true;
+                        break;
+                    }
+                }
+                if(field.get(blog).getClass() == String.class) {
+                    String get = (String) field.get(blog);
+                    bool = get.toLowerCase().contains(search.toLowerCase());
+                    if (bool) break;
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        return bool;
+    }
 }

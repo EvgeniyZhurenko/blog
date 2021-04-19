@@ -5,15 +5,15 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
 
 </head>
 <body>
 
-<header th:insert="blocks/header :: header"></header>
+<header th:insert="blocks/user :: user"></header>
 
 <div th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
-           style="background-image: url('../static/images/background-main.jpg'); background-size: cover;">
+     style="background-image: url('../../static/images/background-main.jpg'); background-size: cover;">
     <h3 th:text="${title}"></h3>
     <div th:each="blog : ${blogList}" class="alert alert-info mt-2 mb-10"
          th:style="'margin-left: 10em; margin-right: 10em;'">
@@ -25,7 +25,8 @@
                 <span th:text="${blog.user.getFirst_name()} + ' ' + ${blog.user.getLast_name()}"></span>
             </p>
         </div>
-        <a th:href="@{~/blog/{id}/{bool}(id= ${blog.id}, bool = true)}">Читать полностью</a>
+        <a th:href="@{~/user/blog/{idUser}/{idBlog}/{idUserBlog}/{bool}(idUser= ${idUser},idBlog = ${blog.getId()},
+           idUserBlog = ${blog.getUser().getId()}, bool = true)}">Читать полностью</a>
     </div>
 </div>
 
@@ -37,4 +38,3 @@
 
 </body>
 </html>
-

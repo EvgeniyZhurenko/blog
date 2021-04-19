@@ -5,7 +5,7 @@
                     <a th:href="@{~/user/{id}(id = ${idUser})}" th:text="${name}"></a>
                 </p>
 
-                <form class="d-flex" action="user/search" method="post">
+                <form class="d-flex" th:action="@{~/user/search/{idUser}(idUser = ${idUser})}" th:method="post">
 
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
@@ -20,6 +20,10 @@
                 <a class="p-2 text-dark"
                    th:href="@{/user/blog/list/{id}(id = ${idUser})}"
                    th:text="|Список всех блогов|">Список всех блогов </a>
+
+                <a class="p-2 text-dark"
+                   th:href="@{/user/all-blogs/{id}(id = ${idUser})}"
+                   th:text="|Все ваши блоги|">Все ваши блоги </a>
 
                 <a class="p-2 text-dark"
                    th:href="@{/user/creat-blog/{id}(id = ${idUser})}"

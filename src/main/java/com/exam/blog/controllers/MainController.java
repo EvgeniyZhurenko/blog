@@ -4,6 +4,7 @@ import com.exam.blog.models.Blog;
 import com.exam.blog.models.Comment;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
+import com.exam.blog.service.CommentService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 
 @Controller
@@ -23,11 +23,13 @@ public class MainController {
 
     private final UserRepoImpl userRepo;
     private final BlogService blogService;
+    private final CommentService commentService;
 
     @Autowired
-    public MainController(UserRepoImpl userRepo, BlogService blogService) {
+    public MainController(UserRepoImpl userRepo, BlogService blogService, CommentService commentService) {
         this.userRepo = userRepo;
         this.blogService = blogService;
+        this.commentService = commentService;
     }
 
 
@@ -182,8 +184,15 @@ public class MainController {
     public String search(@RequestParam(name = "search",required = false) String search,
                          Model model){
         List<User> users = userRepo.findUserBySearch(search);
+        List<Blog> bloges = blogService.findBlogBySearch(search);
+        List<Comment> comments = commentService.findCommentBySearch(search);
+        model.addAttribute("title", "Страница поиска");
         model.addAttribute("users", users);
-        return "all-accounts";
+        model.addAttribute("bloges", bloges);
+        model.addAttribute("comments", comments);
+        if(users.size() == 0 && bloges.size()== 0 && comments.size() == 0)
+            model.addAttribute("msg", "По вашему запросу ничего не найдено");
+        return "search-page";
     }
 
     public void addMenu (Authentication auth, Model model){

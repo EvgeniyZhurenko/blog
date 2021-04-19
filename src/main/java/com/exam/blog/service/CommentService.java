@@ -7,6 +7,9 @@ import com.exam.blog.repository.CommentRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -74,5 +77,46 @@ public class CommentService {
         return commentRepo.findAll().stream()
                           .filter(comment -> comment.getBlog().getId()==(idBlog))
                           .collect(Collectors.toList());
+    }
+
+    public List<Comment> findCommentBySearch(String search){
+        return commentRepo.findAll().stream().filter(comment -> findPropsComment(comment,search))
+                .collect(Collectors.toList());
+    }
+
+    public boolean findPropsComment(Comment comment, String search){
+        Field[] fields = comment.getClass().getDeclaredFields();
+        boolean bool = false;
+        for(Field field : fields){
+            try{
+                field.setAccessible(true);
+                if(field.get(comment) == null){
+                    continue;
+                }
+                if(field.get(comment).getClass() == Long.class){
+                    continue;
+                }
+                if(field.get(comment).getClass() == Boolean.class){
+                    continue;
+                }
+                if(field.getName().toLowerCase().equals(search.toLowerCase()))
+                    continue;
+                if(field.getName() == "dateCreateComment"){
+                    LocalDateTime get = (LocalDateTime) field.get(comment);
+                    if(get.toString().contains(search)){
+                        bool = true;
+                        break;
+                    }
+                }
+                if(field.get(comment).getClass() == String.class) {
+                    String get = (String) field.get(comment);
+                    bool = get.toLowerCase().contains(search.toLowerCase());
+                    if (bool) break;
+                }
+            } catch (IllegalAccessException e){
+                e.printStackTrace();
+            }
+        }
+        return bool;
     }
 }
