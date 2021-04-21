@@ -4,10 +4,7 @@
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
-    <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}">
-        <!--th:integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="-->
-        <!--th:crossorigin="anonymous">-->
-    </script>
+    <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
@@ -94,7 +91,7 @@
                             <div  class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}">
                                 <hr/>
                                 <p th:text="${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment} + ' '"></p>
+                                    ${comment.dateCreateComment} + ' '"></p>
                                 <p th:text="'' + ${comment.text}" th:style="'float: rigth'"></p>
                                 <hr/>
 

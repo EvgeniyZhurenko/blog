@@ -15,11 +15,11 @@
 <div class="container mt-5">
     <h1 th:text="${menu}"> </h1>
         <a class="p-2 text-dark"
-           th:href="@{/admin/blog/list/{id}(id = ${idUser})}"
+           th:href="@{/admin/blog/list/{id}(id = ${idAdmin})}"
            th:text="|Список всех блогов|">Список всех блогов </a>
         <br>
         <a class="p-2 text-dark"
-           th:href="@{/admin/all-accounts/{id}(id = ${idUser})}"
+           th:href="@{/admin/all-accounts/{id}(id = ${idAdmin})}"
         >Список всех аккаунтов</a>
 
 </div>

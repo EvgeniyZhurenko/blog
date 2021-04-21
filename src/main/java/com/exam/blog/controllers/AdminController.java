@@ -7,13 +7,13 @@ import com.exam.blog.service.BlogService;
 import com.exam.blog.service.CommentService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = {"/admin/"})
@@ -35,9 +35,14 @@ public class AdminController {
     @GetMapping(value = "account/{id}")
     public String accountAdminInfo(@PathVariable(value = "id", required = false) Long idUser,
                               Model model) {
-        mainController.account(idUser,model);
+        User userDB = userRepo.getById(idUser);
+        model.addAttribute("name", "Аккаунт " + " " + userDB.getLast_name());
+        model.addAttribute("idAdmin", idUser);
 
-        return "admin/admin-account";
+        model.addAttribute("title", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("user", userDB);
+
+        return "admin/admin-page";
     }
 
     @GetMapping("update/{id}")
@@ -50,6 +55,7 @@ public class AdminController {
         model.addAttribute("idUser" , idUser);
         model.addAttribute("title", "Страница редактирования данных АДМИНА.");
         model.addAttribute("user", userDB);
+        model.addAttribute("idAdmin", 4);
 
         return "admin/admin-update_page";
     }
@@ -68,6 +74,7 @@ public class AdminController {
 
         model.addAttribute("name", "Аккаутн " + " " + userDB.getFirst_name());
         model.addAttribute("idUser" , user.getId());
+        model.addAttribute("idAdmin", 4);
 
         if(userDB != null) {
 
@@ -94,7 +101,7 @@ public class AdminController {
 
     @GetMapping("all-accounts/{id}")
     public String allUsersList(@PathVariable(value = "id", required = false) Long idAdmin,
-                              Model model){
+                               Model model){
 
         User userDB = userRepo.getById(idAdmin);
         model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
@@ -103,6 +110,22 @@ public class AdminController {
         model.addAttribute("userList", userRepo.sortUserListFirstName());
 
         return "admin/admin-all-users";
+    }
+
+    @GetMapping("all-accounts/{idAdmin}/{idUser}")
+    public String allUsersList(@PathVariable(value = "idAdmin", required = false) Long idAdmin,
+                               @PathVariable(value = "idUser", required = false) Long idUser,
+                               Model model){
+
+        User admin = userRepo.getById(idAdmin);
+        User userDB = userRepo.getById(idUser);
+
+        model.addAttribute("name", "Аккаунт " + admin.getFirst_name());
+        model.addAttribute("title", "Аккаунт пользователя " + userDB.getFirst_name() + ' ' + userDB.getLast_name());
+        model.addAttribute("idAdmin", idAdmin);
+        model.addAttribute("user", userDB);
+
+        return "admin/admin-user-page";
     }
 
     @GetMapping("user/all-blogs/{id_admin}/{id_user}")
@@ -171,5 +194,28 @@ public class AdminController {
         }
         userRepo.delete(idUser);
         return "redirect:/admin/all-accounts/4";
+    }
+
+    @PostMapping("search/{idAdmin}")
+    public String search(@RequestParam(name = "search",required = false) String search,
+                         @PathVariable(name = "idAdmin", required = false) Long idAdmin,
+                         Model model){
+        List<User> users = userRepo.findUserBySearch(search);
+        List<Blog> bloges = blogService.findBlogBySearch(search);
+        List<Comment> comments = commentService.findCommentBySearch(search);
+
+        User userDB = userRepo.getById(idAdmin);
+        model.addAttribute("name", "Аккаунт " + " " + userDB.getLast_name());
+        model.addAttribute("idAdmin", idAdmin);
+
+        model.addAttribute("title", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
+        model.addAttribute("user", userDB);
+
+        model.addAttribute("userList", users);
+        model.addAttribute("blogList", bloges);
+        model.addAttribute("comments", comments);
+        if(users.size() == 0 && bloges.size()== 0 && comments.size() == 0)
+            model.addAttribute("msg", "По вашему запросу ничего не найдено");
+        return "admin/admin-search-page";
     }
 }

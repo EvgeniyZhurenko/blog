@@ -77,12 +77,12 @@ public class MainController {
                     model.addAttribute("menu", "Сделайте выбор :");
                     model.addAttribute("list", true);
                     model.addAttribute("blogList", bloges);
-                    model.addAttribute("idUser", userDB.getId());
+                    model.addAttribute("idAdmin", userDB.getId());
                     model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
                 } else {
                     model.addAttribute("list", false);
                     model.addAttribute("msg", "На данном ресурсе пока что нет блогов!");
-                    model.addAttribute("idUser", userDB.getId());
+                    model.addAttribute("idAdmin", userDB.getId());
                     model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
                 }
             }

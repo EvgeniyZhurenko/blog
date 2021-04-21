@@ -122,7 +122,7 @@
             <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
             <p th:style="'color:red; margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
             <p><a th:href="@{~/user/blog/{idUser}/{idBlog}/{idUserBlog}/{bool}
-                (idUser= ${idUser}, idBlog = ${comment.blog.id}, idUserBlog = ${comment.user.id}, bool = true)}"
+                (idUser= ${idUser}, idBlog = ${comment.blog.id}, idUserBlog = ${comment.blog.user.id}, bool = true)}"
                   th:text="'Перейти к блогу ' + ${comment.blog.title}"></a></p>
             <p><a th:href="@{~/user/account/{idUser}/{idAccount}(idUser= ${idUser}, idAccount = ${comment.user.id})}"
                   th:text="'Перейти на аккаунт ' + ${comment.user.getFirst_name()} + ' '
