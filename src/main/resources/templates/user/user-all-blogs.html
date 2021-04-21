@@ -28,14 +28,21 @@
      th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
      style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
      background-size: cover;">
-
+    <h3 th:unless="${sort} == 'alphabet'"><a class="p-2 text-blue"
+         th:href="@{~/user/all-blogs/{id}?data=alphabet(id = ${idUser})}"
+         th:text="|Сортировать по алфавиту|"> </a></h3>
+    <h3 th:unless="${sort} == 'date'"><a class="p-2 text-blue"
+         th:href="@{~/user/all-blogs/{id}?data=date(id = ${idUser})}"
+         th:text="|Сортировать по дате|"> ></a></h3>
+    <h3 th:unless="${sort} == 'rating'"><a class="p-2 text-blue"
+       th:href="@{~/user/all-blogs/{id}?data=rating(id = ${idUser})}"
+       th:text="|Сортировать по рейтингу|"> ></a></h3>
     <div class="container mt-4" >
         <div class="card p-3" th:each="blog : ${blogList}">
             <div class="row">
                 <div class="col-md-4">
                     <div class="position-relative snipimage"
                          th:each="picture : ${blog.pictures}">
-                        <!--<div th:if="${picture.blog.getId().equals(blog.getId())}">-->
                             <img th:src="@{|/${picture.url_image}|}"
                                  th:alt="${picture.getName()}"
                                  class="rounded img-fluid w-100 img-responsive">

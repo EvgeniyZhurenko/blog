@@ -88,14 +88,24 @@ public class AdminController {
 
     @GetMapping("blog/list/{id}")
     public String allBlogList(@PathVariable(value = "id", required = false) Long idAdmin,
+                              @RequestParam(value = "data", required = false) String data,
                               Model model){
         User userDB = userRepo.getById(idAdmin);
         model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
         model.addAttribute("title", "Все блоги");
         model.addAttribute("idAdmin", idAdmin);
-        model.addAttribute("blogList", blogService.getSortListBlogByRating());
-
-
+        if(data.equals("rating")) {
+            model.addAttribute("blogList", blogService.getSortListBlogByRating());
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("alphabet")){
+            model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("date")){
+            model.addAttribute("blogList", blogService.getSortListBlogByDate());
+            model.addAttribute("sort", data);
+        }
         return "admin/admin-blog-list";
     }
 

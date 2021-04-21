@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -74,13 +75,23 @@ public class BlogService {
         return blogRepo.getBlogById(id);
     }
 
-
     public List<Blog> getAllBlog(){
         return blogRepo.findAll();
     }
 
     public List<Blog> getSortListBlogByRating(){
         return getAllBlog().stream().sorted((blog1,blog2) -> Float.compare(blog2.getRating(), blog1.getRating()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Blog> getSortListBlogByAlphabet(){
+        return getAllBlog().stream().sorted((blog1,blog2) -> blog1.getTitle().compareToIgnoreCase(blog2.getTitle()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Blog> getSortListBlogByDate(){
+        return getAllBlog().stream()
+                .sorted(Comparator.comparing(Blog::getDate_create_blog))
                 .collect(Collectors.toList());
     }
 

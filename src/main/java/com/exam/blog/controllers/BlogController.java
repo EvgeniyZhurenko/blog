@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class BlogController {
     }
 
     @GetMapping(value = {"/blog/list"})
-    public String blogMain(Model model){
+    public String blogMain(@RequestParam(name = "data", required = false) String data,
+                           Model model){
         List<Blog> blogs = blogService.getSortListBlogByRating();
         if(blogs.size() == 0) {
             model.addAttribute("list", false);
@@ -34,6 +36,18 @@ public class BlogController {
         model.addAttribute("title", "Все блоги");
         model.addAttribute("blogList", blogs);
         model.addAttribute("blog", false);
+        if(data.equals("rating")) {
+            model.addAttribute("blogList", blogService.getSortListBlogByRating());
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("alphabet")){
+            model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("date")){
+            model.addAttribute("blogList", blogService.getSortListBlogByDate());
+            model.addAttribute("sort", data);
+        }
         return "blog-list";
     }
 

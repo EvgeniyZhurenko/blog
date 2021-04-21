@@ -15,6 +15,15 @@
 <div
      th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
      style="background-image: url('../../static/images/background-main.jpg'); background-size: cover;">
+    <h3 th:unless="${sort} == 'alphabet'"><a class="p-2 text-blue"
+       th:href="@{/admin/blog/list/{id}?data=alphabet(id = ${idAdmin})}"
+       th:text="|Сортировать по алфавиту|"> </a></h3>
+    <h3 th:unless="${sort} == 'date'"><a class="p-2 text-blue"
+       th:href="@{/admin/blog/list/{id}?data=date(id = ${idAdmin})}"
+       th:text="|Сортировать по дате|"> ></a></h3>
+    <h3 th:unless="${sort} == 'rating'"><a class="p-2 text-blue"
+           th:href="@{/admin/blog/list/{id}?data=rating(id = ${idAdmin})}"
+           th:text="|Сортировать по рейтингу|"> ></a></h3>
 
     <div th:each="blog : ${blogList}" class="alert alert-info mt-2 mb-10"
          th:style="'margin-left: 10em; margin-right: 10em;'">

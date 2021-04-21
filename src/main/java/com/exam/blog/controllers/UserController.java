@@ -48,6 +48,7 @@ public class UserController {
 
     @GetMapping("all-blogs/{id}")
     public String blogListUser(@PathVariable(value = "id", required = false) Long id_user,
+                           @RequestParam(name = "data", required = false) String data,
                            Model model){
         User userDB = userRepo.getById(id_user);
 
@@ -63,10 +64,34 @@ public class UserController {
             model.addAttribute("title", "Блоги " + userDB.getFirst_name() + " " + userDB.getLast_name());
             model.addAttribute("blogList", blogs);
             model.addAttribute("user", userDB);
+            if(data.equals("rating")) {
+                model.addAttribute("blogList", blogService.getSortListBlogByRating());
+                model.addAttribute("sort", data);
+            }
+            if(data.equals("alphabet")){
+                model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
+                model.addAttribute("sort", data);
+            }
+            if(data.equals("date")){
+                model.addAttribute("blogList", blogService.getSortListBlogByDate());
+                model.addAttribute("sort", data);
+            }
         } else {
             model.addAttribute("boolean", false);
             model.addAttribute("title", "Блоги " + userDB.getFirst_name() + " " + userDB.getLast_name());
             model.addAttribute("msg", "У вас пока что нет блогов!");
+            if(data.equals("rating")) {
+                model.addAttribute("blogList", blogService.getSortListBlogByRating());
+                model.addAttribute("sort", data);
+            }
+            if(data.equals("alphabet")){
+                model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
+                model.addAttribute("sort", data);
+            }
+            if(data.equals("date")){
+                model.addAttribute("blogList", blogService.getSortListBlogByDate());
+                model.addAttribute("sort", data);
+            }
         }
         return "user/user-all-blogs";
     }
@@ -199,6 +224,7 @@ public class UserController {
 
     @GetMapping(value = {"blog/list/{id}"})
     public String userBlogMain(@PathVariable(value = "id", required = false) Long id_user,
+                           @RequestParam(name = "data", required = false) String data,
                            Model model) {
 
         User userDB = userRepo.getById(id_user);
@@ -215,6 +241,18 @@ public class UserController {
         model.addAttribute("blogList", blogs);
         model.addAttribute("boolean", true);
         model.addAttribute("blog", false);
+        if(data.equals("rating")) {
+            model.addAttribute("blogList", blogService.getSortListBlogByRating());
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("alphabet")){
+            model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("date")){
+            model.addAttribute("blogList", blogService.getSortListBlogByDate());
+            model.addAttribute("sort", data);
+        }
         return "user/user-account-all-blog-list";
     }
 
