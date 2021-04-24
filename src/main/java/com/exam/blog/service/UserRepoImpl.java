@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
@@ -53,10 +54,18 @@ public class UserRepoImpl implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+        User user = userRepo.getUserByUsername(userName);
+        if (user == null) {
+            throw new UsernameNotFoundException("Пользователь с логином " + userName + " не удается найти");
+        }
+        return user;
+    }
+
     public boolean saveBoolean(User user) {
         User userFromDB = userRepo.getUserByUsername(user.getUsername());
         if (userFromDB == null) {
-            user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
+            user.setRoles(Collections.singletonList(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setBan_user(false);
             userRepo.save(user);
@@ -83,30 +92,24 @@ public class UserRepoImpl implements UserDetailsService {
 
     public void delete(Long id) {
         User userDelete = userRepo.getUserById(id);
-        if(userDelete.getBlogs().size() != 0 || userDelete.getBlogs() != null){
-            for(Blog blog : userDelete.getBlogs()) {
+        if (userDelete.getBlogs().size() != 0 || userDelete.getBlogs() != null) {
+            for (Blog blog : userDelete.getBlogs()) {
                 blogService.deleteBlog(userDelete, blog);
             }
+            userRepo.delete(userDelete);
+            File userDirectory = new File(uploadPath + "/" + id);
+            if (userDirectory.exists()) {
+                userDirectory.delete();
+            }
+            File pictureDirectory = new File(picturePath + "/" + id);
+            if (pictureDirectory.exists()) {
+                pictureDirectory.delete();
+            }
         }
-        userRepo.delete(userDelete);
-        File userDirectory = new File(uploadPath + "/" + id);
-        if(userDirectory.exists())
-            userDirectory.delete();
-        File pictureDirectory = new File(picturePath + "/" + id);
-        if(pictureDirectory.exists())
-            pictureDirectory.delete();
     }
 
     public User getById(Long id) {
         User user = userRepo.getUserById(id);
-        return user;
-    }
-
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        User user = userRepo.getUserByUsername(userName);
-        if (user == null) {
-            throw new UsernameNotFoundException("User with " + userName + " not found");
-        }
         return user;
     }
 
@@ -265,6 +268,10 @@ public class UserRepoImpl implements UserDetailsService {
             }
         }
         return bool;
+    }
+
+    public boolean findUserByUsernameException(String username){
+        return userRepo.findAll().stream().map(User::getUsername).noneMatch(name-> name.equals(username));
     }
 }
 

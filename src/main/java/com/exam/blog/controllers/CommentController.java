@@ -36,7 +36,7 @@ public class CommentController {
         comment.setUser(userRepo.getUserById(1L));
         commentService.save(comment);
 
-        return "redirect:/blog/" + idBlog;
+        return "redirect:/blog/" + idBlog + "/true";
     }
 
     @PostMapping("comment/creat/{id_user}/{id_blog}/{id_user_blog}")
@@ -51,6 +51,6 @@ public class CommentController {
         comment.setUser(userRepo.getUserById(id_user));
         commentService.save(comment);
 
-        return "redirect:/user/blog/" + id_user + "/" + idBlog + "/" + id_user_blog;
+        return "redirect:/user/blog/" + id_user + "/" + idBlog + "/" + id_user_blog + "/true";
     }
 }

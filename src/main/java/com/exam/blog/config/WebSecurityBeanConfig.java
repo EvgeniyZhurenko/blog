@@ -1,24 +1,23 @@
 package com.exam.blog.config;
 
+import com.exam.blog.security.CustomAccessDeniedHandler;
+import com.exam.blog.security.CustomAuthenticationFailureHandler;
 import com.exam.blog.security.CustomLogoutSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.access.DelegatingAccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.DelegatingAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.ForwardAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
 import org.springframework.security.web.csrf.MissingCsrfTokenException;
-import org.springframework.stereotype.Component;
 
 import java.util.LinkedHashMap;
 
@@ -75,38 +74,50 @@ public class WebSecurityBeanConfig {
         return authenticationEntryPoint;
     }
 
+//    @Bean
+//    public AccessDeniedHandler accessDeniedHandler() {
+//        LinkedHashMap<Class<? extends AccessDeniedException>, AccessDeniedHandler> errorHandlers = new LinkedHashMap<>();
+//
+//        // неверный обработчик ошибок аутентификатора csrf
+//        AccessDeniedHandlerImpl invalidCsrfTokenErrorHandler = new AccessDeniedHandlerImpl();
+//        invalidCsrfTokenErrorHandler.setErrorPage("/status/403");
+//        errorHandlers.put(InvalidCsrfTokenException.class, invalidCsrfTokenErrorHandler);
+//
+//        // пропуск обработчика ошибок аутентификатора csrf
+//        AccessDeniedHandlerImpl missingCsrfTokenErrorHandler = new AccessDeniedHandlerImpl();
+//        missingCsrfTokenErrorHandler.setErrorPage("/status/403");
+//        errorHandlers.put(MissingCsrfTokenException.class, missingCsrfTokenErrorHandler);
+//
+//        // обработчик ошибок по умолчанию
+//        AccessDeniedHandlerImpl defaultErrorHandler = new AccessDeniedHandlerImpl();
+//        defaultErrorHandler.setErrorPage("/status/403");
+//
+//        return new DelegatingAccessDeniedHandler(errorHandlers, defaultErrorHandler);
+//    }
+
+//    @Bean
+//    public AuthenticationFailureHandler authenticationFailureHandler() {
+//        LinkedHashMap<Class<? extends AuthenticationException>, AuthenticationFailureHandler> authenticationFailureHandlers = new LinkedHashMap<>();
+//
+//
+//        // обработчик ошибок аутентификатора
+//        ForwardAuthenticationFailureHandler forwardAuthenticationFailureHandler = new ForwardAuthenticationFailureHandler("/login");
+//        authenticationFailureHandlers.put(AuthenticationException.class, forwardAuthenticationFailureHandler);
+//
+//        // обработчик ошибок по умолчанию
+//        AuthenticationFailureHandler defaultAuthenticationFailureHandler = new ForwardAuthenticationFailureHandler("/authentication?error=true");
+//
+//
+//        return new DelegatingAuthenticationFailureHandler(authenticationFailureHandlers, defaultAuthenticationFailureHandler);
+//    }
+
     @Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        LinkedHashMap<Class<? extends AccessDeniedException>, AccessDeniedHandler> errorHandlers = new LinkedHashMap<>();
-
-        // неверный обработчик ошибок аутентификатора csrf
-        AccessDeniedHandlerImpl invalidCsrfTokenErrorHandler = new AccessDeniedHandlerImpl();
-        invalidCsrfTokenErrorHandler.setErrorPage("/status/403");
-        errorHandlers.put(InvalidCsrfTokenException.class, invalidCsrfTokenErrorHandler);
-
-        // пропуск обработчика ошибок аутентификатора csrf
-        AccessDeniedHandlerImpl missingCsrfTokenErrorHandler = new AccessDeniedHandlerImpl();
-        missingCsrfTokenErrorHandler.setErrorPage("/status/403");
-        errorHandlers.put(MissingCsrfTokenException.class, missingCsrfTokenErrorHandler);
-
-        // обработчик ошибок по умолчанию
-        AccessDeniedHandlerImpl defaultErrorHandler = new AccessDeniedHandlerImpl();
-        defaultErrorHandler.setErrorPage("/status/403");
-
-        return new DelegatingAccessDeniedHandler(errorHandlers, defaultErrorHandler);
+    CustomAuthenticationFailureHandler authenticationFailureHandler(){
+        return new CustomAuthenticationFailureHandler();
     }
 
     @Bean
-    public AuthenticationFailureHandler authenticationFailureHandler() {
-        LinkedHashMap<Class<? extends AuthenticationException>, AuthenticationFailureHandler> authenticationFailureHandlers = new LinkedHashMap<>();
-
-        // обработчик ошибок аутентификатора
-        ForwardAuthenticationFailureHandler authenticationFailureHandler = new ForwardAuthenticationFailureHandler("/status/401");
-        authenticationFailureHandlers.put(AuthenticationException.class, authenticationFailureHandler);
-
-        // обработчик ошибок по умолчанию
-        AuthenticationFailureHandler defaultAuthenticationFailureHandler = new ForwardAuthenticationFailureHandler("/status/401");
-
-        return new DelegatingAuthenticationFailureHandler(authenticationFailureHandlers, defaultAuthenticationFailureHandler);
+    CustomAccessDeniedHandler accessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
     }
 }

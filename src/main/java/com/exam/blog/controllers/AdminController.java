@@ -181,17 +181,17 @@ public class AdminController {
         Comment commentDB = commentService.getById(idComment);
         commentService.delete(idComment);
         return "redirect:/admin/user/blog/" + idAdmin + "/" + commentDB.getUser().getId() +
-                        "/" + commentDB.getBlog().getId() + "/" + true;
+                        "/" + commentDB.getBlog().getId() + "/true";
     }
 
     @GetMapping("delete/blog/{idBlog}")
-    public String deleteBlog(@PathVariable(value = "idBlog", required = false) Long idBlog){
+    public String deleteBlog(@PathVariable(value = "idBlog", required = false) Long idBlog) {
 
         Blog blogDB = blogService.getById(idBlog);
         User userDB = userRepo.getById(blogDB.getUser().getId());
         blogService.deleteBlog(userDB, blogDB);
 
-        return "redirect:/admin/blog/list/4";
+        return "redirect:/admin/blog/list/4?data=rating";
     }
 
     @GetMapping("delete/user/{idUser}")

@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,13 +49,11 @@ public class UserController {
 
     @GetMapping("all-blogs/{id}")
     public String blogListUser(@PathVariable(value = "id", required = false) Long id_user,
-                           @RequestParam(name = "data", required = false) String data,
-                           Model model){
+                                @RequestParam(name = "data", required = false) String data,
+                                Model model){
         User userDB = userRepo.getById(id_user);
 
-        List<Blog> blogs = userDB.getBlogs().stream()
-                                 .sorted((b1,b2) -> b2.getRating().compareTo(b1.getRating()))
-                                 .collect(Collectors.toList());
+        List<Blog> blogs = userDB.getBlogs();
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , id_user);
@@ -65,33 +64,22 @@ public class UserController {
             model.addAttribute("blogList", blogs);
             model.addAttribute("user", userDB);
             if(data.equals("rating")) {
-                model.addAttribute("blogList", blogService.getSortListBlogByRating());
+                model.addAttribute("blogList", blogService.getSortUserListBlogByRating(blogs));
                 model.addAttribute("sort", data);
             }
             if(data.equals("alphabet")){
-                model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
+                model.addAttribute("blogList", blogService.getSortUserListBlogByAlphabet(blogs));
                 model.addAttribute("sort", data);
             }
             if(data.equals("date")){
-                model.addAttribute("blogList", blogService.getSortListBlogByDate());
+                model.addAttribute("blogList", blogService.getSortUserListBlogByDate(blogs));
                 model.addAttribute("sort", data);
             }
         } else {
             model.addAttribute("boolean", false);
             model.addAttribute("title", "Блоги " + userDB.getFirst_name() + " " + userDB.getLast_name());
+            model.addAttribute("user", userDB);
             model.addAttribute("msg", "У вас пока что нет блогов!");
-            if(data.equals("rating")) {
-                model.addAttribute("blogList", blogService.getSortListBlogByRating());
-                model.addAttribute("sort", data);
-            }
-            if(data.equals("alphabet")){
-                model.addAttribute("blogList", blogService.getSortListBlogByAlphabet());
-                model.addAttribute("sort", data);
-            }
-            if(data.equals("date")){
-                model.addAttribute("blogList", blogService.getSortListBlogByDate());
-                model.addAttribute("sort", data);
-            }
         }
         return "user/user-all-blogs";
     }
@@ -123,7 +111,7 @@ public class UserController {
 
             blogService.addPropertiesBlog(blog, picture, idUser, image);
 
-            return "redirect:/user/all-blogs/" + idUser;
+            return "redirect:/user/all-blogs/" + idUser + "?data=rating";
 
         } else {
 
@@ -196,7 +184,7 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
 
-        return "main";
+        return "redirect:/leave/authentication";
     }
 
     @GetMapping("blog/{id_user}/{id_blog}/{id_user_blog}/{bool}")
@@ -294,17 +282,17 @@ public class UserController {
         Blog blogDB = blogService.getById(idBlog);
         blogService.deleteBlog(userDB, blogDB);
 
-        return "redirect:/user/blog/list/" + idUser;
+        return "redirect:/user/blog/list/" + idUser + "?data=rating";
     }
 
-    @GetMapping("delete/user/{idUser}/{idBlog}")
+    @GetMapping("delete-picture-blog/{idUser}/{idBlog}")
     public String deletePicture(@PathVariable(value = "idUser", required = false) Long idUser,
                                 @PathVariable(value = "idBlog", required = false) Long idBlog){
 
         Blog blogDB = blogService.getById(idBlog);
         pictureService.deletePictureBlog(blogDB);
 
-        return "redirect:/user/blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId();
+        return "redirect:/user/blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId() + "/true";
     }
 
     @PostMapping("search/{id}")

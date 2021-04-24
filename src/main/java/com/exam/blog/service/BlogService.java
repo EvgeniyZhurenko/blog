@@ -84,13 +84,29 @@ public class BlogService {
                 .collect(Collectors.toList());
     }
 
+    public List<Blog> getSortUserListBlogByRating(List<Blog> bloges){
+        return bloges.stream().sorted((blog1,blog2) -> Float.compare(blog2.getRating(), blog1.getRating()))
+                .collect(Collectors.toList());
+    }
+
     public List<Blog> getSortListBlogByAlphabet(){
         return getAllBlog().stream().sorted((blog1,blog2) -> blog1.getTitle().compareToIgnoreCase(blog2.getTitle()))
                 .collect(Collectors.toList());
     }
 
+    public List<Blog> getSortUserListBlogByAlphabet(List<Blog> bloges){
+        return bloges.stream().sorted((blog1,blog2) -> blog1.getTitle().compareToIgnoreCase(blog2.getTitle()))
+                .collect(Collectors.toList());
+    }
+
     public List<Blog> getSortListBlogByDate(){
         return getAllBlog().stream()
+                .sorted(Comparator.comparing(Blog::getDate_create_blog))
+                .collect(Collectors.toList());
+    }
+
+    public List<Blog> getSortUserListBlogByDate(List<Blog> bloges){
+        return bloges.stream()
                 .sorted(Comparator.comparing(Blog::getDate_create_blog))
                 .collect(Collectors.toList());
     }
@@ -182,7 +198,7 @@ public class BlogService {
 
             update(blogDB);
 
-            return "redirect:/user/blog/" + idUser + "/" + blogDB.getId() + "/" + blogDB.getUser().getId();
+            return "redirect:/user/blog/" + idUser + "/" + blogDB.getId() + "/" + blogDB.getUser().getId() + "/true";
 
         } else {
 
@@ -203,7 +219,7 @@ public class BlogService {
         }
         deletePicture(blogDB);
 
-        if(blogDB.getId() ==  userRepo.findBlogById(userDB, blogDB).getId()){
+        if(blogDB.getId() == userRepo.findBlogById(userDB, blogDB).getId()){
 
             userDB.getBlogs().remove(blogDB);
         }

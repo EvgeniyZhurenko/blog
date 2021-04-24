@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -42,7 +43,7 @@ public class Role implements GrantedAuthority{
     @JoinTable (name="user_roles",
                 joinColumns=@JoinColumn (name="id_user"),
                 inverseJoinColumns=@JoinColumn(name="id_role"))
-    Set<User> users = new HashSet<>();
+    List<User> users;
 
     @Override
     public String getAuthority() {

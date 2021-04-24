@@ -120,7 +120,7 @@
             id_user = ${blog.getUser().getId()}, id_blog= ${blog.id}, bool = true)}">Свернуть все комментарии</a>&emsp;</span>
 
         <span><a th:href="@{~/admin/user/all-blogs/{id_admin}/{id_user}(id_admin = ${idAdmin},id_user = ${blog.user.id})}">К списку блогов пользователя</a>&emsp;</span>
-        <span><a th:href="@{~/admin/blog/list/{id_admin}(id_admin = ${idAdmin})}">К списку всех блогов</a>&emsp;</span>
+        <span><a th:href="@{~/admin/blog/list/{id_admin}?data=rating(id_admin = ${idAdmin})}">К списку всех блогов</a>&emsp;</span>
 
 
     </div>

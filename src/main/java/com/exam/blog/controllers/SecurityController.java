@@ -2,8 +2,10 @@ package com.exam.blog.controllers;
 
 import com.exam.blog.models.User;
 import com.exam.blog.service.UserRepoImpl;
+import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,24 +25,30 @@ public class SecurityController {
         this.userRepo = userRepo;
     }
 
-    @GetMapping("/login")
+    @GetMapping(value = {"/login","/authentication"})
     public String loginGet(Model model){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(!auth.getPrincipal().toString().equalsIgnoreCase("anonymousUser")){
-            model.addAttribute("title", "Страница авторизации");
-            return "redirect:/";
+        model.addAttribute("title", "Страница авторизации");
+        if(auth == null){
+            return "redirect:/accessDenied";
+        } else if(!auth.getPrincipal().toString().equalsIgnoreCase("anonymousUser")){
+            if(auth.getAuthorities().stream().anyMatch(a-> a.toString().equalsIgnoreCase("ROLE_USER")))
+                return "redirect:/user/main";
+            if(auth.getAuthorities().stream().anyMatch(a-> a.toString().equalsIgnoreCase("ROLE_ADMIN")))
+                return "redirect:/admin/main";
         }
-
         return "sign_in";
     }
 
-    @PostMapping(value = {"/login"})
+    @PostMapping(value = {"/authentication"})
     public String loginPost(@RequestParam(name = "error", required = false) Boolean error,
+                            @RequestParam(name = "message", required = false) String message,
                             Model model){
 
         if(Boolean.TRUE.equals(error)){
             model.addAttribute("error" , true);
+            model.addAttribute("message", message);
         }
         return "sign_in";
 

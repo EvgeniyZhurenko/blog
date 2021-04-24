@@ -62,7 +62,7 @@ public class MainController {
                 } else {
                     model.addAttribute("blog", false);
                     model.addAttribute("user", userDB);
-                    model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
+                    model.addAttribute("name", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
                     model.addAttribute("idUser", userDB.getId());
                     model.addAttribute("msg", "У вас пока что нет блогов!");
                     model.addAttribute("anonymous", false);
@@ -144,6 +144,7 @@ public class MainController {
 
     @GetMapping("account/all-blogs/{id}")
     public String blogListUser(@PathVariable(value = "id", required = false) Long id_user,
+                               @RequestParam(name = "data", required = false) String data,
                                Model model) {
 
         User userDB = userRepo.getById(id_user);
@@ -162,6 +163,18 @@ public class MainController {
             model.addAttribute("title", "Блоги " + userDB.getFirst_name() + " " + userDB.getLast_name());
             model.addAttribute("msg", "У вас пока что нет блогов!");
         }
+        if(data.equals("rating")) {
+            model.addAttribute("blogList", blogService.getSortUserListBlogByDate(blogs));
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("alphabet")){
+            model.addAttribute("blogList", blogService.getSortUserListBlogByAlphabet(blogs));
+            model.addAttribute("sort", data);
+        }
+        if(data.equals("date")){
+            model.addAttribute("blogList", blogService.getSortUserListBlogByDate(blogs));
+            model.addAttribute("sort", data);
+        }
         return "account-all-blogs";
     }
 
@@ -170,7 +183,7 @@ public class MainController {
                            @PathVariable(value = "id_blog", required = false) Long idBLog,
                            @PathVariable(value = "bool", required = false) Boolean bool,
                            Model model){
-        User UserDB = userRepo.getById(idUser);
+
         Blog blogDB = blogService.getById(idBLog);
         Comment comment = new Comment();
         model.addAttribute("blog", blogDB );
@@ -195,6 +208,34 @@ public class MainController {
         return "search-page";
     }
 
+    @GetMapping("accessDenied")
+    public String accessDenied(Model model){
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        if(auth.getName().equalsIgnoreCase("anonymousUser")) {
+            model.addAttribute("title", "Access denied");
+            model.addAttribute("access", "anonymous");
+        } else {
+            User userDB = userRepo.getUserByUserName(auth.getName());
+            if (userDB.getRoles().stream()
+                    .anyMatch(role -> role.getName().equals("ROLE_USER"))) {
+                model.addAttribute("title", "Access denied");
+                model.addAttribute("access", "user");
+                model.addAttribute("user", userDB);
+                model.addAttribute("name", "Аккаунт " + userDB.getFirst_name() + " " + userDB.getLast_name());
+                model.addAttribute("idUser", userDB.getId());
+            } else if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))) {
+                model.addAttribute("title", "Access denied");
+                model.addAttribute("access", "admin");
+                model.addAttribute("idAdmin", userDB.getId());
+                model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
+            }
+        }
+
+        return "status/access_denied";
+    }
+
     public void addMenu (Authentication auth, Model model){
         if (auth.getName().equalsIgnoreCase("anonymousUser"))
             model.addAttribute("anonymous", true);
@@ -203,10 +244,11 @@ public class MainController {
             if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_USER"))) {
                 model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
                 model.addAttribute("idUser", userDB.getId());
-                model.addAttribute("user", true);
+                model.addAttribute("User", true);
+                model.addAttribute("user", userDB);
             } else if(userDB.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"))){
                 model.addAttribute("name", "Аккаунт " + userDB.getFirst_name());
-                model.addAttribute("idUser", userDB.getId());
+                model.addAttribute("idAdmin", userDB.getId());
                 model.addAttribute("admin", true);
             }
         }

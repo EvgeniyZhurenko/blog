@@ -19,7 +19,7 @@
 			<h1>Войти в свой аккаунт</h1>
 
 			<div th:if="${error}">
-				<span style="color: red">Не удачная попытка</span>
+				<span style="color: red" th:text="${message}">Не удачная попытка</span>
 			</div>
 
 			<div>
@@ -28,8 +28,9 @@
 			<div>
 				<input type="password" placeholder="Password" required="" id="password" name="password" />
 			</div>
-			<div>
-				<input type="submit" value="Войти" />
+
+		    <input type="submit" value="Войти" />
+            <div>
 				<a href="/forgot-password">Забыли пароль?</a>
 				<a href="/registration">Регистрация</a>
 				<br>

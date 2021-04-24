@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${title}"></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
+    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
+    <link rel="stylesheet" href="../../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
+
+</head>
+<body>
+
+<div th:if="${access} == 'anonymous'">
+    <header th:insert="blocks/header :: header"></header>
+</div>
+
+<div th:if="${access} == 'user'">
+    <header th:insert="blocks/user :: user"></header>
+</div>
+
+<div th:if="${access} == 'admin'">
+    <header th:insert="blocks/admin :: admin"></header>
+</div>
+
+<main class="container " style="display: block; text-align: center;" th:style="'display: block; text-align: center'">
+    <h1 th:text="|У вас нет прав доступа к данной странице|"></h1>
+</main>
+
+
+
+<footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
+
+
+</body>
+</html>
+

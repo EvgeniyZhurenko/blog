@@ -14,6 +14,7 @@
 
 <div th:style="'background-image: url(/images/background-main.jpg); background-size: cover;'"
      style="background-image: url('../../static/images/background-main.jpg'); background-size: cover;">
+
     <h3 th:text="${title}"></h3>
     <div th:each="blog : ${blogList}" class="alert alert-info mt-2 mb-10"
          th:style="'margin-left: 10em; margin-right: 10em;'">

@@ -43,7 +43,7 @@ public class User implements UserDetails {
     private String foto;
 
 
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date born;
 
@@ -66,7 +66,7 @@ public class User implements UserDetails {
     @JoinTable (name="user_roles",
                 joinColumns=@JoinColumn (name="id_role"),
                 inverseJoinColumns=@JoinColumn(name="id_user"))
-    Set<Role> roles ;
+    List<Role> roles ;
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL,

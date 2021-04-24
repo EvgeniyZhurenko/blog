@@ -1,11 +1,11 @@
 package com.exam.blog.config;
 
 
+import com.exam.blog.security.CustomAuthenticationFailureHandler;
 import com.exam.blog.security.RefererRedirectionAuthenticationSuccessHandler;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
@@ -35,7 +34,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         private PasswordEncoder passwordEncoder;
 
-        private AuthenticationFailureHandler authenticationFailureHandler;
+        private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
 
         private AccessDeniedHandler accessDeniedHandler;
 
@@ -57,8 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         }
 
         @Autowired
-        public void setAuthenticationFailureHandler(AuthenticationFailureHandler authenticationFailureHandler) {
-                this.authenticationFailureHandler = authenticationFailureHandler;
+        public void setCustomAuthenticationFailureHandler(CustomAuthenticationFailureHandler customAuthenticationFailureHandler) {
+                this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
         }
 
         @Autowired
@@ -76,6 +75,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 this.authenticationEntryPoint = authenticationEntryPoint;
         }
 
+        @Bean
+        public PersistentTokenRepository persistentTokenRepository() {
+                JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
+                db.setDataSource(dataSource);
+                return db;
+        }
+
         @Override
         public void configure(WebSecurity web) throws Exception {
                 web.debug(true);
@@ -83,31 +89,34 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
+                http
+                        .authorizeRequests().antMatchers("/registration").not().fullyAuthenticated();
+                http
+                        .authorizeRequests().antMatchers("/user/**").hasRole("USER");
+                http
+                        .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
                 http
                         .authorizeRequests()
                         .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js","/static/**" ).permitAll();
                 http
-                        .authorizeRequests().antMatchers("/registration").not().fullyAuthenticated();
-                http
-                        .authorizeRequests().antMatchers("/user/**","/main").hasRole("USER");
-                http
-                        .authorizeRequests().antMatchers("/admin/**","/main").hasRole("ADMIN");
-                http
                         .authorizeRequests().anyRequest().authenticated();
-                http.authorizeRequests().and().exceptionHandling()
+                http
+                        .authorizeRequests().and().exceptionHandling()
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler);
                 http
                         .authorizeRequests()
                         .and()
                         .formLogin()
-                        .loginProcessingUrl("/authentication")
+                        .failureHandler(customAuthenticationFailureHandler)
                         .loginPage("/sign_in")
-                        .defaultSuccessUrl("/main")
-////                        .failureUrl("/login?error = true")
-//                        .failureForwardUrl("/login?error = true")
+                        .loginProcessingUrl("/authentication")
+                        .defaultSuccessUrl("/main", true)
+                        .usernameParameter("username")
+//                        .failureUrl("/sign_in")
+//                        .failureForwardUrl("/authentication?error=true")
                         .successHandler(new RefererRedirectionAuthenticationSuccessHandler())
-                        .failureHandler(authenticationFailureHandler)
 
                         .and()
                         .logout(logout -> logout
@@ -126,13 +135,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
                 auth.userDetailsService(userRepo).passwordEncoder(passwordEncoder);
-        }
-
-        @Bean
-        public PersistentTokenRepository persistentTokenRepository() {
-                JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-                db.setDataSource(dataSource);
-                return db;
         }
 
 }
