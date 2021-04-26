@@ -112,7 +112,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .failureHandler(customAuthenticationFailureHandler)
                         .loginPage("/sign_in")
                         .loginProcessingUrl("/authentication")
-                        .defaultSuccessUrl("/main", true)
+//                        .defaultSuccessUrl("/main", true)
                         .usernameParameter("username")
 //                        .failureUrl("/sign_in")
 //                        .failureForwardUrl("/authentication?error=true")
@@ -134,7 +134,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-                auth.userDetailsService(userRepo).passwordEncoder(passwordEncoder);
+                auth.userDetailsService(userRepo)
+                        .passwordEncoder(passwordEncoder);
         }
 
 }

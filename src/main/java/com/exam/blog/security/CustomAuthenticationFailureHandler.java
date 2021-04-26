@@ -42,7 +42,7 @@ public class CustomAuthenticationFailureHandler
             message = "Проверьте свой пароль";
         }
 
-        request.getRequestDispatcher(String.format("/authentication?error=true&message=%s", message))
+        request.getRequestDispatcher(String.format("/authentication?error=true&message=%s&un=%s", message,username))
                 .forward(request, response);
     }
 

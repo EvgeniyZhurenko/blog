@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -247,10 +246,11 @@ public class BlogService {
             for (Picture picture : pictureService.findAllPictureByUserId(blogDB.getUser().getId())) {
                 if (picture.getId() == blogDB.getPictures().get(0).getId()) {
                     pictureService.delete(picture.getId());
-                    pictureService.deleteFolder(blogDB);
                 }
             }
-        }}
+        }
+        pictureService.deleteFolderPicture(blogDB);
+    }
 
     public List<Blog> findBlogBySearch(String search){
         List<Blog> blogs = blogRepo.findAll();

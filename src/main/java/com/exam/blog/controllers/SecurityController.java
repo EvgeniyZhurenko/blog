@@ -44,11 +44,13 @@ public class SecurityController {
     @PostMapping(value = {"/authentication"})
     public String loginPost(@RequestParam(name = "error", required = false) Boolean error,
                             @RequestParam(name = "message", required = false) String message,
+                            @RequestParam(name = "un", required = false) String username,
                             Model model){
 
         if(Boolean.TRUE.equals(error)){
             model.addAttribute("error" , true);
             model.addAttribute("message", message);
+            model.addAttribute("username", username);
         }
         return "sign_in";
 

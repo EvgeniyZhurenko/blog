@@ -122,7 +122,7 @@ public class AdminController {
         return "admin/admin-all-users";
     }
 
-    @GetMapping("all-accounts/{idAdmin}/{idUser}")
+    @GetMapping("account/{idAdmin}/{idUser}")
     public String allUsersList(@PathVariable(value = "idAdmin", required = false) Long idAdmin,
                                @PathVariable(value = "idUser", required = false) Long idUser,
                                Model model){

@@ -6,6 +6,8 @@ import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,10 +15,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
@@ -25,6 +30,7 @@ import java.util.stream.Collectors;
 
 
 @Service
+@Transactional
 public class UserRepoImpl implements UserDetailsService {
 
     private UserRepo userRepo;
@@ -32,6 +38,13 @@ public class UserRepoImpl implements UserDetailsService {
     private PasswordEncoder passwordEncoder;
 
     private BlogService blogService;
+
+    private PictureService pictureService;
+
+    @Autowired
+    public void setPictureService(PictureService pictureService) {
+        this.pictureService = pictureService;
+    }
 
     @Autowired
     public void setBlogService(BlogService blogService) {
@@ -92,21 +105,25 @@ public class UserRepoImpl implements UserDetailsService {
 
     public void delete(Long id) {
         User userDelete = userRepo.getUserById(id);
-        if (userDelete.getBlogs().size() != 0 || userDelete.getBlogs() != null) {
-            for (Blog blog : userDelete.getBlogs()) {
-                blogService.deleteBlog(userDelete, blog);
+        List<Blog> bloges = new CopyOnWriteArrayList<>(userDelete.getBlogs());
+        if (bloges.size() > 0 ) {
+
+                for(Blog blog : bloges){
+                    blogService.deleteBlog(userDelete, blog);
+                }
             }
-            userRepo.delete(userDelete);
-            File userDirectory = new File(uploadPath + "/" + id);
-            if (userDirectory.exists()) {
-                userDirectory.delete();
-            }
-            File pictureDirectory = new File(picturePath + "/" + id);
-            if (pictureDirectory.exists()) {
-                pictureDirectory.delete();
-            }
-        }
+        userRepo.deleteUserById(userDelete.getId());
+        pictureService.deleteFolderUser(userDelete);
+//        File userDirectory = new File(uploadPath + "/" + id);
+//        if (userDirectory.exists()) {
+//            userDirectory.delete();
+//        }
+//        File pictureDirectory = new File(picturePath + "/" + id);
+//        if (pictureDirectory.exists()) {
+//            pictureDirectory.delete();
+//        }
     }
+
 
     public User getById(Long id) {
         User user = userRepo.getUserById(id);

@@ -52,7 +52,7 @@
         <p th:text="${blog.full_text}"></p>
 
         <span th:if="${idUser} == ${blog.user.getId()}">
-            <a th:href="@{~/user/all-blogs/{id}(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+            <a th:href="@{~/user/all-blogs/{id}?data=rating(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
         <span th:unless="${idUser} == ${blog.user.getId()}">
             <a th:href="@{~/user/all-account-blogs/{idUser}/{idAccount}(idUser = ${idUser},
                 idAccount = ${blog.getUser().id})}" th:text="'К списку блогов ' + ${blog.user.first_name} +

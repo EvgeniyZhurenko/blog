@@ -184,7 +184,7 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
 
-        return "redirect:/leave/authentication";
+        return "main";
     }
 
     @GetMapping("blog/{id_user}/{id_blog}/{id_user_blog}/{bool}")

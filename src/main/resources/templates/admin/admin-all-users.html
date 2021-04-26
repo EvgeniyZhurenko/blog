@@ -22,7 +22,7 @@
      th:style="'background-image: url(/images/background-about-metrics-contact.jpg); background-size: cover; display: grid; justify-items: center;'"
      style="background-image: url('../../static/images/background-about-metrics-contact.jpg');
      background-size: cover; display: grid; justify-items: center;"
-     th:each="user : ${userList}" th:unless="${user.getId() == 4}">
+     th:each="user : ${userList}" th:unless="${user.getId() == 4 || user.getId() == 1}">
 
         <div class="div-about-metrics-contact">
             <div class="container">

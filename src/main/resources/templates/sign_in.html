@@ -22,7 +22,11 @@
 				<span style="color: red" th:text="${message}">Не удачная попытка</span>
 			</div>
 
-			<div>
+			<div th:if="${username}">
+				<input type="text" placeholder="Username" required="" id="username" name="username" th:value="${username}"/>
+			</div>
+
+			<div th:unless="${username}">
 				<input type="text" placeholder="Username" required="" id="username" name="username" />
 			</div>
 			<div>

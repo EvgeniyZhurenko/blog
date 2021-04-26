@@ -3,6 +3,7 @@ package com.exam.blog.service;
 
 import com.exam.blog.models.Blog;
 import com.exam.blog.models.Picture;
+import com.exam.blog.models.User;
 import com.exam.blog.repository.PictureRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,9 @@ public class PictureService  {
 
     @Value("${upload.picture.path}")
     private String uploadPicturePath;
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
     @Autowired
     public void setPictureRepo(PictureRepo pictureRepo) {
@@ -158,11 +162,10 @@ public class PictureService  {
                 blogDB.getPictures().remove(picture);
                 blogService.update(blogDB);
                 delete(picture.getId());
-
                 }
             }
 
-        deleteFolder(blogDB);
+        deleteFolderPicture(blogDB);
         }
 
 
@@ -198,14 +201,25 @@ public class PictureService  {
         picture.setUrl_image(filePathFoto);
     }
 
-    public void deleteFolder(Blog blogDB) {
+    public void deleteFolderPicture(Blog blogDB) {
+        File folderMain = new File(uploadPicturePath + "/" + blogDB.getUser().getId());
         File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
+        deleteFolder(folder);
+        folderMain.delete();
+    }
+
+    public void deleteFolderUser(User userDB) {
+        File folder = new File(uploadPath + "/" + userDB.getId());
+        deleteFolder(folder);
+    }
+
+    private void deleteFolder(File folder){
         File[] files = folder.listFiles();
         if (files.length != 0) {
             for (File file : files) {
                 file.delete();
             }
-            folder.delete();
         }
+        folder.delete();
     }
 }
