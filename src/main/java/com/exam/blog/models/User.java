@@ -40,6 +40,9 @@ public class User implements UserDetails {
     private String country;
     private Boolean ban_user;
 
+    @Column(name = "activation_code")
+    private String activationCode;
+
     private String foto;
 
 
@@ -64,9 +67,9 @@ public class User implements UserDetails {
 
     @ManyToMany
     @JoinTable (name="user_roles",
-                joinColumns=@JoinColumn (name="id_role"),
-                inverseJoinColumns=@JoinColumn(name="id_user"))
-    List<Role> roles ;
+            joinColumns=@JoinColumn (name="id_role"),
+            inverseJoinColumns=@JoinColumn(name="id_user"))
+    Set<Role> roles ;
 
     @OneToMany(mappedBy = "user",
                cascade = CascadeType.ALL,

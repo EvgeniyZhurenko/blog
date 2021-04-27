@@ -2,13 +2,12 @@ package com.exam.blog.controllers;
 
 import com.exam.blog.models.User;
 import com.exam.blog.service.UserRepoImpl;
-import com.sun.istack.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -31,7 +30,7 @@ public class SecurityController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("title", "Страница авторизации");
         if(auth == null){
-            return "redirect:/accessDenied";
+            return "redirect:/main";
         } else if(!auth.getPrincipal().toString().equalsIgnoreCase("anonymousUser")){
             if(auth.getAuthorities().stream().anyMatch(a-> a.toString().equalsIgnoreCase("ROLE_USER")))
                 return "redirect:/user/main";
@@ -80,7 +79,7 @@ public class SecurityController {
                 return "redirect:/login";
             } else {
                 redirectAttributes.addFlashAttribute("account", true);
-                redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\n Попробуйте еще раз");
+                redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
                 return "redirect:/registration";
             }
         } else {
@@ -88,5 +87,22 @@ public class SecurityController {
             redirectAttributes.addFlashAttribute("msg", userRepo.userRegistration(user));
             return "redirect:/registration";
         }
+    }
+
+    @GetMapping("/activate/{code}")
+    public String activate(RedirectAttributes redirectAttributes,
+                           @PathVariable(name = "code", required = false) String code){
+        boolean isActivate = userRepo.activateUser(code);
+
+        if(isActivate){
+            redirectAttributes.addFlashAttribute("error", "true");
+            redirectAttributes.addFlashAttribute("message", "Пользователь активирован успешно");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "true");
+            redirectAttributes.addFlashAttribute("message", "Код активации не найден");
+        }
+
+
+        return "redirect:/login";
     }
 }

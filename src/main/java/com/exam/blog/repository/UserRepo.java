@@ -23,4 +23,6 @@ public interface UserRepo extends JpaRepository<User, Long> {
         Optional<User> findById(Long id);
 
         void deleteUserById(Long id);
+
+        User getUserByActivationCode(String code);
 }

@@ -41,6 +41,13 @@ public class UserRepoImpl implements UserDetailsService {
 
     private PictureService pictureService;
 
+    private MailSender mailSender;
+
+    @Autowired
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
     @Autowired
     public void setPictureService(PictureService pictureService) {
         this.pictureService = pictureService;
@@ -78,10 +85,21 @@ public class UserRepoImpl implements UserDetailsService {
     public boolean saveBoolean(User user) {
         User userFromDB = userRepo.getUserByUsername(user.getUsername());
         if (userFromDB == null) {
-            user.setRoles(Collections.singletonList(new Role(2L, "ROLE_USER")));
+            user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setActivationCode(UUID.randomUUID().toString());
             user.setBan_user(false);
+
             userRepo.save(user);
+            if(!user.getEmail().isEmpty()){
+                String message = String.format(
+                        "Hello, %s! \n" +
+                                "Welcome to blog.com. Please, visit next link: http://localhost:8080/activate/%s",
+                        user.getUsername(),
+                        user.getActivationCode()
+                );
+                mailSender.send(user.getEmail(), "Activation code", message);
+            }
             return true;
         } else {
             return false;
@@ -114,14 +132,6 @@ public class UserRepoImpl implements UserDetailsService {
             }
         userRepo.deleteUserById(userDelete.getId());
         pictureService.deleteFolderUser(userDelete);
-//        File userDirectory = new File(uploadPath + "/" + id);
-//        if (userDirectory.exists()) {
-//            userDirectory.delete();
-//        }
-//        File pictureDirectory = new File(picturePath + "/" + id);
-//        if (pictureDirectory.exists()) {
-//            pictureDirectory.delete();
-//        }
     }
 
 
@@ -289,6 +299,17 @@ public class UserRepoImpl implements UserDetailsService {
 
     public boolean findUserByUsernameException(String username){
         return userRepo.findAll().stream().map(User::getUsername).noneMatch(name-> name.equals(username));
+    }
+
+    public boolean activateUser(String code) {
+        User user = userRepo.getUserByActivationCode(code);
+
+        if(user == null)
+            return false;
+
+        user.setActivationCode(null);
+        userRepo.save(user);
+        return true;
     }
 }
 
