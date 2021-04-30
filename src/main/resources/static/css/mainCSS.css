@@ -27,7 +27,7 @@ a.text-white, p.lead:nth-child(2){
     text-overflow: ellipsis;
 }
 .bd-placeholder-img > rect{
-    background-image: url("../../images/background-main.jpg");
+    background-image: url("../images/background-main.jpg");
 }
 
 .ul li {

@@ -41,8 +41,8 @@ public class Role implements GrantedAuthority{
 
     @ManyToMany
     @JoinTable (name="user_roles",
-            joinColumns=@JoinColumn (name="id_user"),
-            inverseJoinColumns=@JoinColumn(name="id_role"))
+            joinColumns=@JoinColumn (name="id_role"),
+            inverseJoinColumns=@JoinColumn(name="id_user"))
     Set<User> users = new HashSet<>();
 
     @Override

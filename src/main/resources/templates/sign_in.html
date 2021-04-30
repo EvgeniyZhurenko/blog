@@ -12,7 +12,7 @@
 
 <div id="container">
 	<section id="content">
-		<form action="/authentication" method="post" >
+		<form th:action="@{~/authentication}" th:method="post" >
 
 			<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 			
@@ -35,7 +35,7 @@
 
 		    <input type="submit" value="Войти" />
             <div>
-				<a href="/forgot-password">Забыли пароль?</a>
+				<a th:href="@{/forgot-password}">Забыли пароль?</a>
 				<a href="/registration">Регистрация</a>
 				<br>
 				<a href="/">На главную</a>

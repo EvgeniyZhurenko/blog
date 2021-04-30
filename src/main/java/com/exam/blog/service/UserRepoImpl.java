@@ -6,13 +6,10 @@ import com.exam.blog.models.User;
 import com.exam.blog.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -121,6 +118,14 @@ public class UserRepoImpl implements UserDetailsService {
         return false;
     }
 
+    public void updatePassword(User user){
+        User exist = userRepo.getUserById(user.getId());
+        if(exist != null){
+            exist.setPassword(user.getPassword());
+            userRepo.save(exist);
+        }
+    }
+
     public void delete(Long id) {
         User userDelete = userRepo.getUserById(id);
         List<Blog> bloges = new CopyOnWriteArrayList<>(userDelete.getBlogs());
@@ -153,11 +158,11 @@ public class UserRepoImpl implements UserDetailsService {
         if (user.getLast_name().equals(""))
             attr[1] = "Заполните поле Ваша фамилия!";
         if (user.getEmail().equals(""))
-            attr[2] = "Заполните поле Ваш e-mail!";
+            attr[2]="Заполните поле Ваш e-mail!";
         if (user.getPhone().equals(""))
             attr[3] = "Заполните поле Ваш телефон!";
         if (user.getUsername().equals(""))
-            attr[4] = "Заполните поле Ваше логин!";
+            attr[4]="Заполните поле Ваше логин!";
         if (user.getPassword().equals(""))
             attr[5] = "Заполните поле Ваш пароль!";
 
@@ -310,6 +315,16 @@ public class UserRepoImpl implements UserDetailsService {
         user.setActivationCode(null);
         userRepo.save(user);
         return true;
+    }
+
+    public User findUserByEmail(String email){
+        return userRepo.findAll().stream().filter(user-> user.getEmail()!= null).collect(Collectors.toList())
+                .stream().filter(user -> user.getEmail().equals(email)).toArray(User[]::new)[0];
+    }
+
+    public User findUserByActivationCode(String activationCode){
+        return userRepo.findAll().stream().filter(user-> user.getActivationCode()!= null).collect(Collectors.toList())
+                .stream().filter(user -> user.getActivationCode().equals(activationCode)).toArray(User[]::new)[0];
     }
 }
 

@@ -67,8 +67,8 @@ public class User implements UserDetails {
 
     @ManyToMany
     @JoinTable (name="user_roles",
-            joinColumns=@JoinColumn (name="id_role"),
-            inverseJoinColumns=@JoinColumn(name="id_user"))
+            joinColumns=@JoinColumn (name="id_user"),
+            inverseJoinColumns=@JoinColumn(name="id_role"))
     Set<Role> roles ;
 
     @OneToMany(mappedBy = "user",

@@ -7,12 +7,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class SecurityController {
@@ -69,14 +71,18 @@ public class SecurityController {
     }
 
     @PostMapping("/registration")
-    public String registrationPost(@ModelAttribute User user,
+    public String registrationPost(@ModelAttribute User user, Model model,
                                    RedirectAttributes redirectAttributes){
 
-        if(Arrays.asList(userRepo.userRegistration(user)).contains(null)) {
+        String[] arrProps = userRepo.userRegistration(user);
+        if(Arrays.stream(arrProps).filter(e -> e != null).collect(Collectors.toList()).size() == 0) {
             User userDB = userRepo.getUserByUserName(user.getUsername());
             if (userDB == null && user.getUsername() != null) {
                 userRepo.saveBoolean(user);
-                return "redirect:/login";
+                model.addAttribute("title", "Сообщение");
+                model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации"
+                        + user.getEmail());
+                return "email-message";
             } else {
                 redirectAttributes.addFlashAttribute("account", true);
                 redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
@@ -84,25 +90,26 @@ public class SecurityController {
             }
         } else {
             redirectAttributes.addFlashAttribute("bool", true);
-            redirectAttributes.addFlashAttribute("msg", userRepo.userRegistration(user));
+            redirectAttributes.addFlashAttribute("msg", arrProps);
             return "redirect:/registration";
         }
     }
 
     @GetMapping("/activate/{code}")
-    public String activate(RedirectAttributes redirectAttributes,
+    public ModelAndView activate(ModelAndView modelAndView,
                            @PathVariable(name = "code", required = false) String code){
+
         boolean isActivate = userRepo.activateUser(code);
 
         if(isActivate){
-            redirectAttributes.addFlashAttribute("error", "true");
-            redirectAttributes.addFlashAttribute("message", "Пользователь активирован успешно");
+            modelAndView.addObject("error", "true");
+            modelAndView.addObject("message", "Пользователь активирован успешно");
+            modelAndView.setViewName("redirect:/login");
         } else {
-            redirectAttributes.addFlashAttribute("error", "true");
-            redirectAttributes.addFlashAttribute("message", "Код активации не найден");
+            modelAndView.addObject("title", "Error");
+            modelAndView.addObject("message", "Код активации не найден");
+            modelAndView.setViewName("error");
         }
-
-
-        return "redirect:/login";
+        return modelAndView;
     }
 }
