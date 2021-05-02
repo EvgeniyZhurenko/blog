@@ -19,8 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-;
 
+/**
+ @author Zhurenko Evgeniy
+ */
 
 @Controller
 @RequestMapping("/user/")
@@ -46,6 +48,7 @@ public class UserController {
     }
 
 
+    // access to all blogs of site
     @GetMapping("all-blogs/{id}")
     public String blogListUser(@PathVariable(value = "id", required = false) Long id_user,
                                 @RequestParam(name = "data", required = false) String data,
@@ -83,6 +86,7 @@ public class UserController {
         return "user/user-all-blogs";
     }
 
+    // access to the page for creat blog
     @GetMapping("creat-blog/{id}")
     public String creatBlogUserGet(@PathVariable(value = "id", required = false) Long id_user,
                            Model model){
@@ -101,6 +105,7 @@ public class UserController {
         return "user/creat-blog";
     }
 
+    // create blog
     @PostMapping("creat-blog/{id}")
     public String creatBlogUserPost(@ModelAttribute Picture picture,@ModelAttribute Blog blog,
                                     @PathVariable(value = "id", required = false) Long idUser,
@@ -120,7 +125,7 @@ public class UserController {
 
     }
 
-
+    // access to the user`s page
     @GetMapping("{id}")
     public String userInfo(@PathVariable(name = "id", required = false) Long idUser,
                            Model model) {
@@ -130,6 +135,7 @@ public class UserController {
         return "user/user_page";
     }
 
+    // access to the update page of user
     @GetMapping("update/{id}")
     public String userUpdateGet(@PathVariable(name = "id", required = false) Long idUser,
                            Model model){
@@ -149,6 +155,7 @@ public class UserController {
         return "user/user_update_page";
     }
 
+    // update information of user
     @PostMapping("update")
     public String userUpdatePost(@ModelAttribute User user, Model model,
                                  @RequestParam(name = "image", required = false) MultipartFile foto)
@@ -171,6 +178,7 @@ public class UserController {
             }
         }
 
+    // delete user`s account
     @GetMapping("delete/{id}")
     public String deleteUser(@PathVariable(value = "id", required = false) Long idUser,
                              Model model){
@@ -186,6 +194,7 @@ public class UserController {
         return "main";
     }
 
+    // access to the blog details
     @GetMapping("blog/{id_user}/{id_blog}/{id_user_blog}/{bool}")
     public String userBlogShow(@PathVariable(value = "id_user", required = false) Long id_user,
                                @PathVariable(value = "id_blog", required = false) Long id_blog,
@@ -209,6 +218,7 @@ public class UserController {
         return "user/user-blog";
     }
 
+    // access to the all blogs of user
     @GetMapping(value = {"blog/list/{id}"})
     public String userBlogMain(@PathVariable(value = "id", required = false) Long id_user,
                            @RequestParam(name = "data", required = false) String data,
@@ -243,7 +253,7 @@ public class UserController {
         return "user/user-account-all-blog-list";
     }
 
-
+    // access to the page of update blog
     @GetMapping("update-blog/{id_user}/{id_blog}")
     public String updateUserBlogGet(@PathVariable(name = "id_user", required = false) Long idUser,
                                  @PathVariable(name = "id_blog", required = false) Long idBlog,
@@ -263,7 +273,7 @@ public class UserController {
 
         return "user/user-update-blog";
     }
-
+    // update blog`s information
     @PostMapping("update-blog/{id}")
     public String updateUserBlogPost(@ModelAttribute Picture picture,@ModelAttribute Blog blog,
                                      @PathVariable(value = "id", required = false) Long idUser,
@@ -273,6 +283,7 @@ public class UserController {
 
     }
 
+    // delete blog of user
     @GetMapping("delete-blog/{idUser}/{idBlog}")
     public String deleteBlog(@PathVariable(value = "idUser", required = false) Long idUser,
                              @PathVariable(value = "idBlog", required = false) Long idBlog){
@@ -284,6 +295,7 @@ public class UserController {
         return "redirect:/user/blog/list/" + idUser + "?data=rating";
     }
 
+    // delete picture of blog
     @GetMapping("delete-picture-blog/{idUser}/{idBlog}")
     public String deletePicture(@PathVariable(value = "idUser", required = false) Long idUser,
                                 @PathVariable(value = "idBlog", required = false) Long idBlog){
@@ -294,6 +306,7 @@ public class UserController {
         return "redirect:/user/blog/" + idUser + "/" + idBlog + "/" + blogDB.getUser().getId() + "/true";
     }
 
+    // site search for user account
     @PostMapping("search/{id}")
     public String search(@RequestParam(name = "search",required = false) String search,
                          @PathVariable(value = "id", required = false) Long idUser,
@@ -316,6 +329,7 @@ public class UserController {
         return "user/user-search-page";
     }
 
+    // view information about other`s account
     @GetMapping("account/{idUser}/{idAccount}")
     public String accountUser(@PathVariable(value = "idUser", required = false) Long idUser,
                               @PathVariable(value = "idAccount", required = false) Long idAccount,
@@ -332,6 +346,7 @@ public class UserController {
         return "user/user-account";
     }
 
+    // view all blog of other`s account
     @GetMapping("all-account-blogs/{idUser}/{idAccount}")
     public String listBLogAccount(@PathVariable(value = "idUser", required = false) Long idUser,
                               @PathVariable(value = "idAccount", required = false) Long idAccount,

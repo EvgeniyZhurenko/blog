@@ -210,7 +210,9 @@ public class PictureService  {
 
     public void deleteFolderUser(User userDB) {
         File folder = new File(uploadPath + "/" + userDB.getId());
-        deleteFolder(folder);
+        if(folder.exists()) {
+            deleteFolder(folder);
+        }
     }
 
     private void deleteFolder(File folder){

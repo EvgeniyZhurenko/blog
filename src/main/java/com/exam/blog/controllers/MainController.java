@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ @author Zhurenko Evgeniy
+ */
 
 @Controller
 @RequestMapping("/")
@@ -33,6 +36,7 @@ public class MainController {
     }
 
 
+    // access to the start page for guest/user/admin
     @GetMapping(value = {"user/main", "", "main","admin/main"})
     public String mainPage(Model model) {
         model.addAttribute("title", "Главная страница");
@@ -110,6 +114,7 @@ public class MainController {
     }
 
 
+    // access to the metrics page for guest/user/admin
     @GetMapping(value = {"metrics", "user/metrics", "admin/metrics"})
     public String aboutPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -118,6 +123,7 @@ public class MainController {
         return "menu_bar_pages/metrics";
     }
 
+    // access to the about page for guest/user/admin
     @GetMapping(value = {"about", "user/about", "admin/about"})
     public String supportPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -126,6 +132,7 @@ public class MainController {
         return "menu_bar_pages/about";
     }
 
+    // access to the contacts page for guest/user/admin
     @GetMapping(value = {"contacts", "user/contacts", "admin/contacts"})
     public String contactsPage(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -134,6 +141,7 @@ public class MainController {
         return "menu_bar_pages/contacts";
     }
 
+    // access to the account of user
     @GetMapping(value = "account/{id}")
     public String accountInfo(@PathVariable(value = "id", required = false) Long idUser,
                               Model model) {
@@ -142,6 +150,7 @@ public class MainController {
         return "account";
     }
 
+    // access to the all blogs of user
     @GetMapping("account/all-blogs/{id}")
     public String blogListUser(@PathVariable(value = "id", required = false) Long id_user,
                                @RequestParam(name = "data", required = false) String data,
@@ -178,6 +187,7 @@ public class MainController {
         return "account-all-blogs";
     }
 
+    // access to the blog of user
     @GetMapping("blog/{id_user}/{id_blog}/{bool}")
     public String blogUser(@PathVariable(value = "id_user", required = false) Long idUser,
                            @PathVariable(value = "id_blog", required = false) Long idBLog,
@@ -193,6 +203,7 @@ public class MainController {
         return "blog";
     }
 
+    // site search
     @PostMapping("search")
     public String search(@RequestParam(name = "search",required = false) String search,
                          Model model){
@@ -208,6 +219,7 @@ public class MainController {
         return "search-page";
     }
 
+    // processing a request in case of access denial
     @GetMapping("accessDenied")
     public String accessDenied(Model model){
 

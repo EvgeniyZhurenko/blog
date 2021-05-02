@@ -13,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
+/**
+ @author Zhurenko Evgeniy
+ */
+
 @Controller
 public class BlogController {
 
@@ -25,6 +29,7 @@ public class BlogController {
         this.blogService = blogService;
     }
 
+    // view all blogs
     @GetMapping(value = {"/blog/list"})
     public String blogMain(@RequestParam(name = "data", required = false) String data,
                            Model model){
@@ -51,6 +56,7 @@ public class BlogController {
         return "blog-list";
     }
 
+    // view details of blog
     @GetMapping(value = {"/blog/{id_blog}/{bool}"})
     public String blogSee(@PathVariable(name = "id_blog", required = false) Long idBlog,
                           @PathVariable(name = "bool", required = false) Boolean bool,

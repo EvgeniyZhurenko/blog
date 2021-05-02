@@ -24,7 +24,6 @@ import javax.sql.DataSource;
 
 /**
  @author Zhurenko Evgeniy
-  * @noinspection ALL
  */
 
 @Configuration
@@ -98,7 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
                 http
                         .authorizeRequests()
-                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js","/static/**", "/activate/*" ).permitAll();
+                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js","/static/**" ).permitAll();
                 http
                         .authorizeRequests().anyRequest().authenticated();
                 http

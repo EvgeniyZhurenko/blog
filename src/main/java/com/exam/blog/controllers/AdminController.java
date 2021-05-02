@@ -15,6 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ @author Zhurenko Evgeniy
+ */
+
 @Controller
 @RequestMapping(value = {"/admin/"})
 public class AdminController {
@@ -32,6 +36,7 @@ public class AdminController {
         this.mainController = mainController;
     }
 
+    // Resend to the page with information about admin
     @GetMapping(value = "account/{id}")
     public String accountAdminInfo(@PathVariable(value = "id", required = false) Long idUser,
                               Model model) {
@@ -45,6 +50,7 @@ public class AdminController {
         return "admin/admin-page";
     }
 
+    // Resend to the page of updating information about admin
     @GetMapping("update/{id}")
     public String adminUpdateGet(@PathVariable(name = "id", required = false) Long idUser,
                                 Model model){
@@ -60,6 +66,7 @@ public class AdminController {
         return "admin/admin-update_page";
     }
 
+    // Change admin account information
     @PostMapping("update")
     public String userUpdatePost(@ModelAttribute User user, Model model,
                                  @RequestParam(name = "image", required = false) MultipartFile foto)
@@ -86,6 +93,8 @@ public class AdminController {
         }
     }
 
+
+    // Resend to the page of all blogs on the site
     @GetMapping("blog/list/{id}")
     public String allBlogList(@PathVariable(value = "id", required = false) Long idAdmin,
                               @RequestParam(value = "data", required = false) String data,
@@ -109,6 +118,8 @@ public class AdminController {
         return "admin/admin-blog-list";
     }
 
+
+    // Resend to the page of all user-accounts
     @GetMapping("all-accounts/{id}")
     public String allUsersList(@PathVariable(value = "id", required = false) Long idAdmin,
                                Model model){
@@ -122,6 +133,7 @@ public class AdminController {
         return "admin/admin-all-users";
     }
 
+    // access to user information
     @GetMapping("account/{idAdmin}/{idUser}")
     public String allUsersList(@PathVariable(value = "idAdmin", required = false) Long idAdmin,
                                @PathVariable(value = "idUser", required = false) Long idUser,
@@ -138,6 +150,7 @@ public class AdminController {
         return "admin/admin-user-page";
     }
 
+    // access to user's blogs
     @GetMapping("user/all-blogs/{id_admin}/{id_user}")
     public String allBlogsUser(@PathVariable(value = "id_admin", required = false) Long idAdmin,
                                @PathVariable(value = "id_user", required = false) Long idUser,
@@ -154,6 +167,8 @@ public class AdminController {
         return "admin/admin-user-blogs";
     }
 
+
+    // access to user's blog for change
     @GetMapping("user/blog/{id_admin}/{id_user}/{id_blog}/{bool}")
     public String userBlog(@PathVariable(value = "id_admin", required = false) Long idAdmin,
                            @PathVariable(value = "id_user", required = false) Long idUser,
@@ -174,6 +189,8 @@ public class AdminController {
         return "admin/admin-blog";
     }
 
+
+    // access to delete comments by admin
     @GetMapping("delete/comment/{idAdmin}/{idComment}")
     public String deleteComment(@PathVariable(value = "idComment", required = false) Long idComment,
                                 @PathVariable(value = "idAdmin", required = false) Long idAdmin){
@@ -184,6 +201,7 @@ public class AdminController {
                         "/" + commentDB.getBlog().getId() + "/true";
     }
 
+    // access to delete blog by admin
     @GetMapping("delete/blog/{idBlog}")
     public String deleteBlog(@PathVariable(value = "idBlog", required = false) Long idBlog) {
 
@@ -194,6 +212,8 @@ public class AdminController {
         return "redirect:/admin/blog/list/4?data=rating";
     }
 
+
+    // delete user account
     @GetMapping("delete/user/{idUser}")
     public String deleteUser(@PathVariable(value = "idUser", required = false) Long idUser){
 
@@ -206,6 +226,7 @@ public class AdminController {
         return "redirect:/admin/all-accounts/4";
     }
 
+    // site search
     @PostMapping("search/{idAdmin}")
     public String search(@RequestParam(name = "search",required = false) String search,
                          @PathVariable(name = "idAdmin", required = false) Long idAdmin,

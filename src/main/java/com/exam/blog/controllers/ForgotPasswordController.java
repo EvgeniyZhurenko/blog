@@ -11,6 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.UUID;
 
+/**
+ @author Zhurenko Evgeniy
+ */
+
 
 @Controller
 public class ForgotPasswordController {
@@ -37,6 +41,7 @@ public class ForgotPasswordController {
     }
 
 
+    // Redirect to the forgot password page
     @GetMapping(value="/forgot-password")
     public ModelAndView displayResetPassword(ModelAndView modelAndView, User user) {
         modelAndView.addObject("user", user);
@@ -79,6 +84,7 @@ public class ForgotPasswordController {
         return modelAndView;
     }
 
+    // Receive the token from email and redirect to the reset password page
     @GetMapping(value="/confirm-reset/{token}")
     public ModelAndView validateResetToken(ModelAndView modelAndView,
                                            @PathVariable("token")String confirmationToken) {

@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+/**
+ @author Zhurenko Evgeniy
+ */
+
 @Controller
 @RequestMapping(value = {"comment/", "/user/"})
 public class CommentController {
@@ -26,6 +30,7 @@ public class CommentController {
         this.userRepo = userRepo;
     }
 
+    // to add comment to blog bu guest
     @PostMapping("creat/{id}")
     public String creatComment(@ModelAttribute Comment comment,
                                @PathVariable(value = "id", required = false) Long idBlog){
@@ -39,6 +44,7 @@ public class CommentController {
         return "redirect:/blog/" + idBlog + "/true";
     }
 
+    // to add comment to blog bu user
     @PostMapping("comment/creat/{id_user}/{id_blog}/{id_user_blog}")
     public String creatUserComment(@ModelAttribute Comment comment,
                                    @PathVariable(value = "id_user", required = false) Long id_user,

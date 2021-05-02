@@ -12,9 +12,12 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+/**
+ @author Zhurenko Evgeniy
+ */
 
 @Controller
 public class SecurityController {
@@ -26,6 +29,7 @@ public class SecurityController {
         this.userRepo = userRepo;
     }
 
+    // Authentication process and redirect depending on role to the relation page
     @GetMapping(value = {"/login","/authentication"})
     public String loginGet(Model model){
 
@@ -42,6 +46,7 @@ public class SecurityController {
         return "sign_in";
     }
 
+    // Redirect on login page if receive error
     @PostMapping(value = {"/authentication"})
     public String loginPost(@RequestParam(name = "error", required = false) Boolean error,
                             @RequestParam(name = "message", required = false) String message,
@@ -57,6 +62,7 @@ public class SecurityController {
 
     }
 
+    // Open registration page
     @GetMapping("/registration")
     public String registrationGet(Model model){
         model.addAttribute("title", "Страница регистрации");
@@ -70,6 +76,7 @@ public class SecurityController {
         return "registration";
     }
 
+    // Registration process controller
     @PostMapping("/registration")
     public String registrationPost(@ModelAttribute User user, Model model,
                                    RedirectAttributes redirectAttributes){
@@ -80,7 +87,7 @@ public class SecurityController {
             if (userDB == null && user.getUsername() != null) {
                 userRepo.saveBoolean(user);
                 model.addAttribute("title", "Сообщение");
-                model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации"
+                model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации "
                         + user.getEmail());
                 return "email-message";
             } else {
@@ -95,6 +102,7 @@ public class SecurityController {
         }
     }
 
+    // Ending registration process when receive email and follow by email link
     @GetMapping("/activate/{code}")
     public ModelAndView activate(ModelAndView modelAndView,
                            @PathVariable(name = "code", required = false) String code){

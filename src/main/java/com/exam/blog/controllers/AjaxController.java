@@ -19,6 +19,10 @@ import java.util.stream.Collectors;
 
 import static org.springframework.data.repository.init.ResourceReader.Type.JSON;
 
+/**
+ @author Zhurenko Evgeniy
+ */
+
 @Controller
 @RequestMapping("/")
 public class AjaxController {
@@ -35,6 +39,8 @@ public class AjaxController {
         this.commentService = commentService;
     }
 
+
+    // change rating of blog
     @GetMapping(value = "ajax/rating")
     public ResponseEntity<Float> ratingBlog(@RequestParam(value = "idBlog", required = false) String id_blog,
                                             @RequestParam(value = "rating", required = false) String str_rating,
@@ -59,6 +65,7 @@ public class AjaxController {
         return ResponseEntity.ok(blogDB.getRating());
     }
 
+    // ban of blog
     @GetMapping(value = "ajax/ban/blog")
     public ResponseEntity<Boolean> banBlog(@RequestParam(value = "idBlog", required = false) String id_blog,
                                             @RequestParam(value = "bunBlog", required = false) String str_ban) {
@@ -72,6 +79,7 @@ public class AjaxController {
         return ResponseEntity.ok(banBlog);
     }
 
+    // ban user
     @GetMapping(value = "ajax/ban/user")
     public ResponseEntity<Boolean> banUser(@RequestParam(value = "idUser", required = false) String id_user,
                                            @RequestParam(value = "bunUser", required = false) String str_ban) {
@@ -85,6 +93,7 @@ public class AjaxController {
         return ResponseEntity.ok(banUser);
     }
 
+    // ban comment
     @GetMapping(value = "ajax/ban/comment")
     public ResponseEntity<Boolean> banComment(@RequestParam(value = "idComment", required = false) String id_comment,
                                               @RequestParam(value = "bunComment", required = false) String str_ban) {
