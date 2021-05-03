@@ -61,7 +61,7 @@ public class ForgotPasswordController {
 
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to blog.com. To complete the password reset process, please click here: " +
+                            "Добро пожаловать на blog.com. Для завершения сброса пароля перейдите по следующей ссылке: " +
                             "http://localhost:8080/confirm-reset/%s",
                     existingUser.getUsername(),
                     existingUser.getActivationCode()

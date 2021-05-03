@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
  @author Zhurenko Evgeniy
  */
 
-
-
 @Service
 public class RefererRedirectionAuthenticationSuccessHandler
         extends SimpleUrlAuthenticationSuccessHandler implements AuthenticationSuccessHandler {

@@ -31,8 +31,11 @@
         <div>
             <p th:text="${blog.announcement}"></p>
             <p th:text="'Рейтинг ' + ${blog.rating}"></p>
-            <p ><span th:text="${blog.date_create_blog}"></span>
+            <p  class="d-flex flex-row align-items-center">
+                <span th:text="${blog.date_create_blog}"></span>
                 <span th:text="${blog.user.getFirst_name()} + ' ' + ${blog.user.getLast_name()}"></span>
+                <span th:if="${blog.user.enabled}" class="dots"></span>
+                <span th:unless="${blog.user.enabled}" class="dots_disable"></span>
             </p>
         </div>
         <a th:href="@{~/admin/user/blog/{id_admin}/{id_user}/{id_blog}/{bool}(id_admin = ${idAdmin},

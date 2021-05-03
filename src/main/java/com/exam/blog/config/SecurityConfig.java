@@ -2,6 +2,7 @@ package com.exam.blog.config;
 
 
 import com.exam.blog.security.CustomAuthenticationFailureHandler;
+import com.exam.blog.security.CustomLogoutSuccessHandler;
 import com.exam.blog.security.RefererRedirectionAuthenticationSuccessHandler;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         private UserRepoImpl userRepo;
 
-        @Autowired
+        private CustomLogoutSuccessHandler customLogoutSuccessHandler;
+
         private DataSource dataSource;
+
+        @Autowired
+        public void setDataSource(DataSource dataSource) {
+                this.dataSource = dataSource;
+        }
+
+        @Autowired
+        public void setCustomLogoutSuccessHandler(CustomLogoutSuccessHandler customLogoutSuccessHandler) {
+                this.customLogoutSuccessHandler = customLogoutSuccessHandler;
+        }
 
         @Autowired
         public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -119,9 +131,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .and()
                         .logout(logout -> logout
+                                        .logoutSuccessHandler(customLogoutSuccessHandler)
                                         .logoutUrl("/leave/authentication")
                                         .deleteCookies("JSESSIONID")
-                                        .logoutSuccessUrl("/main")
+//                                        .logoutSuccessUrl("/main")
                         );
                 http
                         .authorizeRequests().and() //

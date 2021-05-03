@@ -39,6 +39,7 @@ public class User implements UserDetails {
     private String city;
     private String country;
     private Boolean ban_user;
+    private Boolean enabled;
 
     @Column(name = "activation_code")
     private String activationCode;

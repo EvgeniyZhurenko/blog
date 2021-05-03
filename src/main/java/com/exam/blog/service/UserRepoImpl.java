@@ -85,13 +85,14 @@ public class UserRepoImpl implements UserDetailsService {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setActivationCode(UUID.randomUUID().toString());
+            user.setEnabled(false);
             user.setBan_user(false);
 
             userRepo.save(user);
             if(!user.getEmail().isEmpty()){
                 String message = String.format(
                         "Hello, %s! \n" +
-                                "Welcome to blog.com. Please, visit next link: http://localhost:8080/activate/%s",
+                                "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : http://localhost:8080/activate/%s",
                         user.getUsername(),
                         user.getActivationCode()
                 );

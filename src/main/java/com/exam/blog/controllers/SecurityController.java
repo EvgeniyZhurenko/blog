@@ -38,8 +38,12 @@ public class SecurityController {
         if(auth == null){
             return "redirect:/main";
         } else if(!auth.getPrincipal().toString().equalsIgnoreCase("anonymousUser")){
-            if(auth.getAuthorities().stream().anyMatch(a-> a.toString().equalsIgnoreCase("ROLE_USER")))
+            if(auth.getAuthorities().stream().anyMatch(a-> a.toString().equalsIgnoreCase("ROLE_USER"))) {
+                User userDB = userRepo.getUserByUserName(auth.getName());
+                userDB.setEnabled(true);
+                userRepo.update(userDB,true);
                 return "redirect:/user/main";
+            }
             if(auth.getAuthorities().stream().anyMatch(a-> a.toString().equalsIgnoreCase("ROLE_ADMIN")))
                 return "redirect:/admin/main";
         }
