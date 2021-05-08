@@ -1,3 +1,7 @@
+/**
+ @author Zhurenko Evgeniy
+ */
+
 $(document).ready( function () {
    let href = $('#show_comment');
    href.on('click', function () {

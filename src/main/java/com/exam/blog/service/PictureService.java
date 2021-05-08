@@ -204,8 +204,12 @@ public class PictureService  {
     public void deleteFolderPicture(Blog blogDB) {
         File folderMain = new File(uploadPicturePath + "/" + blogDB.getUser().getId());
         File folder = new File(uploadPicturePath + "/" + blogDB.getUser().getId() + "/" + blogDB.getId());
-        deleteFolder(folder);
-        folderMain.delete();
+        if(folder.exists()) {
+            deleteFolder(folder);
+        }
+        if(folderMain.listFiles().length == 0) {
+            folderMain.delete();
+        }
     }
 
     public void deleteFolderUser(User userDB) {

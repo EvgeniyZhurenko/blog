@@ -1,13 +1,10 @@
 package com.exam.blog.models;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
-import javax.swing.event.*;
-import javax.xml.bind.annotation.XmlTransient;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -38,6 +35,11 @@ public class Blog {
     private LocalDate date_create_blog;
     private Float rating;
     private Boolean ban_blog;
+
+    @OneToMany(mappedBy = "blog",
+                cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY)
+    List<Ingredient> ingredients = new ArrayList<>();
 
     @OneToMany(mappedBy = "blog",
                cascade = CascadeType.ALL,

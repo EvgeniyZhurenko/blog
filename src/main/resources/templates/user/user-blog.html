@@ -42,14 +42,27 @@
                                 <div class="col-sm-6 col-md-4" th:each="picture : ${blog.pictures}">
                                     <img th:src="@{|/${picture.url_image}|}"
                                          th:alt="${picture.name}" class="img-rounded img-responsive" th:style="'width: 15em; heigth: 20em'">
+
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <p th:text="${blog.full_text}"></p>
                 </div>
             </div>
         </div>
-        <p th:text="${blog.full_text}"></p>
+
+        <hr/>
+        <div th:if="${blog.ingredients.size() != 0}" >
+            <h5 th:text="'Ингредиенты : '"></h5>
+            <div th:each="ingredient : ${blog.ingredients}">
+                <p>
+                    <span th:text="${ingredientStat.count} + '. '"></span>
+                    <span th:text="${ingredient.text}"></span>
+                </p>
+            </div>
+        </div>
+
 
         <span th:if="${idUser} == ${blog.user.getId()}">
             <a th:href="@{~/user/all-blogs/{id}?data=rating(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>

@@ -1,9 +1,6 @@
 package com.exam.blog.controllers;
 
-import com.exam.blog.models.Blog;
-import com.exam.blog.models.Comment;
-import com.exam.blog.models.Picture;
-import com.exam.blog.models.User;
+import com.exam.blog.models.*;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.CommentService;
 import com.exam.blog.service.PictureService;
@@ -109,11 +106,12 @@ public class UserController {
     @PostMapping("creat-blog/{id}")
     public String creatBlogUserPost(@ModelAttribute Picture picture,@ModelAttribute Blog blog,
                                     @PathVariable(value = "id", required = false) Long idUser,
-                                    @RequestParam(value = "image",required = false) MultipartFile image) throws IOException {
+                                    @RequestParam(value = "image",required = false) MultipartFile image,
+                                    @RequestParam String[] ingredient) throws IOException {
 
         if(blog != null) {
 
-            blogService.addPropertiesBlog(blog, picture, idUser, image);
+            blogService.addPropertiesBlog(blog, picture, idUser, image, ingredient);
 
             return "redirect:/user/all-blogs/" + idUser + "?data=rating";
 
@@ -221,8 +219,8 @@ public class UserController {
     // access to the all blogs of user
     @GetMapping(value = {"blog/list/{id}"})
     public String userBlogMain(@PathVariable(value = "id", required = false) Long id_user,
-                           @RequestParam(name = "data", required = false) String data,
-                           Model model) {
+                               @RequestParam(name = "data", required = false) String data,
+                               Model model) {
 
         User userDB = userRepo.getById(id_user);
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
@@ -256,8 +254,8 @@ public class UserController {
     // access to the page of update blog
     @GetMapping("update-blog/{id_user}/{id_blog}")
     public String updateUserBlogGet(@PathVariable(name = "id_user", required = false) Long idUser,
-                                 @PathVariable(name = "id_blog", required = false) Long idBlog,
-                                 Model model){
+                                    @PathVariable(name = "id_blog", required = false) Long idBlog,
+                                    Model model){
 
         User userDB = userRepo.getById(idUser);
         Blog blogDB = blogService.getById(idBlog);
@@ -265,10 +263,12 @@ public class UserController {
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
         model.addAttribute("idUser" , idUser);
+        model.addAttribute("title", "Редактирование блога ");
 
         model.addAttribute("boolean", true);
         model.addAttribute("user", userDB);
         model.addAttribute("blog", blogDB);
+        model.addAttribute("ingredients", blogDB.getIngredients());
         model.addAttribute("picture", picture);
 
         return "user/user-update-blog";
@@ -277,9 +277,10 @@ public class UserController {
     @PostMapping("update-blog/{id}")
     public String updateUserBlogPost(@ModelAttribute Picture picture,@ModelAttribute Blog blog,
                                      @PathVariable(value = "id", required = false) Long idUser,
-                                     @RequestParam(value = "image",required = false) MultipartFile image) throws IOException {
+                                     @RequestParam(value = "image",required = false) MultipartFile image,
+                                     @RequestParam(name = "ingredient", required = false) String[] ingredient) throws IOException {
 
-        return blogService.updatePropertiesExsistingBlog(blog,picture,image,idUser,uploadPicturePath);
+        return blogService.updatePropertiesExsistingBlog(blog,picture,image,idUser,uploadPicturePath, ingredient);
 
     }
 

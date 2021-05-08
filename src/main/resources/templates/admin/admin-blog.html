@@ -54,10 +54,21 @@
                             </div>
                         </div>
                     </div>
+                    <p th:text="${blog.full_text}"></p>
                 </div>
             </div>
         </div>
-        <p th:text="${blog.full_text}"></p>
+
+        <hr/>
+        <div th:if="${blog.ingredients.size()} != 0" >
+            <h3 th:text="'Ингредиенты : '"></h3>
+            <div th:each="ingredient : ${blog.ingredients}">
+                <p>
+                    <span th:text="${ingredientStat.count} + '. '"></span>
+                    <span th:text="${ingredient.text}"></span>
+                </p>
+            </div>
+        </div>
         <div class="container" id="value_blog" th:value="${blog.getId()}">
             <div class="row">
                 <div class="col-xs-12 col-sm-6 col-md-6" th:if="${state}">

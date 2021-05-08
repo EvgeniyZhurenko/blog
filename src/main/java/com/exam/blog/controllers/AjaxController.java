@@ -2,9 +2,11 @@ package com.exam.blog.controllers;
 
 import com.exam.blog.models.Blog;
 import com.exam.blog.models.Comment;
+import com.exam.blog.models.Ingredient;
 import com.exam.blog.models.User;
 import com.exam.blog.service.BlogService;
 import com.exam.blog.service.CommentService;
+import com.exam.blog.service.IngredientService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.springframework.data.repository.init.ResourceReader.Type.JSON;
 
 /**
  @author Zhurenko Evgeniy
@@ -30,13 +26,15 @@ public class AjaxController {
     private final BlogService blogService;
     private final UserRepoImpl userRepo;
     private final CommentService commentService;
+    private final IngredientService ingredientService;
 
 
     @Autowired
-    public AjaxController(BlogService blogService, UserRepoImpl userRepo, CommentService commentService) {
+    public AjaxController(BlogService blogService, UserRepoImpl userRepo, CommentService commentService, IngredientService ingredientService) {
         this.blogService = blogService;
         this.userRepo = userRepo;
         this.commentService = commentService;
+        this.ingredientService = ingredientService;
     }
 
 
@@ -105,6 +103,27 @@ public class AjaxController {
         commentService.update(commentDB);
 
         return ResponseEntity.ok(banComment);
+    }
+
+    //delete ingredient
+    @GetMapping(value = "ajax/delete-ingredient")
+    public ResponseEntity<Boolean> deleteIngredientBlog(@RequestParam(value = "idBlog",required = false) String id_blog,
+                                                        @RequestParam(value = "idIngredient", required = false) String id_ingredient){
+
+        Long idBlog = Long.valueOf(id_blog);
+        Long idIngredient = Long.valueOf(id_ingredient);
+        boolean bool = false;
+        Blog blogDB = blogService.getById(idBlog);
+        Ingredient ingredientDB = ingredientService.getById(idIngredient);
+        if(blogDB != null){
+            if(blogDB.getIngredients().contains(ingredientDB)){
+                blogDB.getIngredients().remove(ingredientDB);
+                blogService.update(blogDB);
+                ingredientService.deleteIngredient(ingredientDB);
+                bool = true;
+            }
+        }
+        return ResponseEntity.ok(bool);
     }
 
     // не передает User в Comment-ax

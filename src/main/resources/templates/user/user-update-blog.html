@@ -6,16 +6,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
-
-</head>
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <title th:text="${title}"></title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-          th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
-    <link rel="stylesheet" href="../../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
     <link rel="stylesheet" href="../../static/css/creat-blog.css" th:href="@{/css/creat-blog.css}">
     <link rel="stylesheet" href="../../static/css/about-metrics-contact.css" th:href="@{/css/about-metrics-contact.css}">
 
@@ -79,8 +69,33 @@
                                   th:name="text" th:field="*{blog.full_text}">message </textarea>
                     </div>
                 </div>
+                <hr/>
+                <div class="col-md-6" th:if="${blog.ingredients.size()!=0}" >
+                    <h5 th:text="'Ингредиенты : '"></h5>
+                    <div class="row"  th:id="${blog.id}" th:name="${ingredient.id}" th:each="ingredient : ${blog.ingredients}">
+                        <p th:style="'display: flex; flex-direction: row;'">
+                            <span th:style="'margin-top: 8px;'" th:text="${ingredientStat.count} + '. '"></span>
+                            <input class="form-control" th:type="'text'" th:value="${ingredient.text}"
+                                th:name="'ingredient'" th:style="'width: auto;'"/>
+                            <input id="delete" class="btn btn-outline-danger" th:type="'button'"
+                                   th:value="'Удалить ингредиент'"/>
+                        </p>
+                    </div>
+                    <div id="ingredient" class="row" th:style="'margin-left: 0.25em;'"></div>
+                    <div>
+                        <input id="button" class="btn btn-outline-success" th:type="'button'" th:value="'Добавить ингредиент'" />
+                    </div>
+                </div>
+
+                <div class="col-md-6" th:unless="${blog.ingredients.size()!=0}" >
+                    <h5 th:text="'Ингредиенты : '"></h5>
+                    <div id="ingredient"></div>
+                    <div>
+                            <input id="button" class="btn btn-outline-success" th:type="'button'" th:value="'Добавить ингредиент'" />
+                    </div>
+                </div>
                 <div class="send-button mt-4">
-                    <button class="button" type="submit">Редактировать блог</button>
+                    <button class="btn btn-outline-info" type="submit">Редактировать блог</button>
                 </div>
 
             </form>
@@ -92,3 +107,6 @@
 
 
 </body>
+<script type="text/javascript" src="../../static/js/ingredient_delete.js" th:src="@{/js/ingredient_delete.js}"></script>
+<script type="text/javascript" src="../../static/js/ingredients.js" th:src="@{/js/ingredients.js}" ></script>
+</html>

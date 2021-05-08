@@ -1,10 +1,7 @@
 package com.exam.blog.service;
 
 
-import com.exam.blog.models.Blog;
-import com.exam.blog.models.Comment;
-import com.exam.blog.models.Picture;
-import com.exam.blog.models.User;
+import com.exam.blog.models.*;
 import com.exam.blog.repository.BlogRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,9 +26,15 @@ public class BlogService {
     private UserRepoImpl userRepo;
     private PictureService pictureService;
     private CommentService commentService;
+    private IngredientService ingredientService;
 
     @Value("${upload.picture.path}")
     private String uploadPicturePath;
+
+    @Autowired
+    public void setIngredientService(IngredientService ingredientService) {
+        this.ingredientService = ingredientService;
+    }
 
     @Autowired
     public void setCommentService(CommentService commentService) {
@@ -117,7 +120,8 @@ public class BlogService {
                 .collect(Collectors.toList());
     }
 
-    public void addPropertiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image) throws IOException {
+    public void addPropertiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image,
+                                  String[] ingredientList) throws IOException {
 
         if(picture != null){
 
@@ -135,6 +139,7 @@ public class BlogService {
 
             addProperties(blog, idUser);
         }
+        addIngredientToBlog(blog, ingredientList);
     }
 
     public void addProperties(Blog blog, Long idUser){
@@ -155,13 +160,14 @@ public class BlogService {
     }
 
     public void updatePropertiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image) throws IOException{
-        if(picture != null){
+        if(!image.isEmpty()){
            pictureService.updateBlogLoadPictureImage(idUser, blog, image, picture);
 
         }
     }
 
-    public String updatePropertiesExsistingBlog(Blog blog, Picture picture, MultipartFile image, Long idUser, String uploadPicturePath) throws IOException {
+    public String updatePropertiesExsistingBlog(Blog blog, Picture picture, MultipartFile image,
+                                                Long idUser, String uploadPicturePath, String[] ingredients) throws IOException {
 
         Blog blogDB = getById(blog.getId());
         if(blogDB != null) {
@@ -169,8 +175,20 @@ public class BlogService {
             blogDB.setAnnouncement(blog.getAnnouncement());
             blogDB.setTitle(blog.getTitle());
             blogDB.setFull_text(blog.getFull_text());
+            if(!blogDB.getIngredients().isEmpty()) {
+                for (int i = 0; i < ingredients.length; i++) {
+                    Ingredient ingredientDB = ingredientService.getById(blogDB.getIngredients().get(i).getId());
+                    if (!ingredientDB.getText().equals(ingredients[i])) {
+                        ingredientDB.setText(ingredients[i]);
+                        ingredientService.updateIngredient(ingredientDB);
+                        blogDB.getIngredients().get(i).setText(ingredients[i]);
+                    }
+                }
+            } else {
+                    addIngredientToBlog(blogDB, ingredients);
+                }
 
-            if(image != null){
+            if(!image.isEmpty()){
                 File folder = new File(uploadPicturePath + "/" + idUser + "/" + blogDB.getId());
 
                 File[] files = folder.listFiles();
@@ -218,6 +236,13 @@ public class BlogService {
         }
         deletePicture(blogDB);
 
+        if(!blogDB.getIngredients().isEmpty()) {
+            for (Ingredient ingredient : blogDB.getIngredients()) {
+                blogDB.getIngredients().remove(ingredient);
+                ingredientService.deleteIngredient(ingredient);
+            }
+        }
+
         if(blogDB.getId() == userRepo.findBlogById(userDB, blogDB).getId()){
 
             userDB.getBlogs().remove(blogDB);
@@ -228,7 +253,7 @@ public class BlogService {
 
     public void deleteAdminBlog(User userDB, Blog blogDB){
 
-        if(commentService.findAllCommentsBlog(blogDB.getId()).size() != 0 || commentService.findAllCommentsBlog(blogDB.getId()) != null) {
+        if(!commentService.findAllCommentsBlog(blogDB.getId()).isEmpty()) {
             for (Comment comment : commentService.findAllCommentsBlog(blogDB.getId())) {
                 blogDB.getComments().remove(comment);
                 userDB.getComments().remove(comment);
@@ -241,8 +266,7 @@ public class BlogService {
     }
 
     public void deletePicture(Blog blogDB){
-        if(pictureService.findAllPictureByUserId(blogDB.getUser().getId()).size()!= 0 ||
-                pictureService.findAllPictureByUserId(blogDB.getUser().getId()) != null) {
+        if(!pictureService.findAllPictureByUserId(blogDB.getUser().getId()).isEmpty() && !blogDB.getPictures().isEmpty()) {
             for (Picture picture : pictureService.findAllPictureByUserId(blogDB.getUser().getId())) {
                 if (picture.getId() == blogDB.getPictures().get(0).getId()) {
                     pictureService.delete(picture.getId());
@@ -294,5 +318,18 @@ public class BlogService {
             }
         }
         return bool;
+    }
+
+    public void addIngredientToBlog(Blog blog, String[] ingredients){
+        if(ingredients != null){
+            for(String element : ingredients){
+                Ingredient ingredient = new Ingredient();
+                ingredient.setText(element);
+                ingredient.setBlog(blog);
+                ingredientService.saveIngredient(ingredient);
+                blog.getIngredients().add(ingredient);
+            }
+
+        }
     }
 }

@@ -13,7 +13,7 @@ let ajax_func_comment = function(idBlog, name, comment, idUser) {
         data: {idBlog: idBlog, name: name, comment: comment, idUser: idUser},
         dataType: 'json',
         success: function (response) {
-            console.dir(response);
+
             let div = $('#comment');
             let pName = document.createElement('p');
             pName.text(new Date().toISOString() + " " + name );

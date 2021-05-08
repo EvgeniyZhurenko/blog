@@ -64,6 +64,11 @@
                                   th:name="text" th:field="${blog.full_text}">message </textarea>
                     </div>
                 </div>
+                <hr/>
+                <div id="ingredient"></div>
+                <div>
+                    <input id="button" class="btn btn-outline-success" th:type="'button'" th:value="'Добавить ингредиент'" />
+                </div>
                 <div class="send-button mt-4">
                     <button class="button" type="submit">Добавить блог</button>
                 </div>
@@ -77,3 +82,7 @@
 
 
 </body>
+
+<script type="text/javascript" src="../../static/js/ingredients.js" th:src="@{/js/ingredients.js}" ></script>
+
+</html>

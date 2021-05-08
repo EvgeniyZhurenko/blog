@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title th:text="${blog.title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -41,11 +41,22 @@
                             </div>
                         </div>
                     </div>
+                    <p th:text="${blog.full_text}"></p>
                 </div>
             </div>
         </div>
 
-        <p th:text="${blog.full_text}"></p>
+        <hr/>
+        <div th:if="${blog.ingredients}" >
+            <h5 th:text="'Ингредиенты : '"></h5>
+            <div th:each="ingredient : ${blog.ingredients}">
+                <p>
+                    <span th:text="${ingredientStat.count} + '. '"></span>
+                    <span th:text="${ingredient.text}"></span>
+                </p>
+            </div>
+        </div>
+
         <a href="/">На главную</a>
 
         <div id="rate">
