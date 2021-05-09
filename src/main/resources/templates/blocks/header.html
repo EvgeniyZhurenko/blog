@@ -1,4 +1,4 @@
-<div th:fragment="header" >
+<div th:fragment="header" xmlns:th="http://www.thymeleaf.org" >
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm">
         <div class="header-div">
             <p class="h5 my-0 me-md-auto fw-normal" >Кулинарный блог</p>
@@ -22,7 +22,11 @@
         </nav>
 
             <a class="btn btn-outline-primary" href="/login" >Войти</a>
-            <a class="btn btn-outline-primary" href="/registration" >Регистрация</a>
+            <a class="btn btn-outline-secondary" href="/registration" >Регистрация</a>
+
+
 
     </header>
+    <main class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-body border-bottom shadow-sm"
+          th:insert="blocks/date_time_block :: date_time_block"></main>
 </div>

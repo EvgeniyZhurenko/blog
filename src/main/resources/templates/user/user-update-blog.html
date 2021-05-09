@@ -70,7 +70,7 @@
                     </div>
                 </div>
                 <hr/>
-                <div class="col-md-6" th:if="${blog.ingredients.size()!=0}" >
+                <div class="col" th:if="${blog.ingredients.size()!=0}" >
                     <h5 th:text="'Ингредиенты : '"></h5>
                     <div class="row"  th:id="${blog.id}" th:name="${ingredient.id}" th:each="ingredient : ${blog.ingredients}">
                         <p th:style="'display: flex; flex-direction: row;'">
@@ -87,7 +87,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6" th:unless="${blog.ingredients.size()!=0}" >
+                <div class="col" th:unless="${blog.ingredients.size()!=0}" >
                     <h5 th:text="'Ингредиенты : '"></h5>
                     <div id="ingredient"></div>
                     <div>
@@ -109,4 +109,5 @@
 </body>
 <script type="text/javascript" src="../../static/js/ingredient_delete.js" th:src="@{/js/ingredient_delete.js}"></script>
 <script type="text/javascript" src="../../static/js/ingredients.js" th:src="@{/js/ingredients.js}" ></script>
+<script type="text/javascript" src="../../static/js/date_time.js" th:src="@{/js/date_time.js}" ></script>
 </html>
