@@ -260,9 +260,9 @@ public class UserRepoImpl implements UserDetailsService {
                 .filter(user -> user.getId()!= 1)
                 .filter(user -> user.getId() != 4)
                 .collect(Collectors.toList());
-        users = users.stream().filter(user -> findByProps(user,search))
+        return  users.stream().filter(user -> findByProps(user,search))
                 .collect(Collectors.toList());
-        return users;
+
     }
 
     private static Boolean findByProps(User user, String search) {

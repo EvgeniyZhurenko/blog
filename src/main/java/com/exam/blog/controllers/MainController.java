@@ -13,7 +13,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  @author Zhurenko Evgeniy
@@ -207,9 +210,24 @@ public class MainController {
     @PostMapping("search")
     public String search(@RequestParam(name = "search",required = false) String search,
                          Model model){
-        List<User> users = userRepo.findUserBySearch(search);
-        List<Blog> bloges = blogService.findBlogBySearch(search);
-        List<Comment> comments = commentService.findCommentBySearch(search);
+        String[] strings = search.split("[ \\,\\.\\;\\:\\-?!\\\"]+");
+        List<User> users = new ArrayList<>();
+        List<Blog> bloges = new ArrayList<>();
+        List<Comment> comments = new ArrayList<>();
+        for(String string : strings) {
+            if(users.isEmpty())
+                users = userRepo.findUserBySearch(string);
+            else
+                users.addAll(userRepo.findUserBySearch(string));
+            if(bloges.isEmpty())
+               bloges = blogService.findBlogBySearch(string);
+            else
+               bloges.addAll(blogService.findBlogBySearch(string));
+            if(comments.isEmpty())
+                comments = commentService.findCommentBySearch(string);
+            else
+                comments.addAll(commentService.findCommentBySearch(search));
+        }
         model.addAttribute("title", "Страница поиска");
         model.addAttribute("users", users);
         model.addAttribute("bloges", bloges);

@@ -47,7 +47,7 @@
         </div>
 
         <hr/>
-        <div th:if="${blog.ingredients}" >
+        <div th:if="${blog.ingredients.size() >= 1}" >
             <h5 th:text="'Ингредиенты : '"></h5>
             <div th:each="ingredient : ${blog.ingredients}">
                 <p>

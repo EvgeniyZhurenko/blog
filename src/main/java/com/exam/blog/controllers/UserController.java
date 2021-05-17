@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 /**
  @author Zhurenko Evgeniy
@@ -312,9 +312,24 @@ public class UserController {
     public String search(@RequestParam(name = "search",required = false) String search,
                          @PathVariable(value = "id", required = false) Long idUser,
                          Model model){
-        List<User> users = userRepo.findUserBySearch(search);
-        List<Blog> bloges = blogService.findBlogBySearch(search);
-        List<Comment> comments = commentService.findCommentBySearch(search);
+        String[] strings = search.split("[ \\,\\.\\;\\:\\-?!\\\"]+");
+        List<User> users = new ArrayList<>();
+        List<Blog> bloges = new ArrayList<>();
+        List<Comment> comments = new ArrayList<>();
+        for(String string : strings) {
+            if(users.isEmpty())
+                users = userRepo.findUserBySearch(string);
+            else
+                users.addAll(userRepo.findUserBySearch(string));
+            if(bloges.isEmpty())
+                bloges = blogService.findBlogBySearch(string);
+            else
+                bloges.addAll(blogService.findBlogBySearch(string));
+            if(comments.isEmpty())
+                comments = commentService.findCommentBySearch(string);
+            else
+                comments.addAll(commentService.findCommentBySearch(search));
+        }
         User userDB = userRepo.getById(idUser);
 
         model.addAttribute("name", userDB.getFirst_name() + " " + userDB.getLast_name());
