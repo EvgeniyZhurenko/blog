@@ -219,12 +219,6 @@ public class AdminController {
     // delete user account
     @GetMapping("delete/user/{idUser}")
     public String deleteUser(@PathVariable(value = "idUser", required = false) Long idUser){
-
-        User userDB = userRepo.getById(idUser);
-        for(Blog blog: userDB.getBlogs()) {
-            Blog blogDB = blogService.getById(blog.getId());
-            blogService.deleteAdminBlog(userDB, blogDB);
-        }
         userRepo.delete(idUser);
         return "redirect:/admin/all-accounts/4";
     }

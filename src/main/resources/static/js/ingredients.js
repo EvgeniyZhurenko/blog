@@ -32,7 +32,6 @@ function addIngredientInput()  {
 
 function deleteIngredientInput() {
         let buttonDelete = this;
-        let input = buttonDelete.previousElementSibling;
-        input.remove();
-        buttonDelete.remove();
+        let p = buttonDelete.parentElement;
+        p.remove();
 }

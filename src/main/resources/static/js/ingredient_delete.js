@@ -2,15 +2,19 @@
  @author Zhurenko Evgeniy
  */
 
-let deleteIngredient = document.getElementById('delete');
 
-if(deleteIngredient !== null) {
-    deleteIngredient.addEventListener('click', deleteIngredientInput);
+let allPTagIngredients = document.getElementById('ingredients').getElementsByTagName('p');
+
+if(allPTagIngredients.length !== 0) {
+    for(let i=0; i < allPTagIngredients.length; i++) {
+        let deleteIngredient = allPTagIngredients[i].querySelector('#delete');
+        deleteIngredient.addEventListener('click', deleteIngredientInput);
+    }
 }
 
 function deleteIngredientInput()  {
 
-    let div = deleteIngredient.parentElement;
+    let div = this.parentElement.parentElement;
 
     let idBlog = div.getAttribute('id');
     let idIngredient = div.getAttribute('name');
@@ -31,23 +35,5 @@ function deleteIngredientInput()  {
     };
 
     getRequest.send();
-
-
-    //
-    // document.ajax({
-    //     type:"GET",
-    //     contentType : 'application/json',
-    //     url: '/ajax/delete-ingredient',
-    //     data: {idBlog: idBlog, idIngredient: idIngredient},
-    //     dataType: 'json',
-    //     success: function (response) {
-    //         if(response === true)
-    //             div.remove()
-    //     },
-    //     error: function(jqXhr, textStatus, errorMessage){
-    //         console.log("Error: ", errorMessage);
-    //     }
-    // });
-
 
 }

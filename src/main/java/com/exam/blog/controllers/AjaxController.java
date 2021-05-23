@@ -119,7 +119,7 @@ public class AjaxController {
             if(blogDB.getIngredients().contains(ingredientDB)){
                 blogDB.getIngredients().remove(ingredientDB);
                 blogService.update(blogDB);
-                ingredientService.deleteIngredient(ingredientDB);
+                ingredientService.deleteIngredient(ingredientDB.getId());
                 bool = true;
             }
         }

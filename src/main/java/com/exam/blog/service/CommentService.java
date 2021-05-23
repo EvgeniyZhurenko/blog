@@ -60,6 +60,10 @@ public class CommentService {
         return false;
     }
 
+    public void deleteById(Long id){
+        commentRepo.deleteById(id);
+    }
+
     public void delete(Long id) {
 
         Comment commentDB = commentRepo.getCommentById(id);

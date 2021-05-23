@@ -207,8 +207,10 @@ public class PictureService  {
         if(folder.exists()) {
             deleteFolder(folder);
         }
-        if(folderMain.listFiles().length == 0) {
-            folderMain.delete();
+        if(folderMain.exists()) {
+            if (folderMain.listFiles().length == 0) {
+                folderMain.delete();
+            }
         }
     }
 

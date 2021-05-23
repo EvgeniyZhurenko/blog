@@ -76,7 +76,7 @@
                         <div  class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}" th:if="${commentStat.index <= 1}">
                             <hr/>
                             <p th:text="${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment} + ' '"></p>
+                            ${comment.dateCreateComment} + '&ensp;'"></p>
                             <p th:text="'' + ${comment.text}" th:style="'float: rigth'"></p>
                             <hr/>
 
@@ -102,7 +102,7 @@
                             <div  class="comment"  th:each="comment : ${blog.comments}" th:value="${comment.id}">
                                 <hr/>
                                 <p th:text="${comment.user.username} + ' ' +
-                                    ${comment.dateCreateComment} + ' '"></p>
+                                    ${comment.dateCreateComment} + '&ensp;'"></p>
                                 <p th:text="'' + ${comment.text}" th:style="'float: rigth'"></p>
                                 <hr/>
 

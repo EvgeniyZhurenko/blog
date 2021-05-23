@@ -27,8 +27,8 @@ public class IngredientService {
         ingredientRepo.save(ingredient);
     }
 
-    public void deleteIngredient(Ingredient ingredient){
-        ingredientRepo.delete(ingredient);
+    public void deleteIngredient(Long id){
+        ingredientRepo.deleteById(id);
     }
 
     public boolean updateIngredient(Ingredient ingredient){

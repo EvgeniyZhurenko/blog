@@ -69,8 +69,7 @@
                                   th:name="text" th:field="*{blog.full_text}">message </textarea>
                     </div>
                 </div>
-                <hr/>
-                <div class="col" th:if="${blog.ingredients.size()!=0}" >
+                <div th:id ="'ingredients'" class="col" th:if="${blog.ingredients.size()!=0}" >
                     <h5 th:text="'Ингредиенты : '"></h5>
                     <div class="row"  th:id="${blog.id}" th:name="${ingredient.id}" th:each="ingredient : ${blog.ingredients}">
                         <p th:style="'display: flex; flex-direction: row;'">
@@ -81,13 +80,13 @@
                                    th:value="'Удалить ингредиент'"/>
                         </p>
                     </div>
-                    <div id="ingredient" class="row" th:style="'margin-left: 0.25em;'"></div>
+                    <div id="ingredient" class="column" th:style="'margin-left: 0.25em;'"></div>
                     <div>
                         <input id="button" class="btn btn-outline-success" th:type="'button'" th:value="'Добавить ингредиент'" />
                     </div>
                 </div>
 
-                <div class="col" th:unless="${blog.ingredients.size()!=0}" >
+                <div th:id ="'ingredients'" class="col" th:unless="${blog.ingredients.size()!=0}" >
                     <h5 th:text="'Ингредиенты : '"></h5>
                     <div id="ingredient"></div>
                     <div>

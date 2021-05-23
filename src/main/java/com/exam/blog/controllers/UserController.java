@@ -183,13 +183,14 @@ public class UserController {
 
         model.addAttribute("name", userRepo.getById(idUser).getFirst_name() + " " + userRepo.getById(idUser).getLast_name());
         model.addAttribute("idUser" , idUser);
+        model.addAttribute("title", "Удаление пользователя" + userRepo.getById(idUser).getUsername());
 
         model.addAttribute("msg", "Аккаунт " + userRepo.getById(idUser).getUsername() + " удален и больше не доступен!");
         userRepo.delete(idUser);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         auth.setAuthenticated(false);
 
-        return "main";
+        return  "redirect:/main";
     }
 
     // access to the blog details

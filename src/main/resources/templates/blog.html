@@ -80,7 +80,7 @@
                     <div class="well well-sm" th:if="${blog.comments}">
                         <div id="comment" class="row" th:each="comment : ${blog.comments}" th:if="${commentStat.index <= 1}" >
                             <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment}" th:style="'margin-bottom: 0;'" ></p>
+                            ${comment.dateCreateComment} + '&ensp;'" th:style="'margin-bottom: 0;'" ></p>
                             <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
                             <p th:style="'color:red; margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
                         </div>
@@ -92,7 +92,7 @@
                     <div class="well well-sm" th:if="${blog.comments}">
                         <div id="comment" class="row" th:each="comment : ${blog.comments}" >
                             <p th:text="${commentStat.count} + ' ' + ${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment}" th:style="'margin-bottom: 0;'" ></p>
+                            ${comment.dateCreateComment} + '&ensp;'" th:style="'margin-bottom: 0;'" ></p>
                             <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
                             <p th:style="'color:red; margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
                         </div>

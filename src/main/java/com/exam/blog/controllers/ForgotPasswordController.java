@@ -68,7 +68,7 @@ public class ForgotPasswordController {
             );
 
             // Send the email
-            mailSender.send(existingUser.getEmail(), "Activation code", message);
+            mailSender.send(existingUser.getEmail(), "Reset password", message);
 
             modelAndView.addObject("message", "Получен запрос на сброс пароля. Проверьте свой почтовый ящик на наличие ссылки для сброса.");
             modelAndView.addObject("user",existingUser);

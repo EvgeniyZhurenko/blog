@@ -2,6 +2,7 @@ package com.exam.blog.models;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+@NoArgsConstructor
 @DynamicUpdate
 @Entity
 @Table(name = "ingredient")

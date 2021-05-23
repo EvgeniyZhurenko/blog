@@ -96,7 +96,7 @@ public class UserRepoImpl implements UserDetailsService {
                         user.getUsername(),
                         user.getActivationCode()
                 );
-                mailSender.send(user.getEmail(), "Activation code", message);
+                mailSender.send(user.getEmail(), "Registration on blog.com", message);
             }
             return true;
         } else {
@@ -130,10 +130,12 @@ public class UserRepoImpl implements UserDetailsService {
     public void delete(Long id) {
         User userDelete = userRepo.getUserById(id);
         List<Blog> bloges = new CopyOnWriteArrayList<>(userDelete.getBlogs());
-        if (bloges.size() > 0 ) {
+        if (!bloges.isEmpty()) {
 
                 for(Blog blog : bloges){
-                    blogService.deleteBlog(userDelete, blog);
+                    Blog blogDB = blogService.getById(blog.getId());
+                    if(blogDB != null)
+                        blogService.deleteBlog(userDelete, blogDB);
                 }
             }
         userRepo.deleteUserById(userDelete.getId());
@@ -237,7 +239,7 @@ public class UserRepoImpl implements UserDetailsService {
     public void setProps(User exist, User user){
         user.setRoles(exist.getRoles());
         user.setPassword(exist.getPassword());
-        user.setBan_user(exist.getBan_user());
+//        user.setBan_user(exist.getBan_user());
         if(user.getFoto() == null){
             user.setFoto(exist.getFoto());
         }

@@ -51,7 +51,7 @@
                 <div class="col-auto d-none d-lg-block" th:each="picture : ${blog.getPictures()}">
 
                     <img class="bd-placeholder-img" width="250" height="200"
-                         th:src="@{|${picture.url_image}|}",
+                         th:src="@{|/${picture.url_image}|}",
                          th:alt="${picture.name}" />
                 </div>
             </div>

@@ -26,7 +26,7 @@
 
     <h1 th:text="${blog.title}"></h1>
 
-    <div class="alert alert-info mt-2" >
+    <div class="alert alert-info mt-2" th:style="'display: flex; flex-direction: column;'">
         <div>
             <a th:href="@{~/user/account/{idUser}/{idAccount}(idUser = ${idUser}, idAccount = ${blog.getUser().id})}"
                th:text="${blog.user.first_name} + ' ' + ${blog.user.last_name}"></a>
@@ -35,7 +35,7 @@
         </div>
         <div class="div-about-metrics-contact" th:style="'float: left; margin: 0;'">
             <div class="container">
-                <div class="row">
+                <div class="column">
                     <div class="col-xs-12 col-sm-6 col-md-6">
                         <div class="well well-sm">
                             <div class="row" th:if="${blog.pictures}">
@@ -47,12 +47,16 @@
                             </div>
                         </div>
                     </div>
-                    <p th:text="${blog.full_text}"></p>
+
+                    <hr/>
+                    <p class="row" th:text="${blog.full_text}"></p>
+                    <hr/>
                 </div>
+
+
             </div>
         </div>
 
-        <hr/>
         <div th:if="${blog.ingredients.size() != 0}" >
             <h5 th:text="'Ингредиенты : '"></h5>
             <div th:each="ingredient : ${blog.ingredients}">
@@ -64,21 +68,23 @@
         </div>
 
 
-        <span th:if="${idUser} == ${blog.user.getId()}">
-            <a th:href="@{~/user/all-blogs/{id}?data=rating(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
-        <span th:unless="${idUser} == ${blog.user.getId()}">
-            <a th:href="@{~/user/all-account-blogs/{idUser}/{idAccount}(idUser = ${idUser},
-                idAccount = ${blog.getUser().id})}" th:text="'К списку блогов ' + ${blog.user.first_name} +
-                ' ' + ${blog.user.last_name}"></a>&emsp;</span>
+        <div class="row" >
+            <span th:if="${idUser} == ${blog.user.getId()}">
+                <a th:href="@{~/user/all-blogs/{id}?data=rating(id = ${idUser})}">Назад к списку блогов</a>&emsp;</span>
+            <span th:unless="${idUser} == ${blog.user.getId()}">
+                <a th:href="@{~/user/all-account-blogs/{idUser}/{idAccount}(idUser = ${idUser},
+                    idAccount = ${blog.getUser().id})}" th:text="'К списку блогов ' + ${blog.user.first_name} +
+                    ' ' + ${blog.user.last_name}"></a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}">
-            <a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a>&emsp;</span>
+            <span th:if="${idUser} == ${blog.user.getId()}">
+                <a th:href="@{~/user/update-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Редактировать блог</a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}">
-            <a th:href="@{~/user/delete-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить блог</a>&emsp;</span>
+            <span th:if="${idUser} == ${blog.user.getId()}">
+                <a th:href="@{~/user/delete-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить блог</a>&emsp;</span>
 
-        <span th:if="${idUser} == ${blog.user.getId()}">
-            <a th:href="@{~/user/delete-picture-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить фото блога</a>&emsp;</span>
+            <span th:if="${idUser} == ${blog.user.getId()}">
+                <a th:href="@{~/user/delete-picture-blog/{id_user}/{id_blog}(id_user = ${idUser}, id_blog = ${blog.getId()})}">Удалить фото блога</a>&emsp;</span>
+        </div>
 
         <div id="rate">
             <p id="p_rate" th:value="${blog.getId()}">Оцените : </p>
@@ -98,11 +104,12 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-md-6" th:if="${state}">
+                <div  th:if="${state}">
                     <div class="well well-sm" th:if="${blog.comments}">
-                        <div id="comment" class="row" th:each="comment : ${blog.comments}" th:if="${commentStat.index <= 1}">
+                        <div id="comment" class="row" th:each="comment : ${blog.comments}"
+                             th:if="${commentStat.index <= 1}" th:style="'margin-left: 0.5em;'">
                             <p th:text="${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment} + ' '" th:style="'margin-bottom: 0'"></p>
+                            ${comment.dateCreateComment} + '&ensp;'" th:style="'margin-bottom: 0'"></p>
                             <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
                             <p th:style="'color:red;margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
                         </div>
@@ -111,11 +118,11 @@
                          id_blog = ${blog.id}, id_user_blog= ${idUserBlog}, bool = false)}">Посмотреть все комментарии</a>&emsp;</span>
 
                 </div>
-                <div class="col-xs-12 col-sm-6 col-md-6" th:unless="${state}">
+                <div  th:unless="${state}">
                     <div class="well well-sm" th:if="${blog.comments}">
-                        <div id="comment" class="row" th:each="comment : ${blog.comments}" th:if="${commentStat.index <= 1}">
+                        <div id="comment" class="row" th:each="comment : ${blog.comments}"  th:style="'margin-left: 0.5em;'">
                             <p th:text="${comment.user.username} + ' ' +
-                            ${comment.dateCreateComment} + ' '" th:style="'margin-bottom: 0'"></p>
+                            ${comment.dateCreateComment} + '&ensp;'" th:style="'margin-bottom: 0'"></p>
                             <p th:text="${comment.text}" th:unless="${comment.banComment}" th:style="'margin-bottom: 0;'" ></p>
                             <p th:style="'color:red;margin-bottom: 0;'" th:text="'комментарий заблокирован администратором сайта!'" th:if="${comment.banComment}"></p>
                         </div>

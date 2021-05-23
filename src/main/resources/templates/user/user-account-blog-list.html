@@ -22,7 +22,7 @@
         <div>
             <p th:text="${blog.announcement}"></p>
             <p th:text="'Рейтинг ' + ${blog.rating}"></p>
-            <p ><span th:text="${blog.date_create_blog}"></span>
+            <p ><span th:text="${blog.date_create_blog} + '&ensp;'"></span>
                 <span th:text="${blog.user.getFirst_name()} + ' ' + ${blog.user.getLast_name()}"></span>
                 <span th:if="${blog.user.enabled}" class="dots"></span>
                 <span th:unless="${blog.user.enabled}" class="dots_disable"></span>

@@ -3,6 +3,7 @@ package com.exam.blog.service;
 
 import com.exam.blog.models.*;
 import com.exam.blog.repository.BlogRepo;
+import com.exam.blog.repository.IngredientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -163,7 +164,14 @@ public class BlogService {
     public void updatePropertiesBlog(Blog blog, Picture picture, Long idUser, MultipartFile image) throws IOException{
         if(!image.isEmpty()){
            pictureService.updateBlogLoadPictureImage(idUser, blog, image, picture);
-
+        } else{
+            if(!blog.getPictures().isEmpty()) {
+                Picture pictureDB = pictureService.getById(blog.getPictures().get(0).getId());
+                if (!pictureDB.getName().equalsIgnoreCase(picture.getName())) {
+                    pictureDB.setName(picture.getName());
+                    pictureService.update(pictureDB);
+                }
+            }
         }
     }
 
@@ -177,15 +185,39 @@ public class BlogService {
             blogDB.setTitle(blog.getTitle());
             blogDB.setFull_text(blog.getFull_text());
             if(!blogDB.getIngredients().isEmpty()) {
-                for (int i = 0; i < ingredients.length; i++) {
-                    Ingredient ingredientDB = ingredientService.getById(blogDB.getIngredients().get(i).getId());
-                    if (!ingredientDB.getText().equals(ingredients[i])) {
-                        ingredientDB.setText(ingredients[i]);
-                        ingredientService.updateIngredient(ingredientDB);
-                        blogDB.getIngredients().get(i).setText(ingredients[i]);
+                List<Ingredient> ingredientsDB = blogDB.getIngredients();
+                if (ingredientsDB.size() >= ingredients.length) {
+                    for (int i = 0; i < ingredientsDB.size(); i++) {
+                        if (i < ingredients.length) {
+                                if (!ingredientsDB.get(i).getText().equalsIgnoreCase(ingredients[i]) && !ingredients[i].equals("")) {
+                                    ingredientsDB.get(i).setText(ingredients[i]);
+                                    ingredientService.updateIngredient(ingredientsDB.get(i));
+                                    blogDB.getIngredients().get(i).setText(ingredients[i]);
+                                }
+                        } else {
+                            ingredientsDB.remove(i);
+                        }
+                    }
+                } else {
+                    for (int j = 0; j < ingredients.length; j++) {
+                        if (j < ingredientsDB.size()) {
+                            if (!ingredientsDB.get(j).getText().equalsIgnoreCase(ingredients[j])&& !ingredients[j].equals("")) {
+                                ingredientsDB.get(j).setText(ingredients[j]);
+                                ingredientService.updateIngredient(ingredientsDB.get(j));
+                                blogDB.getIngredients().get(j).setText(ingredients[j]);
+                            }
+                        } else {
+                            if(!ingredients[j].equals("")) {
+                                Ingredient ingredient = new Ingredient();
+                                ingredient.setText(ingredients[j]);
+                                ingredient.setBlog(blogDB);
+                                ingredientService.saveIngredient(ingredient);
+                                blogDB.getIngredients().add(ingredient);
+                            }
+                        }
                     }
                 }
-            } else {
+            }else {
                     addIngredientToBlog(blogDB, ingredients);
                 }
 
@@ -227,26 +259,30 @@ public class BlogService {
 
     public void deleteBlog(User userDB, Blog blogDB){
 
-        if(commentService.findAllCommentsBlog(blogDB.getId()).size() != 0 || commentService.findAllCommentsBlog(blogDB.getId()) != null) {
-            for (Comment comment : commentService.findAllCommentsBlog(blogDB.getId())) {
+        List<Comment> comments = commentService.findAllCommentsBlog(blogDB.getId());
+        if(!comments.isEmpty()) {
+            for (Comment comment : comments) {
                 blogDB.getComments().remove(comment);
-                userDB.getComments().remove(comment);
-                userRepo.update(userDB, true);
-                commentService.delete(comment.getId());
+                User userComment = userRepo.getById(comment.getUser().getId());
+                userComment.getComments().remove(comment);
+                userRepo.update(userComment, true);
+                commentService.deleteById(comment.getId());
+
             }
         }
         deletePicture(blogDB);
 
-        if(!blogDB.getIngredients().isEmpty()) {
-            for (Ingredient ingredient : blogDB.getIngredients()) {
-                blogDB.getIngredients().remove(ingredient);
-                ingredientService.deleteIngredient(ingredient);
+        List<Ingredient> ingredients = blogDB.getIngredients();
+        if(!ingredients.isEmpty()) {
+            for (Ingredient ingredient : ingredients) {
+//                blogDB.getIngredients().remove(ingredient);
+                ingredientService.deleteIngredient(ingredient.getId());
             }
         }
 
-        if(blogDB.getId() == userRepo.findBlogById(userDB, blogDB).getId()){
-
+        if(blogDB.getId().equals(userRepo.findBlogById(userDB, blogDB).getId())){
             userDB.getBlogs().remove(blogDB);
+            userRepo.update(userDB,true);
         }
 
         delete(blogDB.getId());
@@ -254,16 +290,31 @@ public class BlogService {
 
     public void deleteAdminBlog(User userDB, Blog blogDB){
 
-        if(!commentService.findAllCommentsBlog(blogDB.getId()).isEmpty()) {
-            for (Comment comment : commentService.findAllCommentsBlog(blogDB.getId())) {
-                blogDB.getComments().remove(comment);
-                userDB.getComments().remove(comment);
-                commentService.delete(comment.getId());
-            }
-        }
-        deletePicture(blogDB);
-
-        delete(blogDB.getId());
+        deleteBlog(userDB,blogDB);
+//        if(!commentService.findAllCommentsBlog(blogDB.getId()).isEmpty()) {
+//            for (Comment comment : commentService.findAllCommentsBlog(blogDB.getId())) {
+//                blogDB.getComments().remove(comment);
+//                User userComment = userRepo.getById(comment.getUser().getId());
+//                userComment.getComments().remove(comment);
+//                userRepo.update(userComment, true);
+//                commentService.deleteById(comment.getId());
+//            }
+//        }
+//        deletePicture(blogDB);
+//
+//        if(!blogDB.getIngredients().isEmpty()) {
+//            for (Ingredient ingredient : blogDB.getIngredients()) {
+//                blogDB.getIngredients().remove(ingredient);
+//                ingredientService.deleteIngredient(ingredient);
+//            }
+//        }
+//
+//        if(blogDB.getId().equals(userRepo.findBlogById(userDB, blogDB).getId())){
+//
+//            userDB.getBlogs().remove(blogDB);
+//        }
+//
+//        delete(blogDB.getId());
     }
 
     public void deletePicture(Blog blogDB){
