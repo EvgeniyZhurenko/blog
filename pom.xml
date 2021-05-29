@@ -15,7 +15,7 @@
 	<description>blog for cooking</description>
 	<packaging>war</packaging>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>3.8.1</java.version>
 	</properties>
 
 	<dependencies>
