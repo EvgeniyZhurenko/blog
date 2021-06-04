@@ -55,10 +55,10 @@ public class UserRepoImpl implements UserDetailsService {
         this.blogService = blogService;
     }
 
-    @Value("${upload.path}")
+    @Value("${upload.host.path}")
     private String uploadPath;
 
-    @Value("${upload.picture.path}")
+    @Value("${upload.host.picture.path}")
     private String picturePath;
 
     @Autowired
