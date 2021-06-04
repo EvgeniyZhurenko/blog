@@ -32,7 +32,7 @@ public class UserController {
 
     private final MainController mainController;
 
-    @Value("${upload.picture.path}")
+    @Value("${upload.host.picture.path}")
     private String uploadPicturePath;
 
     @Autowired
