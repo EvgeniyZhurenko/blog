@@ -14,7 +14,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/", "classpath:/home/jelastic/upload/images/",
+        registry.addResourceHandler("/images/**").addResourceLocations("classpath:/static/images/", "classpath:/upload/images/profiles_images", "classpath:/upload/images/blogs_images",
                 "file:////var/lib/jelastic/PROJECTS/cooking-blog_cp_ROOT_202937/upload/images/");
     }
 }
