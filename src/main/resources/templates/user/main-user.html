@@ -22,9 +22,9 @@
             <p class="lead-my-3" th:text="${blogList[0].announcement}">Текст блога</p>
 
             <p class="lead-mb-0"><a  class="text-white fw-bold"
-                                     th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}
+                                     th:href="@{~/user/blog/{id_user}/{id_blog}/{id_user_blog}/{bool}
                                      (id_user = ${idUser}, id_blog = ${blogList[0].getId()},
-                                      id_user_blog = ${blogList[0].user.id})}">Продолжить читать...</a></p>
+                                      id_user_blog = ${blogList[0].user.id}, bool = true)}">Продолжить читать...</a></p>
         </div>
     </div>
 

@@ -47,8 +47,8 @@ public class Blog {
     List<Comment> comments;
 
     @OneToMany(mappedBy = "blog",
-               cascade = CascadeType.ALL,
-               fetch = FetchType.LAZY )
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY )
     List<Picture> pictures;
 
     @ManyToOne

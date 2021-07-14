@@ -38,16 +38,12 @@ public class CustomLogoutSuccessHandler extends
             Authentication authentication)
             throws IOException, ServletException {
 
-        String refererUrl = request.getHeader("Referer");
-        new ForwardLogoutSuccessHandler("/main");
         User userDB = userRepo.getUserByUserName(authentication.getName());
         if(userDB != null){
             userDB.setEnabled(false);
             userRepo.update(userDB,true);
         }
-        System.out.println("Logout from: " + refererUrl);
-        System.out.println(request.getHeader("Referer"));
 
-        super.onLogoutSuccess(request, response, authentication);
+        response.sendRedirect("/main");
     }
 }

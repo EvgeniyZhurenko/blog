@@ -30,7 +30,7 @@ public class SecurityController {
     }
 
     // Authentication process and redirect depending on role to the relation page
-    @GetMapping(value = {"/login","/authentication"})
+    @GetMapping(value = {"login", "/authentication"})
     public String loginGet(Model model){
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

@@ -92,7 +92,8 @@ public class UserRepoImpl implements UserDetailsService {
             if(!user.getEmail().isEmpty()){
                 String message = String.format(
                         "Hello, %s! \n" +
-                                "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : http://localhost:8080/activate/%s",
+                                "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : " +
+                                "http://localhost:8080/activate/%s",
                         user.getUsername(),
                         user.getActivationCode()
                 );
