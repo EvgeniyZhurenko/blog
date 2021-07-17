@@ -3,6 +3,8 @@
 <head>
     <title th:text="${title}"></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script th:src="@{'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js'}"></script>
+    <script th:src="@{'https://code.jquery.com/jquery-3.6.0.min.js'}"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           th:href="@{https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css}" >
     <link rel="stylesheet" href="../static/css/mainCSS.css" th:href="@{/css/mainCSS.css}">
@@ -10,10 +12,20 @@
 </head>
 <body>
 
-<div class="container " style="display: block;
-    text-align: center;" th:style="'display: block; text-align: center'">
-    <p th:text="${message}" ></p>
-</div>
+<!-- message -->
+<main th:if="${guest_person}" class="container " style="display: block; text-align: center;" th:style="'display: block; text-align: center'">
+    <h1 th:text="${message}"></h1>
+    <a class="button" th:href="@{~/main}" >Вернуться на главную страницу</a>
+</main>
+<main th:if="${user_person}" class="container " style="display: block; text-align: center;" th:style="'display: block; text-align: center'">
+    <h1 th:text="${message}"></h1>
+    <a class="button" th:href="@{~/user/main}" >Вернуться на главную страницу</a>
+</main>
+<main th:if="${admin_person}" class="container " style="display: block; text-align: center;" th:style="'display: block; text-align: center'">
+    <h1 th:text="${message}"></h1>
+    <a class="button" th:href="@{~/admin/main}" >Вернуться на главную страницу</a>
+</main>
+<!-- //message -->
 
 <footer class="blog-footer" th:insert="blocks/footer :: footer"></footer>
 

@@ -1,6 +1,8 @@
 package com.exam.blog.controllers;
 
 import com.exam.blog.models.User;
+import com.exam.blog.service.ActivationCodeService;
+import com.exam.blog.service.MailSender;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -13,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -23,10 +26,16 @@ import java.util.stream.Collectors;
 public class SecurityController {
 
     private final UserRepoImpl userRepo;
+    private final UserRepoImpl userService;
+    private final ActivationCodeService activationCodeService;
+    private final MailSender mailSender;
 
     @Autowired
-    public SecurityController(UserRepoImpl userRepo) {
+    public SecurityController(UserRepoImpl userRepo, UserRepoImpl userService, ActivationCodeService activationCodeService, MailSender mailSender) {
         this.userRepo = userRepo;
+        this.userService = userService;
+        this.activationCodeService = activationCodeService;
+        this.mailSender = mailSender;
     }
 
     // Authentication process and redirect depending on role to the relation page
@@ -86,14 +95,29 @@ public class SecurityController {
                                    RedirectAttributes redirectAttributes){
 
         String[] arrProps = userRepo.userRegistration(user);
-        if(Arrays.stream(arrProps).filter(e -> e != null).collect(Collectors.toList()).size() == 0) {
+        if(Arrays.stream(arrProps).filter(Objects::nonNull).collect(Collectors.toList()).size() == 0) {
             User userDB = userRepo.getUserByUserName(user.getUsername());
-            if (userDB == null && user.getUsername() != null) {
-                userRepo.saveBoolean(user);
-                model.addAttribute("title", "Сообщение");
-                model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации "
-                        + user.getEmail());
-                return "email-message";
+            if (userDB == null && user.getUsername() != null && userService.chekEmailAndUsername(user.getUsername(),user.getEmail()) ) {
+                Long idCode = activationCodeService.saveActivationCodeUser(user);
+                if(idCode > 0L) {
+                    if(!user.getEmail().isEmpty()){
+                        String message = String.format(
+                                "Hello, %s! \n" +
+                                        "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : " +
+                                        "http://localhost:8080/activate/%s",
+                                user.getUsername(),
+                                activationCodeService.getActivationCodeUser(idCode).getCode());
+                        mailSender.send(user.getEmail(), "Registration on blog.com", message);
+                    }
+                    model.addAttribute("title", "Сообщение");
+                    model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации "
+                            + user.getEmail());
+                    return "email-message";
+                } else {
+                    redirectAttributes.addFlashAttribute("account", true);
+                    redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
+                    return "redirect:/registration";
+                }
             } else {
                 redirectAttributes.addFlashAttribute("account", true);
                 redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
@@ -111,9 +135,9 @@ public class SecurityController {
     public ModelAndView activate(ModelAndView modelAndView,
                            @PathVariable(name = "code", required = false) String code){
 
-        boolean isActivate = userRepo.activateUser(code);
+        Long idActivateUser = activationCodeService.activateUser(code);
 
-        if(isActivate){
+        if(idActivateUser != 0L){
             modelAndView.addObject("error", "true");
             modelAndView.addObject("message", "Пользователь активирован успешно");
             modelAndView.setViewName("redirect:/login");

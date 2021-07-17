@@ -41,9 +41,6 @@ public class User implements UserDetails {
     private Boolean ban_user;
     private Boolean enabled;
 
-    @Column(name = "activation_code")
-    private String activationCode;
-
     private String foto;
 
 

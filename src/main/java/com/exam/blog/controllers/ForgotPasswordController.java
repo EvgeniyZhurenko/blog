@@ -1,6 +1,8 @@
 package com.exam.blog.controllers;
 
+import com.exam.blog.models.ActivationCode;
 import com.exam.blog.models.User;
+import com.exam.blog.service.ActivationCodeService;
 import com.exam.blog.service.MailSender;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,13 @@ public class ForgotPasswordController {
     private MailSender mailSender;
 
     private PasswordEncoder passwordEncoder;
+
+    private ActivationCodeService activationCode;
+
+    @Autowired
+    public void setActivationCodeService(ActivationCodeService activationCode) {
+        this.activationCode = activationCode;
+    }
 
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
@@ -55,17 +64,14 @@ public class ForgotPasswordController {
         User existingUser = userRepo.findUserByEmail(user.getEmail());
         if (existingUser != null) {
 
-            existingUser.setActivationCode(UUID.randomUUID().toString());
-
-            userRepo.update(existingUser,true);
+            Long activCode = activationCode.saveActivationCodeUser(existingUser);
 
             String message = String.format(
                     "Hello, %s! \n" +
                             "Добро пожаловать на blog.com. Для завершения сброса пароля перейдите по следующей ссылке: " +
                             "http://localhost:8080/confirm-reset/%s",
                     existingUser.getUsername(),
-                    existingUser.getActivationCode()
-            );
+                    activationCode.getActivationCodeUser(activCode).getCode());
 
             // Send the email
             mailSender.send(existingUser.getEmail(), "Reset password", message);
@@ -90,12 +96,19 @@ public class ForgotPasswordController {
                                            @PathVariable("token")String confirmationToken) {
 
         if (confirmationToken != null) {
-            User user = userRepo.findUserByActivationCode(confirmationToken);
 
-            modelAndView.addObject("user", user);
-            modelAndView.addObject("email", user.getEmail());
-            modelAndView.addObject("title", "Новый пароль");
-            modelAndView.setViewName("reset-password");
+            User user = userRepo.getUserByUserName(activationCode.getUser(confirmationToken).getUsername());
+
+            if(user != null) {
+                modelAndView.addObject("user", user);
+                modelAndView.addObject("email", user.getEmail());
+                modelAndView.addObject("title", "Новый пароль");
+                modelAndView.setViewName("reset-password");
+            }else {
+                modelAndView.addObject("title", "Новый пароль");
+                modelAndView.addObject("message", "Ссылка недействительна или битая!");
+                modelAndView.setViewName("error");
+            }
         } else {
             modelAndView.addObject("title", "Новый пароль");
             modelAndView.addObject("message", "Ссылка недействительна или битая!");

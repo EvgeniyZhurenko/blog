@@ -33,10 +33,10 @@ public class PictureService  {
         this.blogService = blogService;
     }
 
-    @Value("${upload.host.picture.path}")
+    @Value("${upload.picture.path}")
     private String uploadPicturePath;
 
-    @Value("${upload.host.path}")
+    @Value("${upload.path}")
     private String uploadPath;
 
     @Autowired

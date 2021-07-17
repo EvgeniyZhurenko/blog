@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
@@ -38,13 +39,6 @@ public class UserRepoImpl implements UserDetailsService {
 
     private PictureService pictureService;
 
-    private MailSender mailSender;
-
-    @Autowired
-    public void setMailSender(MailSender mailSender) {
-        this.mailSender = mailSender;
-    }
-
     @Autowired
     public void setPictureService(PictureService pictureService) {
         this.pictureService = pictureService;
@@ -55,10 +49,10 @@ public class UserRepoImpl implements UserDetailsService {
         this.blogService = blogService;
     }
 
-    @Value("${upload.host.path}")
+    @Value("${upload.path}")
     private String uploadPath;
 
-    @Value("${upload.host.picture.path}")
+    @Value("${upload.picture.path}")
     private String picturePath;
 
     @Autowired
@@ -74,38 +68,25 @@ public class UserRepoImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
         User user = userRepo.getUserByUsername(userName);
         if (user == null) {
-            throw new UsernameNotFoundException("Пользователь с логином " + userName + " не удается найти");
+            throw new UsernameNotFoundException("Пользователь с логином - " + userName + " не удается найти");
         }
         return user;
     }
 
-    public boolean saveBoolean(User user) {
+    public void saveBoolean(User user) {
         User userFromDB = userRepo.getUserByUsername(user.getUsername());
         if (userFromDB == null) {
             user.setRoles(Collections.singleton(new Role(2L, "ROLE_USER")));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setActivationCode(UUID.randomUUID().toString());
             user.setEnabled(false);
             user.setBan_user(false);
-
             userRepo.save(user);
-            if(!user.getEmail().isEmpty()){
-                String message = String.format(
-                        "Hello, %s! \n" +
-                                "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : " +
-                                "http://localhost:8080/activate/%s",
-                        user.getUsername(),
-                        user.getActivationCode()
-                );
-                mailSender.send(user.getEmail(), "Registration on blog.com", message);
-            }
-            return true;
         } else {
-            return false;
+            throw new EntityNotFoundException("Такого пользователя не существует.");
         }
     }
 
-    public boolean update(User user, boolean bool) {
+    public void update(User user, boolean bool) {
         User exist = userRepo.getUserById(user.getId());
         if (exist != null) {
             if(!bool) {
@@ -115,9 +96,8 @@ public class UserRepoImpl implements UserDetailsService {
                 setProps(exist,user);
                 userRepo.save(user);
             }
-            return true;
-        }
-        return false;
+        } else
+            throw new EntityNotFoundException("Такого пользователя не существует.");
     }
 
     public void updatePassword(User user){
@@ -125,7 +105,8 @@ public class UserRepoImpl implements UserDetailsService {
         if(exist != null){
             exist.setPassword(user.getPassword());
             userRepo.save(exist);
-        }
+        } else
+            throw new EntityNotFoundException("Такого пользователя не существует.");
     }
 
     public void delete(Long id) {
@@ -145,8 +126,11 @@ public class UserRepoImpl implements UserDetailsService {
 
 
     public User getById(Long id) {
-        User user = userRepo.getUserById(id);
-        return user;
+            User user = userRepo.getUserById(id);
+            if (user != null)
+                return user;
+            else
+                throw new EntityNotFoundException("Пользователя с id - " + id + " не существует");
     }
 
     public User getUserByUserName(String userName) {
@@ -310,26 +294,22 @@ public class UserRepoImpl implements UserDetailsService {
         return userRepo.findAll().stream().map(User::getUsername).noneMatch(name-> name.equals(username));
     }
 
-    public boolean activateUser(String code) {
-        User user = userRepo.getUserByActivationCode(code);
-
-        if(user == null)
-            return false;
-
-        user.setActivationCode(null);
-        userRepo.save(user);
-        return true;
-    }
 
     public User findUserByEmail(String email){
         return userRepo.findAll().stream().filter(user-> user.getEmail()!= null).collect(Collectors.toList())
                 .stream().filter(user -> user.getEmail().equals(email)).toArray(User[]::new)[0];
     }
 
-    public User findUserByActivationCode(String activationCode){
-        return userRepo.findAll().stream().filter(user-> user.getActivationCode()!= null).collect(Collectors.toList())
-                .stream().filter(user -> user.getActivationCode().equals(activationCode)).toArray(User[]::new)[0];
+    public boolean chekEmailAndUsername(String username, String email) {
+        User userDBByUsername = userRepo.getUserByUsername(username);
+        if(userDBByUsername == null) {
+            User userDBByEmail = findUserByEmail(email);
+            return userDBByEmail == null;
+        }
+        else
+            return false;
     }
+
 }
 
 

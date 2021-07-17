@@ -109,7 +109,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
                 http
                         .authorizeRequests()
-                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js","/static/**" ).permitAll();
+                        .antMatchers("/","/**","/**/*.jpg", "/**/*.css", "/**/*.js","/static/**", "/upload/**" ).permitAll();
                 http
                         .authorizeRequests().anyRequest().authenticated();
                 http

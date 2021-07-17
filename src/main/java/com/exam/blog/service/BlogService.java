@@ -30,7 +30,7 @@ public class BlogService {
     private CommentService commentService;
     private IngredientService ingredientService;
 
-    @Value("${upload.host.picture.path}")
+    @Value("${upload.picture.path}")
     private String uploadPicturePath;
 
     @Autowired
