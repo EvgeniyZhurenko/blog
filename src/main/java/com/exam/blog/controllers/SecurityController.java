@@ -9,10 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
@@ -79,53 +81,49 @@ public class SecurityController {
     @GetMapping("/registration")
     public String registrationGet(Model model){
         model.addAttribute("title", "Страница регистрации");
-        Map post = model.asMap();
-        for(Object key : post.keySet()){
-            if(key != "title") {
-                model.addAttribute(key.toString(), post.get(key));
-            }
-        }
+        model.addAttribute("user", new User());
+//        Map post = model.asMap();
+//        for(Object key : post.keySet()){
+//            if(key != "title") {
+//                model.addAttribute(key.toString(), post.get(key));
+//            }
+//        }
 
         return "registration";
     }
 
     // Registration process controller
     @PostMapping("/registration")
-    public String registrationPost(@ModelAttribute User user, Model model,
+    public String registrationPost(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Model model,
                                    RedirectAttributes redirectAttributes){
 
-        String[] arrProps = userRepo.userRegistration(user);
-        if(Arrays.stream(arrProps).filter(Objects::nonNull).collect(Collectors.toList()).size() == 0) {
-            User userDB = userRepo.getUserByUserName(user.getUsername());
-            if (userDB == null && user.getUsername() != null && userService.chekEmailAndUsername(user.getUsername(),user.getEmail()) ) {
-                Long idCode = activationCodeService.saveActivationCodeUser(user);
-                if(idCode > 0L) {
-                    if(!user.getEmail().isEmpty()){
-                        String message = String.format(
-                                "Hello, %s! \n" +
-                                        "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : " +
-                                        "http://localhost:8080/activate/%s",
-                                user.getUsername(),
-                                activationCodeService.getActivationCodeUser(idCode).getCode());
-                        mailSender.send(user.getEmail(), "Registration on blog.com", message);
-                    }
-                    model.addAttribute("title", "Сообщение");
-                    model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации "
-                            + user.getEmail());
-                    return "email-message";
-                } else {
-                    redirectAttributes.addFlashAttribute("account", true);
-                    redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
-                    return "redirect:/registration";
+        if(bindingResult.hasErrors())
+            return "registration";
+        User userDB = userRepo.getUserByUserName(user.getUsername());
+        if (userDB == null && user.getUsername() != null && userService.chekEmailAndUsername(user.getUsername(),user.getEmail()) ) {
+            Long idCode = activationCodeService.saveActivationCodeUser(user);
+            if(idCode > 0L) {
+                if(!user.getEmail().isEmpty()){
+                    String message = String.format(
+                            "Hello, %s! \n" +
+                                    "Добро пожаловать на ресурс blog.com. Для завершения регистрации перейдите по следующей ссылке : " +
+                                    "http://localhost:8080/activate/%s",
+                            user.getUsername(),
+                            activationCodeService.getActivationCodeUser(idCode).getCode());
+                    mailSender.send(user.getEmail(), "Registration on blog.com", message);
                 }
+                model.addAttribute("title", "Сообщение");
+                model.addAttribute("message", "Перейдите в почтовый ящик, указанный при регистрации "
+                        + user.getEmail());
+                return "email-message";
             } else {
                 redirectAttributes.addFlashAttribute("account", true);
                 redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
                 return "redirect:/registration";
             }
         } else {
-            redirectAttributes.addFlashAttribute("bool", true);
-            redirectAttributes.addFlashAttribute("msg", arrProps);
+            redirectAttributes.addFlashAttribute("account", true);
+            redirectAttributes.addFlashAttribute("msg", "Такой аккаунт уже существует!\nПопробуйте еще раз");
             return "redirect:/registration";
         }
     }

@@ -39,25 +39,32 @@
                     <div class="col-md-6">
 
                         <input type="hidden" class="form-control" placeholder="Ваше имя" th:field="*{id}">
+                        <input type="hidden" class="form-control" placeholder="Ваш пароль" th:field="*{password}">
 
                         Имя :<input type="text" class="form-control" placeholder="Ваше имя" th:field="*{first_name}">
+                        <div style="color:red" th:if="${#fields.hasErrors('first_name')}" th:errors="*{first_name}">Errors</div>
                     </div>
                     <div class="col-md-6">
                         Фамилия : <input type="text" class="form-control" th:field="*{last_name}" placeholder="Ваша фамилия" >
+                        <div style="color:red" th:if="${#fields.hasErrors('last_name')}" th:errors="*{last_name}">Errors</div>
                     </div>
                     <div class="col-md-6">
                         Логин : <input type="text" class="form-control" placeholder="Ваш логин" th:field="*{username}" />
+                        <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Errors</div>
                     </div>
                 </div>
                 <div class="row mt-3" >
                     <div class="col-md-12">
                         Телефон : <input type="tel" class="form-control" placeholder="Ваш телефон" th:field="*{phone}" />
+                        <div style="color:red" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}">Errors</div>
                     </div>
                     <div class="col-md-12">
                         E-mail : <input type="email" class="form-control" placeholder="Электронная почта" th:field="*{email}" />
+                        <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Errors</div>
                     </div>
                     <div class="col-md-12">
                        Дата рождения : <input type="date" class="form-control" placeholder="Дата рождения" th:field="*{born}">
+                        <div style="color:red" th:if="${#fields.hasErrors('born')}" th:errors="*{born}">Errors</div>
                     </div>
                     <div class="col-md-12">
                         Twitter : <input type="text" class="form-control" placeholder="Twiter" th:field="*{twiter}">
