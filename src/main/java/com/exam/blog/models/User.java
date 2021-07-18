@@ -2,11 +2,10 @@ package com.exam.blog.models;
 
 import javax.validation.constraints.*;
 
-import com.exam.blog.config.anotation.UserBorn;
+import com.exam.blog.anotation.UserBorn;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

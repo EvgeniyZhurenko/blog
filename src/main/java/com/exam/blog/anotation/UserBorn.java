@@ -1,4 +1,4 @@
-package com.exam.blog.config.anotation;
+package com.exam.blog.anotation;
 
 import com.exam.blog.validation.UserValidBornAnnotation;
 

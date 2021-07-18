@@ -1,6 +1,6 @@
 package com.exam.blog.validation;
 
-import com.exam.blog.config.anotation.UserBorn;
+import com.exam.blog.anotation.UserBorn;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.Date;
