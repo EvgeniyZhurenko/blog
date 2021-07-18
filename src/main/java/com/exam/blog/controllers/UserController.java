@@ -6,18 +6,18 @@ import com.exam.blog.service.CommentService;
 import com.exam.blog.service.PictureService;
 import com.exam.blog.service.UserRepoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.*;
 
@@ -39,15 +39,20 @@ public class UserController {
     @Value("${upload.picture.path}")
     private String uploadPicturePath;
 
+    // spring validator
+    private final Validator personValidator;
+
     @Autowired
-    public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService, CommentService commentService, MainController mainController) {
+    public UserController(UserRepoImpl userRepo, BlogService blogService, PictureService pictureService,
+                          CommentService commentService, MainController mainController,
+                          @Qualifier("userEmailFieldValid") Validator personValidator) {
         this.userRepo = userRepo;
         this.blogService = blogService;
         this.pictureService = pictureService;
         this.commentService = commentService;
         this.mainController = mainController;
+        this.personValidator = personValidator;
     }
-
 
     // access to all blogs of site
     @GetMapping("all-blogs/{id}")
@@ -159,10 +164,14 @@ public class UserController {
 
     // update information of user
     @PostMapping("update")
-    public String userUpdatePost(@ModelAttribute User user, Model model,
+    public String userUpdatePost(@ModelAttribute("user") @Valid User user, BindingResult bindingResult, Errors errors, Model model,
                                  @RequestParam(name = "image", required = false) MultipartFile foto)
             throws IOException {
 
+        personValidator.validate(user, bindingResult);
+        if(bindingResult.hasErrors()) {
+            return "user/user_update_page";
+        }
         boolean bool = userRepo.uploadFotoImage(user, foto);
 
         User userDB = userRepo.getById(user.getId()) ;

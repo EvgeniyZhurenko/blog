@@ -138,24 +138,24 @@ public class UserRepoImpl implements UserDetailsService {
         return user;
     }
 
-    public String[] userRegistration(User user) {
-        String[] attr = new String[6];
-
-        if (user.getFirst_name().equals(""))
-            attr[0] = "Заполните поле Ваша имя!";
-        if (user.getLast_name().equals(""))
-            attr[1] = "Заполните поле Ваша фамилия!";
-        if (user.getEmail().equals(""))
-            attr[2]="Заполните поле Ваш e-mail!";
-        if (user.getPhone().equals(""))
-            attr[3] = "Заполните поле Ваш телефон!";
-        if (user.getUsername().equals(""))
-            attr[4]="Заполните поле Ваше логин!";
-        if (user.getPassword().equals(""))
-            attr[5] = "Заполните поле Ваш пароль!";
-
-        return attr;
-    }
+//    public String[] userRegistration(User user) {
+//        String[] attr = new String[6];
+//
+//        if (user.getFirst_name().equals(""))
+//            attr[0] = "Заполните поле Вашe имя!";
+//        if (user.getLast_name().equals(""))
+//            attr[1] = "Заполните поле Ваша фамилия!";
+//        if (user.getEmail().equals(""))
+//            attr[2]="Заполните поле Ваш e-mail!";
+//        if (user.getPhone().equals(""))
+//            attr[3] = "Заполните поле Ваш телефон!";
+//        if (user.getUsername().equals(""))
+//            attr[4]="Заполните поле Ваш логин!";
+//        if (user.getPassword().equals(""))
+//            attr[5] = "Заполните поле Ваш пароль!";
+//
+//        return attr;
+//    }
 
     public Float countRating(User user){
 

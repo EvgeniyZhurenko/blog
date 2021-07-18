@@ -57,7 +57,7 @@
     <p>Блогер : <span th:text="${user.first_name} + ' ' + ${user.last_name} ">Имя и фамилия</span></p>
     <p>Дата рождения : <span th:text="${user.born}">Дата рождения</span></p>
     <p>Место проживания : <span th:text="${user.city} + ', ' + ${user.country}">Место проживания</span></p>
-    <p>E-mail : <span><a th:href="@{https://mail.google.com/mail/u/0/#inbox?compose=new}" th:text="${user.email}">Почта</a></span></p>
+    <p>E-mail : <span><a th:href="'mailto:' + ${user.email}" th:text="${user.email}">Почта</a></span></p>
     <p>Блоги : <span><a th:href="@{~/admin/user/all-blogs/{id_admin}/{id_user}(id_admin = ${idAdmin},id_user = ${user.getId()})}" th:text="Блоги"></a></span></p>
 
     <div th:style="'margin-top: 2.5em;'">
